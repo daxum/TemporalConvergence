@@ -11,7 +11,7 @@ tile.time_wood_planks.name=Accelerated Planks
 tile.time_chest.name=Asynchronous Chest
 tile.time_pedestal.name=Timestone Pedestal
 tile.time_plant.name=Time Plant
-tile.time_stone_pillar.name=Timestone Pillar (WIP)
+tile.time_stone_pillar.name=Timestone Pillar(WIP)
 
 item.time_freezer.name=Weak Temporal Disruptor
 item.time_wood_pickaxe.name=Transitory Pickaxe
