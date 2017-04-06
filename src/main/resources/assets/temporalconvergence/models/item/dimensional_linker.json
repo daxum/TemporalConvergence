@@ -1,0 +1,14 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "temporalconvergence:dimensional_linker"
+	},
+    "overrides": [
+        {
+            "predicate": {
+                "bound":1
+            },
+            "model":"temporalconvergence:item/dimensional_linker_bound"
+        }
+    ]
+}

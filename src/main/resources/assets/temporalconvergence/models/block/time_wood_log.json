@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "temporalconvergence:time_wood_log_top",
+        "side": "temporalconvergence:time_wood_log"
+    }
+}

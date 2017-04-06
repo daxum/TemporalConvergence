@@ -1,0 +1,9 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "time_water": {
+            "model": "forge:fluid",
+            "custom": { "fluid": "time_water" }
+        }
+    }
+}

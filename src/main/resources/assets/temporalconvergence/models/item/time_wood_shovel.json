@@ -1,0 +1,6 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "temporalconvergence:time_wood_shovel"
+	}
+}

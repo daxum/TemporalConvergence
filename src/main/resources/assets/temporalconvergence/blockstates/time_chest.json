@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "temporalconvergence:time_chest" },
+        "facing=south": { "model": "temporalconvergence:time_chest", "y": 180 },
+        "facing=west":  { "model": "temporalconvergence:time_chest", "y": 270 },
+        "facing=east":  { "model": "temporalconvergence:time_chest", "y": 90 }
+	}
+}

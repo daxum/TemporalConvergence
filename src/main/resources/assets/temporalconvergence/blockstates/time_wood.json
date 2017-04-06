@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "axis=y":  { "model": "temporalconvergence:time_wood_log" },
+        "axis=z":   { "model": "temporalconvergence:time_wood_log", "x": 90 },
+        "axis=x":   { "model": "temporalconvergence:time_wood_log", "x": 90, "y": 90 },
+        "axis=none": { "model": "temporalconvergence:time_wood_bark" }
+    }
+}

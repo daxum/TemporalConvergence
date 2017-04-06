@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"top=true": { "model": "temporalconvergence:time_stone_pillar_top" },
+        "top=false": { "model": "temporalconvergence:time_stone_pillar" }
+	}
+}

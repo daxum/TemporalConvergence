@@ -1,0 +1,6 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "temporalconvergence:time_steel_ingot"
+	}
+}

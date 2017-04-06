@@ -1,0 +1,16 @@
+[
+{
+  "modid": "temporalconvergence",
+  "name": "Temporal Convergence",
+  "description": "Still an incomplete mod",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Me"],
+  "credits": "README.txt. It saved everything.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

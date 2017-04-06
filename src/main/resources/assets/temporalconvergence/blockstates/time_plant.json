@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "normal": { "model": "temporalconvergence:time_plant" }
+    }
+}

@@ -1,0 +1,27 @@
+itemGroup.temporalconvergence=Temporal Convergence
+
+#I went a bit overboard with "time" in names, huh?
+
+tile.origin_stone.name=Origin Stone
+tile.time_sand.name=Timestone Mix
+tile.time_stone.name=Timestone
+tile.time_steel.name=Block of Temporal Steel
+tile.time_wood.name=Accelerated Wood
+tile.time_wood_planks.name=Accelerated Planks
+tile.time_chest.name=Asynchronous Chest
+tile.time_pedestal.name=Timestone Pedestal
+tile.time_plant.name=Time Plant
+tile.time_stone_pillar.name=Timestone Pillar (WIP)
+
+item.time_freezer.name=Weak Temporal Disruptor
+item.time_wood_pickaxe.name=Transitory Pickaxe
+item.time_wood_shovel.name=Transitory Shovel
+item.time_wood_axe.name=Transitory Axe
+item.time_steel_ingot.name=Temporal Ingot
+item.time_pearl.name=Unstable Pearl
+item.time_dust.name=Temporal Dust
+item.dimensional_linker.name=Dimensional Linker
+
+fluid.time_water=Time Essence
+
+entity.time_pixie.name=Flying Time
