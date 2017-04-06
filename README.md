@@ -1,3 +1,3 @@
 # TemporalConvergence
-A minecraft mod
-Yay readme
+A minecraft mod.
+Yay readme.
