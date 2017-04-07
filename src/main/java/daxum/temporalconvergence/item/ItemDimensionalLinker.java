@@ -24,18 +24,14 @@ public class ItemDimensionalLinker extends ItemBase {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-				return isBound(stack) ? 1.0f : 0.0f;
+				return isBound(stack) && !isEmpty(stack) ? 1.0f : 0.0f;
 			}
 		});
 		addPropertyOverride(new ResourceLocation("empty"), new IItemPropertyGetter() {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-				if (isBound(stack)) {
-					return stack.getTagCompound().getBoolean("empty") ? 1.0f : 0.0f;
-				}
-
-				return 0.0f;
+				return isEmpty(stack) ? 1.0f : 0.0f;
 			}
 		});
 	}
@@ -47,6 +43,7 @@ public class ItemDimensionalLinker extends ItemBase {
 
 			if (pd != null) {
 				stack.getTagCompound().setString("debug", pd.toString());
+				stack.getTagCompound().setBoolean("empty", false);
 			}
 			else {
 				stack.getTagCompound().setString("debug", "Empty dimension");
@@ -65,6 +62,7 @@ public class ItemDimensionalLinker extends ItemBase {
 		//Clear if sneaking
 		if (player.isSneaking() && isBound(stack)) {
 			stack.getTagCompound().removeTag("dimid");
+			stack.getTagCompound().removeTag("empty");
 			return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 		}
 
@@ -91,6 +89,10 @@ public class ItemDimensionalLinker extends ItemBase {
 
 	public boolean isBound(ItemStack stack) {
 		return stack.getItem() == this && stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid");
+	}
+
+	public boolean isEmpty(ItemStack stack) {
+		return isBound(stack) && stack.getTagCompound().getBoolean("empty");
 	}
 
 	@Override
