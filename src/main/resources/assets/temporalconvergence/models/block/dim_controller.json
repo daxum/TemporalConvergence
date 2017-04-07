@@ -19,7 +19,7 @@
                 "down": { "texture": "#dim_contr", "cullface": "down" }
             }
         },
-        
+
         {
             "name": "bottom_north",
             "from": [2.0, 0.0, 0.0],
@@ -31,7 +31,7 @@
                 "down": { "texture": "#dim_contr", "cullface": "down" }
             }
         },
-        
+
         {
             "name": "bottom_east",
             "from": [14.0, 0.0, 0.0],
@@ -45,7 +45,7 @@
                 "down": { "texture": "#dim_contr", "cullface": "down" }
             }
         },
-        
+
         {
             "name": "bottom_south",
             "from": [2.0, 0.0, 14.0],
@@ -59,7 +59,7 @@
                 "down": { "texture": "#dim_contr", "cullface": "down" }
             }
         },
-        
+
         {
             "name": "middle_north_west",
             "from": [0.0, 2.0, 0.0],
@@ -71,7 +71,7 @@
                 "north": { "texture": "#dim_contr", "cullface": "north" }
             }
         },
-        
+
         {
             "name": "middle_north_east",
             "from": [14.0, 2.0, 0.0],
@@ -83,7 +83,7 @@
                 "north": { "texture": "#dim_contr", "cullface": "north" }
             }
         },
-        
+
         {
             "name": "middle_south_west",
             "from": [0.0, 2.0, 14.0],
@@ -95,7 +95,7 @@
                 "north": { "texture": "#dim_contr" }
             }
         },
-        
+
         {
             "name": "middle_south_east",
             "from": [14.0, 2.0, 14.0],
@@ -107,7 +107,7 @@
                 "north": { "texture": "#dim_contr" }
             }
         },
-        
+
         {
             "name": "top_west",
             "from": [0.0, 14.0, 0.0],
@@ -121,7 +121,7 @@
                 "down": { "texture": "#dim_contr" }
             }
         },
-        
+
         {
             "name": "top_north",
             "from": [2.0, 14.0, 0.0],
@@ -133,7 +133,7 @@
                 "down": { "texture": "#dim_contr" }
             }
         },
-        
+
         {
             "name": "top_east",
             "from": [14.0, 14.0, 0.0],
@@ -147,7 +147,7 @@
                 "down": { "texture": "#dim_contr" }
             }
         },
-        
+
         {
             "name": "top_south",
             "from": [2.0, 14.0, 14.0],
