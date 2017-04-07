@@ -15,11 +15,11 @@ public class TileDimContr extends TileEntity {
 
 		PowerDimension connected = PowerDimension.get(world, linkId);
 
-		if (connected != null) {
+		if (connected != null)
 			connected.addFreezer();
-			didThisFreeze = true;
-			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
-		}
+
+		didThisFreeze = true;
+		world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
 	}
 
 	public void unFreezeDim() {
@@ -55,6 +55,10 @@ public class TileDimContr extends TileEntity {
 
 			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
 		}
+	}
+
+	public int getId() {
+		return linkId;
 	}
 
 	@Override
