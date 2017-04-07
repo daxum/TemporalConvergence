@@ -12,11 +12,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 
 	public BlockDimContr() {
 		super("dim_controller", 5.0f, 30.0f, "pickaxe", 2);
+		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
 	}
 
 	@Override
