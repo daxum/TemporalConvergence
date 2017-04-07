@@ -214,7 +214,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	public boolean checkAmount(int amount) {
 		switch (amount) {
-		case 2: if (getSpot(pedLocs[1]) != ItemStack.EMPTY && getSpot(pedLocs[3]) != ItemStack.EMPTY 						  //East and west
+		case 2: if (getSpot(pedLocs[1]) != ItemStack.EMPTY && getSpot(pedLocs[3]) != ItemStack.EMPTY						  //East and west
 				|| getSpot(pedLocs[0]) != ItemStack.EMPTY && getSpot(pedLocs[2]) != ItemStack.EMPTY) return true; else break; //North and south
 
 		case 4: if (getSpot(pedLocs[0]) != ItemStack.EMPTY && getSpot(pedLocs[1]) != ItemStack.EMPTY
@@ -287,7 +287,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 				break;
 			currentRecipe.add(new ItemStack((NBTTagCompound) comp.getTag("cur" + i)));
 		}
-
 
 		super.readFromNBT(comp);
 	}
