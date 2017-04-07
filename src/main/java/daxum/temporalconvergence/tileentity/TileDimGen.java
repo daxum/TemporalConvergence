@@ -323,7 +323,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 		return inventory;
 	}
 
-
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (scale > 1.0f)
