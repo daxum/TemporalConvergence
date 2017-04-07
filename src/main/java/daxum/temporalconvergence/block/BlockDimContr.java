@@ -7,6 +7,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -30,11 +31,19 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if (stack.getItem() == ModItems.dimLinker && stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
+		if (stack.getItem() == ModItems.dimLinker) {
 			TileEntity te = world.getTileEntity(pos);
 
-			if (te != null && te instanceof TileDimContr) {
-				((TileDimContr) te).setId(stack.getTagCompound().getInteger("dimid"));
+			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
+				if (te != null && te instanceof TileDimContr) {
+					((TileDimContr) te).setId(stack.getTagCompound().getInteger("dimid"));
+				}
+			}
+			else if (te instanceof TileDimContr && ((TileDimContr) te).getId() >= 0){
+				if (!stack.hasTagCompound())
+					stack.setTagCompound(new NBTTagCompound());
+
+				stack.getTagCompound().setInteger("dimid", ((TileDimContr) te).getId());
 			}
 		}
 
