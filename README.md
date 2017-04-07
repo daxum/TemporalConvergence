@@ -1,3 +1,3 @@
 # TemporalConvergence
-A minecraft mod.
-Yay readme.
+A Minecraft mod.
+Made for version 1.11.2
