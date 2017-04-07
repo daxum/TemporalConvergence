@@ -33,7 +33,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	private int maxIoRate = 0; //The max ioRate before stability starts decreasing.
 
 	private boolean stable = true; //Whether the dimension is stable.
-	private boolean active = false; //If the dimension is active - deactivated dimensions won't loose time and have no i/o.
+	private int frozenCount; //The number of objects keeping this dimension frozen
 
 	//Use makeNew or get to obtain an instance.
 	//Don't use SaveDataHandler to get a new instance, as it will not be initialized.
@@ -43,7 +43,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	}
 
 	public void update() {
-		if (!active || amount <= 0) return;
+		if (!isActive() || amount <= 0) return;
 
 		//Update i/o
 
@@ -121,7 +121,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	public int getPower(int amountRequested) {
 		powerRequested += amountRequested;
 
-		if (!active || powerDrawn >= ioRate || amount <= 0)
+		if (!isActive() || powerDrawn >= ioRate || amount <= 0)
 			return 0;
 
 		int returnAmount = 0;
@@ -150,7 +150,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	public int insertPower(int insertAmount) {
 		attemptedInsertion += insertAmount;
 
-		if (!active || powerInserted >= ioRate)
+		if (!isActive() || powerInserted >= ioRate)
 			return insertAmount;
 		if (amount <= 0)
 			return 0; //nom nom nom (This is here in case someone caches the dimension, normally this wouldn't happen)
@@ -175,7 +175,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		NBTTagCompound comp = new NBTTagCompound();
 
 		comp.setBoolean("stable", stable);
-		comp.setBoolean("active", active);
+		comp.setInteger("freezers", frozenCount);
 
 		int[] values = {amount, instability, ioRate, lossRate, maxAmount, maxIoRate, unstableTicks, lossFrequency};
 
@@ -188,8 +188,8 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	public void deserializeNBT(NBTTagCompound comp) {
 		if (comp.hasKey("stable"))
 			stable = comp.getBoolean("stable");
-		if (comp.hasKey("active"))
-			active = comp.getBoolean("active");
+		if (comp.hasKey("freezers"))
+			frozenCount = comp.getInteger("freezers");
 		if (comp.hasKey("storagedata")) {
 			int[] values = comp.getIntArray("storagedata");
 
@@ -205,7 +205,6 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 			}
 			else {
 				TemporalConvergence.LOGGER.error("Could not load values for power dimension #" + id + ". Only " + values.length + " values found. 8 were expected.");
-				active = false;
 			}
 		}
 	}
@@ -222,12 +221,17 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	}
 
 	public boolean isActive() {
-		return active;
+		return frozenCount == 0;
 	}
 
-	public void setActive(boolean newActive) {
-		if (active != newActive) {
-			active = newActive;
+	public void addFreezer() {
+		frozenCount++;
+		sdh.markDirty();
+	}
+
+	public void removeFreezer() {
+		if (frozenCount > 0) {
+			frozenCount--;
 			sdh.markDirty();
 		}
 	}
@@ -248,7 +252,8 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		String out = "";
 
 		out += "Dimension Id: " + id + "\n";
-		out += "Active: " + active + "\n";
+		out += "Active: " + isActive() + "\n";
+		out += "Number holding inactive: " + frozenCount + "\n";
 		out += "Amount Stored: " + amount + "\n";
 		out += "Max Amount Stored: " + maxAmount + "\n";
 		out += "I/O Rate: " + ioRate + "\n";
