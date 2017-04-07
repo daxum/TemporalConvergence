@@ -89,7 +89,7 @@ public final class DimGenRecipes {
 
 		//TODO: These values still might need rebalancing
 		int id = PowerDimension.makeNew(world, cumulativeInitialAmount,         //Initial amount
-				MathHelper.floor(cumulativeIO / 32.0) + 1,               //Time loss rate
+				MathHelper.floor(cumulativeIO / 32.0) + 1,               		//Time loss rate
 				MathHelper.floor(cumulativeStorage / 192.0 * 5000000) + 25000,  //Max safe amount
 				MathHelper.floor(cumulativeIO / 192.0 * 950000) + 100,          //Max safe i/o rate
 				MathHelper.floor((cumulativeStorage + 1) / 96.0 * 8.0) + 1).id; //Time loss frequency
