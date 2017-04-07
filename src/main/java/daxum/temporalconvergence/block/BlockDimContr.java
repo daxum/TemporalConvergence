@@ -67,4 +67,9 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 				((TileDimContr)world.getTileEntity(pos)).unFreezeDim();
 		}
 	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 }
