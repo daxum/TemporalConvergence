@@ -9,6 +9,12 @@
                 "bound":1
             },
             "model":"temporalconvergence:item/dimensional_linker_bound"
+        },
+        {
+            "predicate": {
+                "empty":1
+            },
+            "model":"temporalconvergence:item/dimensional_linker_empty"
         }
     ]
 }

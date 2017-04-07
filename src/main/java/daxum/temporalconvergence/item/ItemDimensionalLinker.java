@@ -24,7 +24,18 @@ public class ItemDimensionalLinker extends ItemBase {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public float apply(ItemStack stack, World world, EntityLivingBase entity) {
-				return isBound(stack) ? 1.0F : 0.0F;
+				return isBound(stack) ? 1.0f : 0.0f;
+			}
+		});
+		addPropertyOverride(new ResourceLocation("empty"), new IItemPropertyGetter() {
+			@Override
+			@SideOnly(Side.CLIENT)
+			public float apply(ItemStack stack, World world, EntityLivingBase entity) {
+				if (isBound(stack)) {
+					return stack.getTagCompound().getBoolean("empty") ? 1.0f : 0.0f;
+				}
+
+				return 0.0f;
 			}
 		});
 	}
@@ -36,6 +47,10 @@ public class ItemDimensionalLinker extends ItemBase {
 
 			if (pd != null) {
 				stack.getTagCompound().setString("debug", pd.toString());
+			}
+			else {
+				stack.getTagCompound().setString("debug", "Empty dimension");
+				stack.getTagCompound().setBoolean("empty", true);
 			}
 		}
 	}
