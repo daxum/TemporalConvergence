@@ -1,6 +1,7 @@
 package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.tileentity.TileDimGen;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
@@ -61,6 +62,13 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
+	//TODO: Weak power?
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos changedPos) {
+		if (!world.isRemote && world.getStrongPower(pos) > 0 && world.getTileEntity(pos) instanceof TileDimGen)
+			((TileDimGen)world.getTileEntity(pos)).setCrafting();
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileDimGen();
 	}
@@ -88,5 +96,10 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return AABB;
+	}
+
+	@Override
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+		return true;
 	}
 }
