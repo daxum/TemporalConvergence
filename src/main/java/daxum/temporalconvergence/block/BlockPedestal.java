@@ -32,7 +32,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 
 	@Override
 	//Once again, x, y, and z ARE NOT WORLD COORDINATES!!!!
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		if (!world.isRemote && world.getTileEntity(pos) instanceof TilePedestal) {
 			ItemStackHandler inventory = ((TilePedestal)world.getTileEntity(pos)).getInventory();
 			ItemStack playerStack = player.getHeldItemMainhand();
