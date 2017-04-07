@@ -44,6 +44,10 @@ public class SaveDataHandler extends WorldSavedData {
 		markDirty();
 	}
 
+	public int getMaxDimId() {
+		return nextDimId;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound comp) {
 		if (comp.hasKey("nextdim"))

@@ -247,6 +247,20 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		return SaveDataHandler.get(world).getExistingPowerDim(id);
 	}
 
+
+	public static void updateDimensions(World world) {
+		SaveDataHandler current = SaveDataHandler.get(world);
+
+		PowerDimension next = null;
+		for (int i = 0; i < current.getMaxDimId(); i++) {
+			next = current.getExistingPowerDim(i);
+
+			if (next != null) {
+				next.update();
+			}
+		}
+	}
+
 	@Override
 	public String toString() {
 		String out = "";
