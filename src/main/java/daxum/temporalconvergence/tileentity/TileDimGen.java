@@ -66,7 +66,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 				setTime(1);
 			}
 			else if (scale >= 15.0f && !done) {
-				if (!world.isRemote && !inventory.getStackInSlot(0).equals(currentRecipe.get(0))) {
+				if (!world.isRemote && !ItemStack.areItemStacksEqual(inventory.getStackInSlot(0), currentRecipe.get(0))) {
 					done = true;
 					sendBlockUpdate();
 				}
@@ -163,7 +163,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 	}
 
-	//TODO: Make activatable with a redstone signal
 	public void setCrafting() {
 		if (!world.isRemote && !crafting) {
 			List<ItemStack> stacks = getInputs();
@@ -221,8 +220,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 		case 4: if (getSpot(pedLocs[0]) != ItemStack.EMPTY && getSpot(pedLocs[1]) != ItemStack.EMPTY
 				&& getSpot(pedLocs[2]) != ItemStack.EMPTY && getSpot(pedLocs[3]) != ItemStack.EMPTY) return true; else break; //North, south, east, and west
 
-		case 8: if (getSpot(pedLocs[0]) == ItemStack.EMPTY && getSpot(pedLocs[1]) == ItemStack.EMPTY
-				&& getSpot(pedLocs[2]) == ItemStack.EMPTY && getSpot(pedLocs[3]) == ItemStack.EMPTY) return true; else break; //Not four
+		case 8: if (getSpot(pedLocs[0]).isEmpty() && getSpot(pedLocs[1]).isEmpty()
+				&& getSpot(pedLocs[2]).isEmpty() && getSpot(pedLocs[3]).isEmpty()) return true; else break; //Not four
 
 		case 12: return true;
 		}
@@ -289,6 +288,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			currentRecipe.add(new ItemStack((NBTTagCompound) comp.getTag("cur" + i)));
 		}
 
+
 		super.readFromNBT(comp);
 	}
 
@@ -334,7 +334,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	@Override
 	public void onLoad() {
-		//TODO: why didn't this work before, and why did it randomly start working?
+		//Why didn't this work before, and why did it randomly start working?
 		fullClock = new AxisAlignedBB(pos.add(-6, 0, -6), pos.add(6, 1, 6));
 		smallClock = new AxisAlignedBB(pos, pos.add(1, 1, 1));
 
