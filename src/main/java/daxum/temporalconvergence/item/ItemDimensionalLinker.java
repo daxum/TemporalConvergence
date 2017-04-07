@@ -43,12 +43,12 @@ public class ItemDimensionalLinker extends ItemBase {
 
 			if (pd != null) {
 				stack.getTagCompound().setString("debug", pd.toString());
-				stack.getTagCompound().setBoolean("empty", false);
 			}
 			else {
 				stack.getTagCompound().setString("debug", "Empty dimension");
-				stack.getTagCompound().setBoolean("empty", true);
 			}
+
+			stack.getTagCompound().setBoolean("empty", pd == null);
 		}
 	}
 
