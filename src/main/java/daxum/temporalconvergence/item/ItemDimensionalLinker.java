@@ -56,7 +56,7 @@ public class ItemDimensionalLinker extends ItemBase {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if (stack == ItemStack.EMPTY || stack.getItem() != this || world.isRemote)
+		if (stack.isEmpty() || stack.getItem() != this || world.isRemote)
 			return ActionResult.newResult(EnumActionResult.PASS, stack);
 
 		//Clear if sneaking
@@ -68,7 +68,7 @@ public class ItemDimensionalLinker extends ItemBase {
 
 		//Bind to other
 		ItemStack other = hand == EnumHand.MAIN_HAND ? player.getHeldItem(EnumHand.OFF_HAND) : player.getHeldItem(EnumHand.MAIN_HAND);
-		if (other != ItemStack.EMPTY && isBound(other)) {
+		if (!other.isEmpty() && isBound(other)) {
 			int id = other.getTagCompound().getInteger("dimid");
 
 			if (stack.hasTagCompound()) {

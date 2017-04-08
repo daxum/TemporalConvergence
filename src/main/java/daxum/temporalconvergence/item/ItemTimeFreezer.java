@@ -136,11 +136,11 @@ public class ItemTimeFreezer extends ItemBase {
 	}
 
 	public boolean isActive(ItemStack stack) {
-		return stack != ItemStack.EMPTY && stack.hasTagCompound() && stack.getTagCompound().getBoolean("active");
+		return !stack.isEmpty() && stack.hasTagCompound() && stack.getTagCompound().getBoolean("active");
 	}
 
 	public void setActive(ItemStack stack, boolean active) {
-		if (stack != ItemStack.EMPTY && stack.getItem() == this) {
+		if (!stack.isEmpty() && stack.getItem() == this) {
 			if (!stack.hasTagCompound())
 				stack.setTagCompound(new NBTTagCompound());
 

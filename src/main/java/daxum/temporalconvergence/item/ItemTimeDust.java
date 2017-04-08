@@ -26,10 +26,8 @@ public class ItemTimeDust extends ItemBase {
 				item.setDead();
 			else
 				item.getEntityItem().shrink(1);
-
-			return true;
 		}
-		return false;
 
+		return false;
 	}
 }

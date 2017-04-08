@@ -214,14 +214,14 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	public boolean checkAmount(int amount) {
 		switch (amount) {
-		case 2: if (getSpot(pedLocs[1]) != ItemStack.EMPTY && getSpot(pedLocs[3]) != ItemStack.EMPTY						  //East and west
-				|| getSpot(pedLocs[0]) != ItemStack.EMPTY && getSpot(pedLocs[2]) != ItemStack.EMPTY) return true; else break; //North and south
+		case 2: if (!getSpot(pedLocs[1]).isEmpty() && !getSpot(pedLocs[3]).isEmpty()						  //East and west
+				|| !getSpot(pedLocs[0]).isEmpty() && !getSpot(pedLocs[2]).isEmpty()) return true; else break; //North and south
 
-		case 4: if (getSpot(pedLocs[0]) != ItemStack.EMPTY && getSpot(pedLocs[1]) != ItemStack.EMPTY
-				&& getSpot(pedLocs[2]) != ItemStack.EMPTY && getSpot(pedLocs[3]) != ItemStack.EMPTY) return true; else break; //North, south, east, and west
+		case 4: if (!getSpot(pedLocs[0]).isEmpty() && !getSpot(pedLocs[1]).isEmpty()
+				&& !getSpot(pedLocs[2]).isEmpty() && !getSpot(pedLocs[3]).isEmpty()) return true; else break; //North, south, east, and west
 
 		case 8: if (getSpot(pedLocs[0]).isEmpty() && getSpot(pedLocs[1]).isEmpty()
-				&& getSpot(pedLocs[2]).isEmpty() && getSpot(pedLocs[3]).isEmpty()) return true; else break; //Not four
+				&& getSpot(pedLocs[2]).isEmpty() && getSpot(pedLocs[3]).isEmpty()) return true; else break;   //Not four
 
 		case 12: return true;
 		}

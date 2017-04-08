@@ -46,8 +46,8 @@ public final class DimGenRecipes {
 	}
 
 	public static void addDimensionInput(ItemStack input, EnumTier tier, EnumBoostingType type) {
-		if (input == ItemStack.EMPTY) {
-			TemporalConvergence.LOGGER.error("Tried to register ItemStack.EMPTY as dimensional input");
+		if (input.isEmpty()) {
+			TemporalConvergence.LOGGER.error("Tried to register empty ItemStack as dimensional input");
 			return;
 		}
 
@@ -55,13 +55,13 @@ public final class DimGenRecipes {
 	}
 
 	public static boolean isValid(ItemStack centerInput, List<ItemStack> inputs) {
-		return (inputs.size() == 2 || inputs.size() == 4 || inputs.size() == 8 || inputs.size() == 12) && getOutput(centerInput, inputs) != ItemStack.EMPTY;
+		return (inputs.size() == 2 || inputs.size() == 4 || inputs.size() == 8 || inputs.size() == 12) && !getOutput(centerInput, inputs).isEmpty();
 	}
 
 	public static ItemStack getOutput(ItemStack centerInput, List<ItemStack> inputs) {
 		for (DimGenRecipe i : recipes)
 			if (i.areInputsEqual(centerInput, inputs))
-				return i.output;
+				return i.output.copy();
 		return ItemStack.EMPTY;
 
 	}
