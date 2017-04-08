@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -61,7 +62,7 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block changed, BlockPos changedPos) {
 		if (world.getTileEntity(pos) instanceof TileDimContr) {
-			if (world.getStrongPower(pos) > 0)
+			if (world.isBlockPowered(pos))
 				((TileDimContr)world.getTileEntity(pos)).freezeDim();
 			else
 				((TileDimContr)world.getTileEntity(pos)).unFreezeDim();
@@ -72,4 +73,10 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
+
+	@Override
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+		return true;
+	}
+
 }

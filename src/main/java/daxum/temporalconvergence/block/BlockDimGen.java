@@ -62,9 +62,8 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	//TODO: Weak power?
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos changedPos) {
-		if (!world.isRemote && world.getStrongPower(pos) > 0 && world.getTileEntity(pos) instanceof TileDimGen)
+		if (!world.isRemote && world.isBlockPowered(pos) && world.getTileEntity(pos) instanceof TileDimGen)
 			((TileDimGen)world.getTileEntity(pos)).setCrafting();
 	}
 
