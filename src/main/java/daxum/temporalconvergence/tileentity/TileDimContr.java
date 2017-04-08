@@ -73,7 +73,7 @@ public class TileDimContr extends TileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound comp) {
 		if (comp.hasKey("linkid"))
-			linkId = comp.getInteger("linkId");
+			linkId = comp.getInteger("linkid");
 		if (comp.hasKey("freeze"))
 			didThisFreeze = comp.getBoolean("freeze");
 
