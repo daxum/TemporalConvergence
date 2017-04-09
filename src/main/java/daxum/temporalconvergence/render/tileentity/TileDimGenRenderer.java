@@ -1,5 +1,7 @@
 package daxum.temporalconvergence.render.tileentity;
 
+import org.lwjgl.opengl.GL11;
+
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileDimGen;
 import net.minecraft.client.Minecraft;
@@ -64,7 +66,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 
 		//Main clock face
 		bindTexture(clockTexture);
-		vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-radius, 0.0, -radius).tex(0.0, 0.0).endVertex();
 		vb.pos(radius, 0.0, -radius).tex(1.0, 0.0).endVertex();
 		vb.pos(radius, 0.0, radius).tex(1.0, 1.0).endVertex();
@@ -86,7 +88,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(360 - rot, 0.0f, 1.0f, 0.0f);
 
-		vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+		vb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		vb.pos(-width, -0.01, height).tex(texStart, 0.0).endVertex();
 		vb.pos(width, -0.01, height).tex(texEnd, 0.0).endVertex();
 		vb.pos(width, -0.01, 0.0).tex(texEnd, 1.0).endVertex();
