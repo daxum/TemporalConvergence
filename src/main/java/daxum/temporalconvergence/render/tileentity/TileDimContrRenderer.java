@@ -30,15 +30,19 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 
 		bindTexture(SOLID_BLACK);
 
-		if (!compiled)
-			compileSphereDisplayList();
-		GlStateManager.callList(displayList);
+		callSphereDisplayList();
 
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
 
-	protected void compileSphereDisplayList() {
+	public void callSphereDisplayList() {
+		if (!compiled)
+			compileSphereDisplayList();
+		GlStateManager.callList(displayList);
+	}
+
+	private void compileSphereDisplayList() {
 		displayList = GLAllocation.generateDisplayLists(1);
 		GlStateManager.glNewList(displayList, GL11.GL_COMPILE);
 
@@ -48,7 +52,7 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 		compiled = true;
 	}
 
-	public void renderSphere(float radius) {
+	private void renderSphere(float radius) {
 		Tessellator tess = Tessellator.getInstance();
 		VertexBuffer vb = tess.getBuffer();
 
