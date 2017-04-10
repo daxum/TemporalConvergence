@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileDimContr;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -14,8 +15,11 @@ import net.minecraft.util.math.MathHelper;
 
 public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr> {
 	public static final ResourceLocation SOLID_BLACK = new ResourceLocation(TemporalConvergence.MODID + ":textures/test_texture.png");
-	public static final float RADIUS = 1.0f;
+	public static final float RADIUS = 0.25f;
 	public static final float PIF = (float) Math.PI;
+	protected static boolean compiled = false;
+	protected static int displayList;
+
 
 	@Override
 	public void renderTileEntityAt(TileDimContr te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage) {
@@ -23,12 +27,31 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 		GlStateManager.translate(transformX + 0.5, transformY + 0.5, transformZ + 0.5);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		GlStateManager.disableLighting();
-		//GlStateManager.disableCull();
 
+		bindTexture(SOLID_BLACK);
+
+		if (!compiled)
+			compileSphereDisplayList();
+		GlStateManager.callList(displayList);
+
+		GlStateManager.enableLighting();
+		GlStateManager.popMatrix();
+	}
+
+	protected void compileSphereDisplayList() {
+		displayList = GLAllocation.generateDisplayLists(1);
+		GlStateManager.glNewList(displayList, GL11.GL_COMPILE);
+
+		renderSphere(RADIUS);
+
+		GlStateManager.glEndList();
+		compiled = true;
+	}
+
+	public void renderSphere(float radius) {
 		Tessellator tess = Tessellator.getInstance();
 		VertexBuffer vb = tess.getBuffer();
 
-		bindTexture(SOLID_BLACK);
 		vb.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX);
 
 		//The sphere is complete.
@@ -41,14 +64,14 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 						float phi = i * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
+						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					else {
 						float theta = j * PIF / 180.0f;
 						float phi = (i + 5) * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
+						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					alt = !alt;
 				}
@@ -60,14 +83,14 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 						float phi = i * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
+						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					else {
 						float theta = j * PIF / 180.0f;
 						float phi = (i + 5) * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
+						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					alt = !alt;
 				}
@@ -75,23 +98,6 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 			alt = !alt;
 		}
 
-		/*
-		boolean alt = true;
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j <= 365; j += 5) {
-				if (alt)
-					vb.pos(RADIUS * MathHelper.cos(j * PIF / 180.0f), RADIUS * MathHelper.sin(j * PIF / 180.0f), i).tex(j / 360.0, j / 360.0).endVertex();
-				else
-					vb.pos(RADIUS * MathHelper.cos(j * PIF / 180.0f), RADIUS * MathHelper.sin(j * PIF / 180.0f), i + 1).tex(j / 360.0, j / 360.0).endVertex();
-				alt = !alt;
-			}
-			alt = !alt;
-		}*/
-
 		tess.draw();
-
-		//GlStateManager.enableCull();
-		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
 	}
 }
