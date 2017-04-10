@@ -31,43 +31,43 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 		bindTexture(SOLID_BLACK);
 		vb.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX);
 
-		//Icosphere?
+		//The sphere is complete.
 		boolean alt = true;
-		for (int i = 0; i < 180; i += 5) {
+		for (int i = 0; i < 360; i += 5) {
 			if (!alt) {
-				for (int j = 0; j <= 365; j += 5) {
+				for (int j = 0; j <= 185; j += 5) {
 					if (alt) {
 						float theta = j * PIF / 180.0f;
 						float phi = i * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 365.0, j / 365.0).endVertex();
+						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					else {
 						float theta = j * PIF / 180.0f;
 						float phi = (i + 5) * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 365.0, j / 365.0).endVertex();
+						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					alt = !alt;
 				}
 			}
 			else {
-				for (int j = 360; j >= -5; j -= 5) {
+				for (int j = 180; j >= -5; j -= 5) {
 					if (alt) {
 						float theta = j * PIF / 180.0f;
 						float phi = i * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 365.0, j / 365.0).endVertex();
+						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					else {
 						float theta = j * PIF / 180.0f;
 						float phi = (i + 5) * PIF / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
-						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 365.0, j / 365.0).endVertex();
+						vb.pos(RADIUS * sintheta * MathHelper.cos(phi), RADIUS * sintheta * MathHelper.sin(phi), RADIUS * MathHelper.cos(theta)).tex(j / 185.0, j / 185.0).endVertex();
 					}
 					alt = !alt;
 				}
