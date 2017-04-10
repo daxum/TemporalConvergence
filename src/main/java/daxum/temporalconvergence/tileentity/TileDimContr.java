@@ -9,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 public class TileDimContr extends TileEntity {
 	protected int linkId = -1;
 	protected boolean didThisFreeze = false;
+	public float renderScale = 0; //Gets set by the tesr
 
 	public void freezeDim() {
 		if (world.isRemote || didThisFreeze) return;
@@ -23,15 +24,20 @@ public class TileDimContr extends TileEntity {
 	}
 
 	public void unFreezeDim() {
-		if (!world.isRemote) {
+		if (!world.isRemote && didThisFreeze) {
 			PowerDimension connected = PowerDimension.get(world, linkId);
 
-			if (connected != null && didThisFreeze) {
+			if (connected != null) {
 				connected.removeFreezer();
 				didThisFreeze = false;
 				world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
 			}
 		}
+	}
+
+	public void unbind() {
+		unFreezeDim();
+		linkId = -1;
 	}
 
 	public void setId(int i) {

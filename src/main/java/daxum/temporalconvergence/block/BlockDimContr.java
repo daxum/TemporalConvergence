@@ -32,7 +32,11 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if (stack.getItem() == ModItems.dimLinker) {
+		if (stack.isEmpty() && player.isSneaking()) {
+			if (world.getTileEntity(pos) instanceof TileDimContr)
+				((TileDimContr) world.getTileEntity(pos)).unbind();
+		}
+		else if (stack.getItem() == ModItems.dimLinker) {
 			TileEntity te = world.getTileEntity(pos);
 
 			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
