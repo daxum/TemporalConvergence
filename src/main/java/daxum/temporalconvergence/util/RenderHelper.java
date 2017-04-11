@@ -8,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+//Everything rendering related that gets used three or more times goes here
 public final class RenderHelper {
 	public static final float PIF = (float) Math.PI; //PI as a float, to save annoyance over casting
 
@@ -29,11 +30,11 @@ public final class RenderHelper {
 		}
 	}
 
-	public static void renderItem(int time, ItemStack stack, BlockPos pos, float partialTicks) {
-		renderItem(time, stack, pos.getX(), pos.getY(), pos.getZ(), partialTicks, true);
+	public static void renderItem(int time, ItemStack stack, BlockPos pos, float partialTicks, boolean shouldBob) {
+		renderItem(time, stack, pos.getX(), pos.getY(), pos.getZ(), partialTicks, shouldBob);
 	}
 
-	public static void renderItem(TileEntity te, ItemStack stack, float partialTicks) {
-		renderItem((int) te.getWorld().getTotalWorldTime(), stack, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), partialTicks, true);
+	public static void renderItem(TileEntity te, ItemStack stack, float partialTicks, boolean shouldBob) {
+		renderItem((int) te.getWorld().getTotalWorldTime(), stack, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), partialTicks, shouldBob);
 	}
 }

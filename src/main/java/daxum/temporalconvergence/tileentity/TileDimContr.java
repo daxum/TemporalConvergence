@@ -12,7 +12,7 @@ public class TileDimContr extends TileEntity implements ITickable {
 	protected int linkId = -1;
 	protected boolean didThisFreeze = false;
 	protected boolean isFrozen = false;
-	public float renderScale = 0; //Gets set by the tesr
+	public float renderScale = 0; //Gets set by the tesr, client only
 	public EnumPowerLevel state = EnumPowerLevel.EMPTY;
 
 	@Override

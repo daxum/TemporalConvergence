@@ -22,14 +22,14 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 	public static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID + ":textures/dim_contr_center.png");
 	public static final float RADIUS = 0.25f;
 	public static final float PIF = (float) Math.PI;
+	private static final ItemStack BOUND_LINKER = new ItemStack(ModItems.dimLinker);
+	private static final ItemStack UNBOUND_LINKER = new ItemStack(ModItems.dimLinker);
 	protected static boolean compiled = false;
 	protected static int displayList;
-	private static ItemStack boundDimLinker = new ItemStack(ModItems.dimLinker);
-	private static ItemStack unboundDimLinker = new ItemStack(ModItems.dimLinker);
 
 	static {
-		boundDimLinker.setTagCompound(new NBTTagCompound());
-		boundDimLinker.getTagCompound().setInteger("dimid", 0);
+		BOUND_LINKER.setTagCompound(new NBTTagCompound());
+		BOUND_LINKER.getTagCompound().setInteger("dimid", 0);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 		if (te.renderScale <= 0 && te.getId() == -1) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);
-			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), unboundDimLinker, 0, 0, 0, partialTicks, false);
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), UNBOUND_LINKER, 0, 0, 0, partialTicks, false);
 			GlStateManager.popMatrix();
 			return;
 		}
@@ -46,7 +46,7 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 			te.renderScale = 0;
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);
-			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), boundDimLinker, 0, 0, 0, partialTicks, false);
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), BOUND_LINKER, 0, 0, 0, partialTicks, false);
 			GlStateManager.popMatrix();
 			return;
 		}

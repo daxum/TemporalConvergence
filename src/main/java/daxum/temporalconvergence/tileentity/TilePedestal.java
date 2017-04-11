@@ -14,10 +14,8 @@ public class TilePedestal extends TileEntity {
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
-		if (comp.getBoolean("udmarker") || !inventory.getStackInSlot(0).isEmpty())
-			comp.setTag("inv", inventory.serializeNBT());
+		comp.setTag("inv", inventory.serializeNBT());
 
-		comp.removeTag("udmarker");
 		return super.writeToNBT(comp);
 	}
 
@@ -31,12 +29,7 @@ public class TilePedestal extends TileEntity {
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound comp = new NBTTagCompound();
-
-		comp.setBoolean("udmarker", true);
-		comp = writeToNBT(comp);
-
-		return new SPacketUpdateTileEntity(pos, -42, comp);
+		return new SPacketUpdateTileEntity(pos, -42, writeToNBT(new NBTTagCompound()));
 	}
 
 	@Override

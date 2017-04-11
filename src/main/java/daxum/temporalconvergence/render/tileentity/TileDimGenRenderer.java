@@ -39,7 +39,8 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 
-		RenderHelper.renderItem(te, te.getInventory().getStackInSlot(0), partialTicks);
+		GlStateManager.translate(0.0f, 0.1f, 0.0f);
+		RenderHelper.renderItem(te, te.getInventory().getStackInSlot(0), partialTicks, true);
 
 		GlStateManager.popMatrix();
 	}
