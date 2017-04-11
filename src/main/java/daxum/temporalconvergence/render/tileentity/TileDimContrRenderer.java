@@ -15,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 
 //TODO: This should probably be made into some sort of model
 public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr> {
-	public static final ResourceLocation SOLID_BLACK = new ResourceLocation(TemporalConvergence.MODID + ":textures/test_texture.png");
+	public static final ResourceLocation SOLID_BLACK = new ResourceLocation(TemporalConvergence.MODID + ":textures/dim_contr_center.png");
 	public static final float RADIUS = 0.25f;
 	public static final float PIF = (float) Math.PI;
 	protected static boolean compiled = false;

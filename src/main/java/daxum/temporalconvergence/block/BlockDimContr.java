@@ -4,6 +4,9 @@ import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,15 +14,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockDimContr extends BlockBase implements ITileEntityProvider {
+	public static final PropertyEnum POWER_LEVEL = PropertyEnum.create("power_level", EnumPowerLevel.class);
 
 	public BlockDimContr() {
 		super("dim_controller", 5.0f, 30.0f, "pickaxe", 2);
+		setDefaultState(blockState.getBaseState().withProperty(POWER_LEVEL, EnumPowerLevel.EMPTY));
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
 	}
 
@@ -33,8 +39,12 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (stack.isEmpty() && player.isSneaking()) {
-			if (world.getTileEntity(pos) instanceof TileDimContr)
-				((TileDimContr) world.getTileEntity(pos)).unbind();
+			TileEntity te = world.getTileEntity(pos);
+
+			if (te != null && te instanceof TileDimContr) {
+				((TileDimContr) te).unbind();
+				te.markDirty();
+			}
 		}
 		else if (stack.getItem() == ModItems.dimLinker) {
 			TileEntity te = world.getTileEntity(pos);
@@ -42,6 +52,7 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
 				if (te != null && te instanceof TileDimContr) {
 					((TileDimContr) te).setId(stack.getTagCompound().getInteger("dimid"));
+					te.markDirty();
 				}
 			}
 			else if (te instanceof TileDimContr && ((TileDimContr) te).getId() >= 0){
@@ -74,6 +85,17 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+
+		if (te != null && te instanceof TileDimContr) {
+			return getDefaultState().withProperty(POWER_LEVEL, ((TileDimContr) te).state);
+		}
+
+		return state;
+	}
+
+	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
@@ -83,4 +105,60 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 		return true;
 	}
 
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState().withProperty(POWER_LEVEL, EnumPowerLevel.getValue(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return ((EnumPowerLevel) state.getValue(POWER_LEVEL)).getIndex();
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[] {POWER_LEVEL});
+	}
+
+	public static enum EnumPowerLevel implements IStringSerializable {
+		EMPTY,
+		LOW,
+		MEDIUM,
+		HIGH,
+		TOO_HIGH;
+
+		public int getIndex() {
+			switch(this) {
+			case EMPTY: return 0;
+			case LOW: return 1;
+			case MEDIUM: return 2;
+			case HIGH: return 3;
+			case TOO_HIGH: return 4;
+			default: return 0;
+			}
+		}
+
+		public static EnumPowerLevel getValue(int i) {
+			switch(i) {
+			case 0:
+			default: return EMPTY;
+			case 1: return LOW;
+			case 2: return MEDIUM;
+			case 3: return HIGH;
+			case 4: return TOO_HIGH;
+			}
+		}
+
+		@Override
+		public String getName() {
+			switch(this) {
+			case EMPTY: return "empty";
+			case HIGH: return "high";
+			case LOW: return "low";
+			case MEDIUM: return "medium";
+			case TOO_HIGH: return "too_high";
+			default: return "NAV"; //Not a value
+			}
+		}
+	}
 }

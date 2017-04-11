@@ -1,0 +1,165 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"dim_contr": "temporalconvergence:dim_controller_medium",
+		"particle": "temporalconvergence:dim_controller_medium"
+	},
+
+    "elements": [
+        {
+            "name": "bottom_west",
+            "from": [0.0, 0.0, 0.0],
+            "to": [2.0, 2.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr", "cullface": "west" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr" },
+                "north": { "texture": "#dim_contr", "cullface": "north" },
+                "up": { "texture": "#dim_contr" },
+                "down": { "texture": "#dim_contr", "cullface": "down" }
+            }
+        },
+
+        {
+            "name": "bottom_north",
+            "from": [2.0, 0.0, 0.0],
+            "to": [14.0, 2.0, 2.0],
+            "faces": {
+                "south": { "texture": "#dim_contr" },
+                "north": { "texture": "#dim_contr", "cullface": "north" },
+                "up": { "texture": "#dim_contr" },
+                "down": { "texture": "#dim_contr", "cullface": "down" }
+            }
+        },
+
+        {
+            "name": "bottom_east",
+            "from": [14.0, 0.0, 0.0],
+            "to": [16.0, 2.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr", "cullface": "east" },
+                "north": { "texture": "#dim_contr", "cullface": "north" },
+                "up": { "texture": "#dim_contr" },
+                "down": { "texture": "#dim_contr", "cullface": "down" }
+            }
+        },
+
+        {
+            "name": "bottom_south",
+            "from": [2.0, 0.0, 14.0],
+            "to": [14.0, 2.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr", "cullface": "west" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr", "cullface": "east" },
+                "north": { "texture": "#dim_contr" },
+                "up": { "texture": "#dim_contr" },
+                "down": { "texture": "#dim_contr", "cullface": "down" }
+            }
+        },
+
+        {
+            "name": "middle_north_west",
+            "from": [0.0, 2.0, 0.0],
+            "to": [2.0, 14.0, 2.0],
+            "faces": {
+                "west": { "texture": "#dim_contr", "cullface": "west" },
+                "south": { "texture": "#dim_contr" },
+                "east": { "texture": "#dim_contr" },
+                "north": { "texture": "#dim_contr", "cullface": "north" }
+            }
+        },
+
+        {
+            "name": "middle_north_east",
+            "from": [14.0, 2.0, 0.0],
+            "to": [16.0, 14.0, 2.0],
+            "faces": {
+                "west": { "texture": "#dim_contr" },
+                "south": { "texture": "#dim_contr" },
+                "east": { "texture": "#dim_contr", "cullface": "east" },
+                "north": { "texture": "#dim_contr", "cullface": "north" }
+            }
+        },
+
+        {
+            "name": "middle_south_west",
+            "from": [0.0, 2.0, 14.0],
+            "to": [2.0, 14.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr", "cullface": "west" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr" },
+                "north": { "texture": "#dim_contr" }
+            }
+        },
+
+        {
+            "name": "middle_south_east",
+            "from": [14.0, 2.0, 14.0],
+            "to": [16.0, 14.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr", "cullface": "east" },
+                "north": { "texture": "#dim_contr" }
+            }
+        },
+
+        {
+            "name": "top_west",
+            "from": [0.0, 14.0, 0.0],
+            "to": [2.0, 16.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr", "cullface": "west" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr" },
+                "north": { "texture": "#dim_contr", "cullface": "north" },
+                "up": { "texture": "#dim_contr", "cullface": "up" },
+                "down": { "texture": "#dim_contr" }
+            }
+        },
+
+        {
+            "name": "top_north",
+            "from": [2.0, 14.0, 0.0],
+            "to": [14.0, 16.0, 2.0],
+            "faces": {
+                "south": { "texture": "#dim_contr" },
+                "north": { "texture": "#dim_contr", "cullface": "north" },
+                "up": { "texture": "#dim_contr", "cullface": "up" },
+                "down": { "texture": "#dim_contr" }
+            }
+        },
+
+        {
+            "name": "top_east",
+            "from": [14.0, 14.0, 0.0],
+            "to": [16.0, 16.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr", "cullface": "east" },
+                "north": { "texture": "#dim_contr", "cullface": "north" },
+                "up": { "texture": "#dim_contr", "cullface": "up" },
+                "down": { "texture": "#dim_contr" }
+            }
+        },
+
+        {
+            "name": "top_south",
+            "from": [2.0, 14.0, 14.0],
+            "to": [14.0, 16.0, 16.0],
+            "faces": {
+                "west": { "texture": "#dim_contr", "cullface": "west" },
+                "south": { "texture": "#dim_contr", "cullface": "south" },
+                "east": { "texture": "#dim_contr", "cullface": "east" },
+                "north": { "texture": "#dim_contr" },
+                "up": { "texture": "#dim_contr", "cullface": "up" },
+                "down": { "texture": "#dim_contr" }
+            }
+        }
+    ]
+}

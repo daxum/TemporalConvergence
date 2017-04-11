@@ -1,5 +1,9 @@
 {
 	"variants": {
-		"normal": {"model": "temporalconvergence:dim_controller"}
+		"power_level=empty": { "model": "temporalconvergence:dim_controller_empty" },
+		"power_level=low": { "model": "temporalconvergence:dim_controller_low" },
+		"power_level=medium": { "model": "temporalconvergence:dim_controller_medium" },
+		"power_level=high": { "model": "temporalconvergence:dim_controller_high" },
+		"power_level=too_high": { "model": "temporalconvergence:dim_controller_too_high" }
 	}
 }

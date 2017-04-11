@@ -224,6 +224,10 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		return frozenCount == 0;
 	}
 
+	public double getPowerRatio() {
+		return (double)amount / maxAmount;
+	}
+
 	public void addFreezer() {
 		frozenCount++;
 		sdh.markDirty();

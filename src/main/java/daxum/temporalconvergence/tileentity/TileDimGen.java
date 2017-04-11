@@ -36,8 +36,10 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	@Override
 	public void update() {
-		if (!prevPos.equals(pos))
+		if (!prevPos.equals(pos)) {
 			onLoad(); //Just in case
+			sendBlockUpdate();
+		}
 
 		prevScale = scale;
 		for (int i = 0; i < rotations.length; i++) {
