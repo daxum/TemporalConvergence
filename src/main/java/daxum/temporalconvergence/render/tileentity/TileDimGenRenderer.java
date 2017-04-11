@@ -4,16 +4,13 @@ import org.lwjgl.opengl.GL11;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileDimGen;
-import net.minecraft.client.Minecraft;
+import daxum.temporalconvergence.util.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 
 public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 	private final ResourceLocation clockTexture = new ResourceLocation(TemporalConvergence.MODID + ":textures/dimensional_generator_clock.png");
@@ -22,8 +19,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 	@Override
 	public void renderTileEntityAt(TileDimGen te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(transformX, transformY, transformZ);
-		GlStateManager.translate(0.5f, 0.95f, 0.5f);
+		GlStateManager.translate(transformX + 0.5f, transformY + 0.95f, transformZ + 0.5f);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		GlStateManager.enableNormalize(); //What does this even do?
 		GlStateManager.enableBlend();
@@ -42,9 +38,10 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.disableNormalize();
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
 
-		renderItem(te, transformX, transformY, transformZ);
+		RenderHelper.renderItem(te, te.getInventory().getStackInSlot(0), partialTicks);
+
+		GlStateManager.popMatrix();
 	}
 
 	//Rotations in degrees from 12:00 (clockwise)
@@ -96,22 +93,5 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 
 		tess.draw();
 		GlStateManager.popMatrix();
-	}
-
-	private void renderItem(TileDimGen te, double x, double y, double z) {
-		ItemStack stack = te.getInventory().getStackInSlot(0);
-
-		if (!stack.isEmpty()) {
-			float angle = (te.getWorld().getTotalWorldTime() + (te.getPos().getX() + te.getPos().getY() + te.getPos().getZ()) * 7) % 90 * 4.0f;
-			float bobHeight = (MathHelper.cos(angle * (float)Math.PI / 180.0f) + 1.0f) / 10.0f;
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(x + 0.5f, y + 1.0f + bobHeight, z + 0.5f);
-			GlStateManager.rotate(angle, 0.0f, 1.0f, 0.0f);
-
-			Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.GROUND);
-
-			GlStateManager.popMatrix();
-		}
 	}
 }

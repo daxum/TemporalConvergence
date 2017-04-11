@@ -11,6 +11,7 @@ import net.minecraft.util.ITickable;
 public class TileDimContr extends TileEntity implements ITickable {
 	protected int linkId = -1;
 	protected boolean didThisFreeze = false;
+	protected boolean isFrozen = false;
 	public float renderScale = 0; //Gets set by the tesr
 	public EnumPowerLevel state = EnumPowerLevel.EMPTY;
 
@@ -18,17 +19,21 @@ public class TileDimContr extends TileEntity implements ITickable {
 	public void update() {
 		if (!world.isRemote) {
 			EnumPowerLevel prevState = state;
+			boolean prevFrozen = isFrozen;
 
 			if (linkId == -1) {
 				state = EnumPowerLevel.EMPTY;
+				isFrozen = false;
 			}
 			else {
 				PowerDimension connected = PowerDimension.get(world, linkId);
 
 				if (connected == null) {
 					state = EnumPowerLevel.EMPTY;
+					isFrozen = false;
 				}
 				else {
+					isFrozen = !connected.isActive();
 					double ratio = connected.getPowerRatio();
 
 					if (ratio < 0.15)
@@ -42,7 +47,7 @@ public class TileDimContr extends TileEntity implements ITickable {
 				}
 			}
 
-			if (state != prevState)
+			if (state != prevState || isFrozen != prevFrozen)
 				sendBlockUpdate();
 		}
 	}
@@ -112,11 +117,16 @@ public class TileDimContr extends TileEntity implements ITickable {
 		return linkId;
 	}
 
+	public boolean isDimFrozen() {
+		return isFrozen;
+	}
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
 		comp.setInteger("linkid", linkId);
 		comp.setBoolean("freeze", didThisFreeze);
 		comp.setInteger("state", state.getIndex());
+		comp.setBoolean("isdimf", isFrozen);
 
 		return super.writeToNBT(comp);
 	}
@@ -129,6 +139,8 @@ public class TileDimContr extends TileEntity implements ITickable {
 			didThisFreeze = comp.getBoolean("freeze");
 		if (comp.hasKey("state"))
 			state = EnumPowerLevel.getValue(comp.getInteger("state"));
+		if (comp.hasKey("isdimf"))
+			isFrozen = comp.getBoolean("isdimf");
 
 		super.readFromNBT(comp);
 	}

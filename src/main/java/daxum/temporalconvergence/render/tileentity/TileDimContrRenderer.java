@@ -3,13 +3,17 @@ package daxum.temporalconvergence.render.tileentity;
 import org.lwjgl.opengl.GL11;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileDimContr;
+import daxum.temporalconvergence.util.RenderHelper;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -20,10 +24,32 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 	public static final float PIF = (float) Math.PI;
 	protected static boolean compiled = false;
 	protected static int displayList;
+	private static ItemStack boundDimLinker = new ItemStack(ModItems.dimLinker);
+	private static ItemStack unboundDimLinker = new ItemStack(ModItems.dimLinker);
+
+	static {
+		boundDimLinker.setTagCompound(new NBTTagCompound());
+		boundDimLinker.getTagCompound().setInteger("dimid", 0);
+	}
 
 	@Override
 	public void renderTileEntityAt(TileDimContr te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage) {
-		if (te.renderScale <= 0 && te.getId() == -1) return;
+		if (te.renderScale <= 0 && te.getId() == -1) {
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), unboundDimLinker, 0, 0, 0, partialTicks, false);
+			GlStateManager.popMatrix();
+			return;
+		}
+
+		if (te.isDimFrozen()) {
+			te.renderScale = 0;
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), boundDimLinker, 0, 0, 0, partialTicks, false);
+			GlStateManager.popMatrix();
+			return;
+		}
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(transformX + 0.5, transformY + 0.5, transformZ + 0.5);
