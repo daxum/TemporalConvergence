@@ -3,6 +3,8 @@ package daxum.temporalconvergence.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 public final class ModBlocks {
 	public static Block originStone;
@@ -24,7 +26,12 @@ public final class ModBlocks {
 		originStone = new BlockBase("origin_stone");
 		timeStone = new BlockBase("time_stone");
 		timeSteel = new BlockBase(Material.IRON, "time_steel", 5.0f, 30.0f, "pickaxe", 1, SoundType.METAL);
-		timeWoodPlanks = new BlockBase(Material.WOOD, "time_wood_planks", 2.0f, 15.0f, "axe", 0, SoundType.WOOD);
+		timeWoodPlanks = new BlockBase(Material.WOOD, "time_wood_planks", 2.0f, 15.0f, "axe", 0, SoundType.WOOD) {
+			@Override
+			public boolean isWood(IBlockAccess world, BlockPos pos) {
+				return world.getBlockState(pos).getBlock() == this;
+			}
+		};
 
 		timeWood = new BlockTimeWood();
 		timeSand = new BlockTimeSand();
