@@ -16,7 +16,6 @@
 				"south": { "texture": "#timeStone", "uv": [5.0, 16.0, 11.0, 4.0] },
 				"east": { "texture": "#timeStone", "uv": [5.0, 16.0, 11.0, 4.0] },
 				"north": { "texture": "#timeStone", "uv": [5.0, 16.0, 11.0, 4.0] },
-				"up": { "texture": "#timeStone", "cullface": "up" },
 				"down": { "texture": "#timeStone", "cullface": "down" }
 			}
 		},

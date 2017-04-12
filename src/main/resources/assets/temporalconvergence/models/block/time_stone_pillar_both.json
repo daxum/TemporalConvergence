@@ -1,0 +1,51 @@
+{
+	"parent": "minecraft:block/block",
+	
+	"textures": {
+		"timeStone": "temporalconvergence:time_stone",
+		"particle": "temporalconvergence:time_stone"
+	},
+	
+	"elements": [
+		{
+			"name": "pillar",
+			"from": [5.0, 2.0, 5.0],
+			"to": [11.0, 12.0, 11.0],
+			"faces": {
+				"west": { "texture": "#timeStone", "uv": [5.0, 4.0, 11.0, 12.0] },
+				"south": { "texture": "#timeStone", "uv": [5.0, 4.0, 11.0, 12.0] },
+				"east": { "texture": "#timeStone", "uv": [5.0, 4.0, 11.0, 12.0] },
+				"north": { "texture": "#timeStone", "uv": [5.0, 4.0, 11.0, 12.0] }
+			}
+		},
+		
+		
+		{
+			"name": "pillar_top",
+			"from": [3.0, 12.0, 3.0],
+			"to": [13.0, 16.0, 13.0],
+			"faces": {
+				"west": { "texture": "#timeStone" },
+				"south": { "texture": "#timeStone" },
+				"east": { "texture": "#timeStone" },
+				"north": { "texture": "#timeStone" },
+                "up": { "texture": "#timeStone", "cullface": "up" },
+				"down": { "texture": "#timeStone" }
+			}
+		},
+		
+		{
+			"name": "pillar_bottom",
+			"from": [0.0, 0.0, 0.0],
+			"to": [16.0, 2.0, 16.0],
+			"faces": {
+				"west": { "texture": "#timeStone" },
+				"south": { "texture": "#timeStone" },
+				"east": { "texture": "#timeStone" },
+				"north": { "texture": "#timeStone" },
+                "up": { "texture": "#timeStone" },
+				"down": { "texture": "#timeStone", "cullface": "down" }
+			}
+		}
+	]
+}
