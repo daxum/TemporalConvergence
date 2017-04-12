@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr> {
-	public static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID + ":textures/dim_contr_center.png");
+	public static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID + ":textures/sphere_textures.png");
 	public static final float MAX_RADIUS = 0.25f;
 	private static final ItemStack BOUND_LINKER = new ItemStack(ModItems.dimLinker);
 	private static final ItemStack UNBOUND_LINKER = new ItemStack(ModItems.dimLinker);

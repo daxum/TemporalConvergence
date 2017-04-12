@@ -69,7 +69,7 @@ public final class RenderHelper {
 
 		long key = (long)Float.floatToIntBits(texStartX) << 32; //Hopefully this won't collide...
 		key += Float.floatToIntBits(texWidthX);
-		key *= texStartY + texWidthY;
+		key *= texStartY + texWidthY * 13;
 		key += step;
 
 		Map<Long, Integer> currentMap = mesh ? sphereMeshRenderMap : sphereRenderMap;

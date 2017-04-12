@@ -27,6 +27,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 	protected boolean done =  false;
 	protected boolean successful = false;
 	protected boolean isLinkRecipe = false;
+	protected boolean afterSuccess = false;
+	protected boolean twoNS = false; //Used for rendering
 	protected int craftTicks = 0;
 	protected List<ItemStack> currentRecipe = new ArrayList<>();
 	public float scale = 1.0f;
@@ -94,6 +96,9 @@ public class TileDimGen extends TileEntity implements ITickable {
 				if (scale == 1.0f) {
 					crafting = false;
 					done = false;
+					afterSuccess = successful;
+					craftTicks = 15;
+
 					if (currentRecipe.size() > 1 && successful && !world.isRemote) {
 						if (isLinkRecipe) {
 							inventory.setStackInSlot(0, DimGenRecipes.getNewDimLink(world, currentRecipe));
@@ -105,10 +110,19 @@ public class TileDimGen extends TileEntity implements ITickable {
 					}
 
 					currentRecipe.clear();
+					sendBlockUpdate();
 				}
 			}
+
+			markDirty();
 		}
 		else {
+			if (afterSuccess) {
+				craftTicks--;
+				afterSuccess = craftTicks > 0;
+				markDirty();
+			}
+
 			setTime(0);
 		}
 	}
@@ -172,6 +186,12 @@ public class TileDimGen extends TileEntity implements ITickable {
 			if (shouldCraft(stacks, true)) {
 				crafting = true;
 				currentRecipe = stacks;
+
+				if (stacks.size() == 3 && isNorthSouth())
+					twoNS = true;
+				else
+					twoNS = false;
+
 				sendBlockUpdate();
 			}
 		}
@@ -212,6 +232,10 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 
 		return inputs;
+	}
+
+	public boolean isNorthSouth() {
+		return !getSpot(pedLocs[0]).isEmpty() && !getSpot(pedLocs[2]).isEmpty();
 	}
 
 	public boolean checkAmount(int amount) {
@@ -258,6 +282,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 		comp.setBoolean("linkrecipe", isLinkRecipe);
 		comp.setFloat("scale", scale);
 		comp.setInteger("ctick", craftTicks);
+		comp.setBoolean("twons", twoNS);
+		comp.setBoolean("aftersuccess", afterSuccess);
 
 		if (crafting)
 			for (int i = 0; i < currentRecipe.size(); i++)
@@ -282,6 +308,10 @@ public class TileDimGen extends TileEntity implements ITickable {
 			isLinkRecipe = comp.getBoolean("linkrecipe");
 		if (comp.hasKey("ctick"))
 			craftTicks = comp.getInteger("ctick");
+		if (comp.hasKey("twons"))
+			twoNS = comp.getBoolean("twons");
+		if (comp.hasKey("aftersuccess"))
+			afterSuccess = comp.getBoolean("aftersuccess");
 
 		currentRecipe.clear();
 		for (int i = 0; i < 13; i++) {
@@ -327,15 +357,46 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (scale > 1.0f)
+		if (scale > 1.0f || afterSuccess)
 			return fullClock;
 		return smallClock;
 	}
 
+	public int getRecipeSize() {
+		return currentRecipe.size();
+	}
+
+	public int getCraftTime() {
+		return 400 - craftTicks;
+	}
+
+	public int getCraftingStage() {
+		if (crafting) {
+			if (scale < 15.0f && !done)
+				return 1;
+			if (scale >= 15.0f)
+				return 2;
+
+			return 3;
+		}
+
+		if (afterSuccess)
+			return 4;
+
+		return 0;
+	}
+
+	public boolean wasSuccessful() {
+		return successful;
+	}
+
+	public boolean isNS() {
+		return twoNS;
+	}
 	@Override
 	public void onLoad() {
 		//Why didn't this work before, and why did it randomly start working?
-		fullClock = new AxisAlignedBB(pos.add(-6, 0, -6), pos.add(6, 1, 6));
+		fullClock = new AxisAlignedBB(pos.add(-6, -1, -6), pos.add(6, 2, 6));
 		smallClock = new AxisAlignedBB(pos, pos.add(1, 1, 1));
 
 		//Cache pedestal locations
