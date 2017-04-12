@@ -104,16 +104,18 @@ public final class DimGenRecipes {
 	}
 
 	public static boolean isValidDimLink(List<ItemStack> inputs) {
-		if (!(inputs.size() > 1 && inputs.size() <= 13) || inputs.get(0).getItem() != ModItems.dimLinker) return false;
+		if (inputs.size() == 13 && inputs.get(0).getItem() == ModItems.dimLinker) { //Has to have 12 inputs or rendering's a living hell
+			boolean hasInitial = false;
+			for (int i = 1; i < inputs.size(); i++)
+				if (getDimItem(inputs.get(i)) == null)
+					return false;
+				else if (getDimItem(inputs.get(i)).type == EnumBoostingType.INITIAL_AMOUNT)
+					hasInitial = true;
 
-		boolean hasInitial = false;
-		for (int i = 1; i < inputs.size(); i++)
-			if (getDimItem(inputs.get(i)) == null)
-				return false;
-			else if (getDimItem(inputs.get(i)).type == EnumBoostingType.INITIAL_AMOUNT)
-				hasInitial = true;
+			return hasInitial;
+		}
 
-		return hasInitial;
+		return false;
 	}
 
 	public static DimBuilderItem getDimItem(ItemStack stack) {
