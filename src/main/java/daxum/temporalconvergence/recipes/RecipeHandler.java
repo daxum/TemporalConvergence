@@ -40,7 +40,7 @@ public final class RecipeHandler {
 	}
 
 	public static void initDimGen() {
-		DimGenRecipes.addRecipe(new ItemStack(ModItems.timeFreezer), new ItemStack(Blocks.CHORUS_FLOWER), new ItemStack(ModItems.timeSteelIngot, 4), new ItemStack(ModItems.timeDust, 8));
+		DimGenRecipes.addRecipe(new ItemStack(ModItems.timeFreezer), new ItemStack(Blocks.CHORUS_FLOWER), new ItemStack(ModItems.timeSteelIngot, 4), new ItemStack(ModItems.timeDust, 4), new ItemStack(Items.DIAMOND, 4));
 		DimGenRecipes.addRecipe(new ItemStack(Items.COAL), new ItemStack(Items.DIAMOND), new ItemStack(Items.CLOCK, 8)); //Test recipe
 		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 4, 10)); //Test recipe
 		DimGenRecipes.addRecipe(new ItemStack(Items.CLAY_BALL), new ItemStack(Items.NETHER_STAR), new ItemStack(Blocks.DRAGON_EGG, 2)); //Balanced test recipe
