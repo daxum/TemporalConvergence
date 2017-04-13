@@ -1,5 +1,8 @@
 {
 	"variants": {
-		"normal": {"model": "temporalconvergence:dimensional_generator"}
+		"facing=north": {"model": "temporalconvergence:dimensional_generator"},
+		"facing=east": {"model": "temporalconvergence:dimensional_generator"},
+		"facing=south": {"model": "temporalconvergence:dimensional_generator"},
+		"facing=west": {"model": "temporalconvergence:dimensional_generator"}
 	}
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.block.BlockDimGen;
+import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.recipes.DimGenRecipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -438,6 +440,23 @@ public class TileDimGen extends TileEntity implements ITickable {
 	public boolean isNS() {
 		return twoNS;
 	}
+
+	public boolean canRemoveItem() {
+		return getCraftingStage() != 2 && (getCraftingStage() != 3 || getCraftingStage() == 3 && !successful);
+	}
+
+	public float getRotation() {
+		if (world.getBlockState(pos).getBlock() == ModBlocks.dimGen)
+			switch (world.getBlockState(pos).getValue(BlockDimGen.FACING)) {
+			default:
+			case NORTH: return 0;
+			case EAST: return 270;
+			case SOUTH: return 180;
+			case WEST: return 90;
+			}
+		return 0;
+	}
+
 	@Override
 	public void onLoad() {
 		//Why didn't this work before, and why did it randomly start working?
