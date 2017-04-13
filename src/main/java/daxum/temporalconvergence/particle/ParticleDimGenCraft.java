@@ -17,12 +17,12 @@ public class ParticleDimGenCraft extends Particle {
 		super(world, posX, posY, posZ);
 		setRBGColorF(0.1961f, 0.6627f, 0.7176f); //Actually RGB, appears to be typo
 		canCollide = false;
-		particleMaxAge = 150;
+		speed = Math.random() * 0.06 + 0.09;
+		particleMaxAge = (int) (Math.sqrt((targetX - posX) * (targetX - posX) + (targetY - posY) * (targetY - posY) + (targetZ - posZ) * (targetZ - posZ)) / speed + 20);
 
 		tx = targetX;
 		ty = targetY;
 		tz = targetZ;
-		speed = Math.random() * 0.06 + 0.09;
 	}
 
 	@Override
