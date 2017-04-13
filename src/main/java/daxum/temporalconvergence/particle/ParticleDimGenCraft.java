@@ -1,7 +1,6 @@
 package daxum.temporalconvergence.particle;
 
 import net.minecraft.client.particle.Particle;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,12 +34,11 @@ public class ParticleDimGenCraft extends Particle {
 			setExpired();
 		}
 
-		Vec3d vec = new Vec3d(tx - posX, ty - posY, tz - posZ);
-		Vec3d travelVec = vec.normalize().scale(speed);
+		double distance = Math.sqrt((tx - posX) * (tx - posX) + (ty - posY) * (ty - posY) + (tz - posZ) * (tz - posZ));
 
-		motionX = travelVec.xCoord;
-		motionY = travelVec.yCoord;
-		motionZ = travelVec.zCoord;
+		motionX = (tx - posX) / distance * speed;
+		motionY = (ty - posY) / distance * speed;
+		motionZ = (tz - posZ) / distance * speed;
 
 		if (Math.abs(motionX) > Math.abs(tx - posX))
 			motionX = tx - posX;
