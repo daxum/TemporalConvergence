@@ -1,5 +1,7 @@
 package daxum.temporalconvergence.proxy;
 
+import net.minecraft.world.World;
+
 public class ServerProxy implements IProxy{
 
 	@Override
@@ -13,4 +15,7 @@ public class ServerProxy implements IProxy{
 
 	@Override
 	public void registerEntityRenderer() {}
+
+	@Override
+	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {}
 }

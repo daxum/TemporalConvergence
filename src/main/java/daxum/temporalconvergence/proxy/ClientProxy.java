@@ -4,10 +4,12 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.fluid.FluidRenderRegister;
 import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.particle.ParticleDimGenCraft;
 import daxum.temporalconvergence.render.entity.EntityRenderRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.world.World;
 
 public class ClientProxy implements IProxy {
 
@@ -53,5 +55,11 @@ public class ClientProxy implements IProxy {
 	public void registerRender(Item item) {
 		ModelResourceLocation mrl = new ModelResourceLocation(TemporalConvergence.MODID + ":" + item.getUnlocalizedName().substring(5), "inventory");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, mrl);
+	}
+
+	@Override
+	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {
+		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDimGenCraft(world, posX, posY, posZ, targetX, targetY, targetZ));
+
 	}
 }

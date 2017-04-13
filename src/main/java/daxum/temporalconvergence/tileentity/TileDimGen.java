@@ -3,6 +3,7 @@ package daxum.temporalconvergence.tileentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.recipes.DimGenRecipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -75,6 +77,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 					sendBlockUpdate();
 				}
 				else {
+					if (craftTicks > 10)
+						spawnParticles();
 					setTime(2);
 					craftTicks--;
 					if (craftTicks <= 0) {
@@ -176,6 +180,47 @@ public class TileDimGen extends TileEntity implements ITickable {
 				for (int i = 1; i < rotations.length; i++)
 					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
 			}
+		}
+	}
+
+	private void spawnParticles() {
+		if (!world.isRemote) return;
+
+		switch(currentRecipe.size() - 1) {
+		case 2:
+			if (twoNS) {
+				spawnParticlesAt(pedLocs[0]);
+				spawnParticlesAt(pedLocs[2]);
+			}
+			else {
+				spawnParticlesAt(pedLocs[1]);
+				spawnParticlesAt(pedLocs[3]);
+			}
+			break;
+
+		case 4:
+			for (int i = 0; i < 4; i++)
+				spawnParticlesAt(pedLocs[i]);
+			break;
+		case 8:
+			for (int i = 4; i < 12; i++)
+				spawnParticlesAt(pedLocs[i]);
+			break;
+		case 12:
+			for (int i = 0; i < 12; i++)
+				spawnParticlesAt(pedLocs[i]);
+			break;
+		}
+	}
+
+	private void spawnParticlesAt(BlockPos toPos) {
+		int number = (int) (10 * MathHelper.sin(180.0f * (craftTicks / 400.0f) * (float)Math.PI / 180.0f));
+
+		for (int i = 0; i < number; i++) {
+			double offX = Math.random() * 0.5 + 0.25;
+			double offY = Math.random() * 0.25 + 1.2;
+			double offZ = Math.random() * 0.5 + 0.25;
+			TemporalConvergence.proxy.spawnDimGenParticle(world, toPos.getX() + offX, toPos.getY() + offY, toPos.getZ() + offZ, pos.getX() + 0.5, pos.getY() + 1.325, pos.getZ() + 0.5);
 		}
 	}
 
