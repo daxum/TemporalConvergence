@@ -113,7 +113,7 @@ public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
 			enumfacing = EnumFacing.NORTH;
-	}
+		}
 
 		return getDefaultState().withProperty(FACING, enumfacing);
 	}
