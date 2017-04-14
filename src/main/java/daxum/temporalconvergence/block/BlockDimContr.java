@@ -18,7 +18,6 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	public static final PropertyEnum POWER_LEVEL = PropertyEnum.create("power_level", EnumPowerLevel.class);
@@ -26,7 +25,6 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	public BlockDimContr() {
 		super("dim_controller", 5.0f, 30.0f, "pickaxe", 2);
 		setDefaultState(blockState.getBaseState().withProperty(POWER_LEVEL, EnumPowerLevel.EMPTY));
-		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
 	}
 
 	@Override

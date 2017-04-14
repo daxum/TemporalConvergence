@@ -22,7 +22,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockDimGen extends BlockBase implements ITileEntityProvider {
@@ -32,7 +31,6 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	public BlockDimGen() {
 		super("dimensional_generator", 5.0f, 30.0f, "pickaxe", 2);
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		GameRegistry.registerTileEntity(TileDimGen.class, "dimensional_generator");
 	}
 
 	@Override

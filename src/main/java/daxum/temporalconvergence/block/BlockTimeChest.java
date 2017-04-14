@@ -25,7 +25,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
@@ -35,7 +34,6 @@ public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
 	public BlockTimeChest() {
 		super(Material.ROCK, "time_chest", 3.5f, 25.0f, "pickaxe", 0, SoundType.STONE);
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
 	}
 
 

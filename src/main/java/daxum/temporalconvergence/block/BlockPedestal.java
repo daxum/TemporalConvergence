@@ -14,7 +14,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockPedestal extends BlockBase implements ITileEntityProvider {
@@ -22,7 +21,6 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 
 	public BlockPedestal() {
 		super("time_pedestal", 2.0f, 10.0f, "pickaxe", 1);
-		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
 	}
 
 	@Override
