@@ -20,10 +20,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = "9001.8", acceptedMinecraftVersions="[1.11.2]")
+@Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = TemporalConvergence.VERSION, acceptedMinecraftVersions="[1.11.2]")
 public class TemporalConvergence {
 	public static final String MODID = "temporalconvergence"; //Remember to change creative tab name in ModItems and lang file if changed.
 	public static final String NAME = "Temporal Convergence";
+	public static final String VERSION = "9001.8"; //TODO: Make gradle put in version on build
 
 	@Instance(MODID)
 	public static TemporalConvergence instance;
