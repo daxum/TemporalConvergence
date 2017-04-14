@@ -7,7 +7,6 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemTimeWoodPick extends ItemPickaxe {
 	public ItemTimeWoodPick() {
@@ -15,7 +14,6 @@ public class ItemTimeWoodPick extends ItemPickaxe {
 		setCreativeTab(ModItems.TEMPCONVTAB);
 		setUnlocalizedName("time_wood_pickaxe");
 		setRegistryName("time_wood_pickaxe");
-		GameRegistry.register(this);
 	}
 
 	@Override

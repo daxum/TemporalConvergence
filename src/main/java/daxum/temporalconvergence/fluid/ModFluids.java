@@ -3,9 +3,9 @@ package daxum.temporalconvergence.fluid;
 import net.minecraftforge.fluids.Fluid;
 
 public final class ModFluids {
-	public static Fluid timeWater;
+	public static final Fluid TIME_WATER;
 
-	public static void init() {
-		timeWater = new FluidTimeWater();
+	static {
+		TIME_WATER = new FluidTimeWater();
 	}
 }

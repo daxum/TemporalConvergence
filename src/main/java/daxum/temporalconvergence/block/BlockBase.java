@@ -4,8 +4,6 @@ import daxum.temporalconvergence.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class BlockBase extends Block {
 	public BlockBase (Material material, String unlocalizedName, float hardness, float resistance, String tool, int level, SoundType sound) {
@@ -17,8 +15,6 @@ public class BlockBase extends Block {
 		setResistance(resistance);
 		setHarvestLevel(tool, level);
 		setSoundType(sound);
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(this.getRegistryName()));
 	}
 
 	public BlockBase (String unlocalizedName, float hardness, float resistance, String tool, int level) {

@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 
 public final class FluidRenderRegister {
 	public static void init() {
-		registerFluid((BlockFluidClassic) ModBlocks.timeWater, "time_water");
+		registerFluid((BlockFluidClassic) ModBlocks.TIME_WATER, "time_water");
 	}
 
 	private static void registerFluid(BlockFluidClassic block, String name) {

@@ -95,7 +95,7 @@ public final class DimGenRecipes {
 				MathHelper.floor((cumulativeStorage + 1) / 96.0 * 8.0) + 1).id; //Time loss frequency
 		//Add 1 to cumulativeStorage above so that 11 tier 1's give time loss frequency of 2 (equation gives ~1.92 otherwise)
 
-		ItemStack stack = new ItemStack(ModItems.dimLinker);
+		ItemStack stack = new ItemStack(ModItems.DIM_LINKER);
 
 		stack.setTagCompound(new NBTTagCompound());
 		stack.getTagCompound().setInteger("dimid", id);
@@ -104,7 +104,7 @@ public final class DimGenRecipes {
 	}
 
 	public static boolean isValidDimLink(List<ItemStack> inputs) {
-		if (inputs.size() == 13 && inputs.get(0).getItem() == ModItems.dimLinker) { //Has to have 12 inputs or rendering's a living hell
+		if (inputs.size() == 13 && inputs.get(0).getItem() == ModItems.DIM_LINKER) { //Has to have 12 inputs or rendering's a living hell
 			boolean hasInitial = false;
 			for (int i = 1; i < inputs.size(); i++)
 				if (getDimItem(inputs.get(i)) == null)

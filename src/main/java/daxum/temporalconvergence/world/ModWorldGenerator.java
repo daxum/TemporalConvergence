@@ -37,8 +37,8 @@ public class ModWorldGenerator implements IWorldGenerator {
 			BlockPos downPos = pos.down();
 			IBlockState state = world.getBlockState(downPos);
 
-			if (world.isAirBlock(pos) && state.getBlock().canSustainPlant(state, world, downPos, EnumFacing.UP, (IPlantable) ModBlocks.timePlant)) {
-				world.setBlockState(pos, ModBlocks.timePlant.getDefaultState(), 2);
+			if (world.isAirBlock(pos) && state.getBlock().canSustainPlant(state, world, downPos, EnumFacing.UP, (IPlantable) ModBlocks.TIME_PLANT)) {
+				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState(), 2);
 			}
 		}
 	}

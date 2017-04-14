@@ -3,11 +3,8 @@ package daxum.temporalconvergence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.entity.ModEntities;
-import daxum.temporalconvergence.fluid.ModFluids;
 import daxum.temporalconvergence.gui.GuiHandler;
-import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.proxy.IProxy;
 import daxum.temporalconvergence.recipes.RecipeHandler;
 import daxum.temporalconvergence.world.DimensionHandler;
@@ -43,9 +40,6 @@ public class TemporalConvergence {
 	@SuppressWarnings("unused")
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ModItems.init();
-		ModFluids.init();
-		ModBlocks.init();
 		ModEntities.init();
 
 		RecipeHandler.initOreDict();
@@ -59,9 +53,6 @@ public class TemporalConvergence {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-
-		proxy.registerItemRenderer();
-		proxy.registerBlockRenderer();
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 0);
 		RecipeHandler.init();

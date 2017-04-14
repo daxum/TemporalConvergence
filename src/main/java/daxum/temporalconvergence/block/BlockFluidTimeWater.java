@@ -6,23 +6,19 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockFluidTimeWater extends BlockFluidClassic {
 	public BlockFluidTimeWater() {
-		super(ModFluids.timeWater, Material.WATER);
+		super(ModFluids.TIME_WATER, Material.WATER);
 		setUnlocalizedName("time_water");
 		setRegistryName("time_water");
-		GameRegistry.register(this);
-		GameRegistry.register(new ItemBlock(this).setRegistryName(this.getRegistryName()));
 	}
 
 	@Override
@@ -73,15 +69,15 @@ public class BlockFluidTimeWater extends BlockFluidClassic {
 	}
 
 	private void convert(World world, BlockPos pos, Block toConvert) {
-		if (toConvert == ModBlocks.timeWood || toConvert == ModBlocks.timeSteel)
+		if (toConvert == ModBlocks.TIME_WOOD || toConvert == ModBlocks.TIME_STEEL)
 			return;
 
 		if (OreDictionary.containsMatch(false, OreDictionary.getOres("blockIron"), new ItemStack(toConvert, 1, OreDictionary.WILDCARD_VALUE))) {
-			world.setBlockState(pos, ModBlocks.timeSteel.getDefaultState());
+			world.setBlockState(pos, ModBlocks.TIME_STEEL.getDefaultState());
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 3.4f);
 		}
 		else if (OreDictionary.containsMatch(false, OreDictionary.getOres("logWood"), new ItemStack(toConvert, 1, OreDictionary.WILDCARD_VALUE))) {
-			world.setBlockState(pos, ModBlocks.timeWood.getDefaultState());
+			world.setBlockState(pos, ModBlocks.TIME_WOOD.getDefaultState());
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 3.4f);
 		}
 	}

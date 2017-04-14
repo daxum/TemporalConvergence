@@ -7,7 +7,6 @@ import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemTimeWoodAxe extends ItemAxe {
 	public ItemTimeWoodAxe() {
@@ -15,7 +14,6 @@ public class ItemTimeWoodAxe extends ItemAxe {
 		setCreativeTab(ModItems.TEMPCONVTAB);
 		setUnlocalizedName("time_wood_axe");
 		setRegistryName("time_wood_axe");
-		GameRegistry.register(this);
 	}
 
 	@Override

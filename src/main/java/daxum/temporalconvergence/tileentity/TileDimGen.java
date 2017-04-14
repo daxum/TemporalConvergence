@@ -446,7 +446,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 	}
 
 	public float getRotation() {
-		if (world.getBlockState(pos).getBlock() == ModBlocks.dimGen)
+		if (world.getBlockState(pos).getBlock() == ModBlocks.DIM_GEN)
 			switch (world.getBlockState(pos).getValue(BlockDimGen.FACING)) {
 			default:
 			case NORTH: return 0;

@@ -17,7 +17,7 @@ public class ItemTimeDust extends ItemBase {
 			return false;
 
 		if (item.getEntityWorld().getBlockState(item.getPosition()) == Blocks.WATER.getDefaultState()) {
-			item.getEntityWorld().setBlockState(item.getPosition(), ModBlocks.timeWater.getDefaultState());
+			item.getEntityWorld().setBlockState(item.getPosition(), ModBlocks.TIME_WATER.getDefaultState());
 			Block justPlaced = item.getEntityWorld().getBlockState(item.getPosition()).getBlock();
 
 			((BlockFluidTimeWater)justPlaced).checkAllButUp(item.getEntityWorld(), item.getPosition());

@@ -8,9 +8,6 @@ public class ServerProxy implements IProxy{
 	public void registerItemRenderer() {}
 
 	@Override
-	public void registerBlockRenderer() {}
-
-	@Override
 	public void registerFluidRenderer() {}
 
 	@Override

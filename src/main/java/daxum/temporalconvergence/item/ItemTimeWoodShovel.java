@@ -15,7 +15,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemTimeWoodShovel extends ItemSpade {
 	public ItemTimeWoodShovel() {
@@ -23,7 +22,6 @@ public class ItemTimeWoodShovel extends ItemSpade {
 		setCreativeTab(ModItems.TEMPCONVTAB);
 		setUnlocalizedName("time_wood_shovel");
 		setRegistryName("time_wood_shovel");
-		GameRegistry.register(this);
 	}
 
 	@Override

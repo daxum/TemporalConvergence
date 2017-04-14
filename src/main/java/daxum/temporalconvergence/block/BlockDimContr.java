@@ -46,7 +46,7 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 				te.markDirty();
 			}
 		}
-		else if (stack.getItem() == ModItems.dimLinker) {
+		else if (stack.getItem() == ModItems.DIM_LINKER) {
 			TileEntity te = world.getTileEntity(pos);
 
 			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
