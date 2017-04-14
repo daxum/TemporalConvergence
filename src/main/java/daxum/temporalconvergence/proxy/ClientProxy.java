@@ -15,6 +15,7 @@ public class ClientProxy implements IProxy {
 
 	@Override
 	public void registerItemRenderer() {
+		//Items
 		registerRender(ModItems.TIME_PEARL);
 		registerRender(ModItems.TIME_STEEL_INGOT);
 		registerRender(ModItems.TIME_DUST);
@@ -57,6 +58,5 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {
 		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDimGenCraft(world, posX, posY, posZ, targetX, targetY, targetZ));
-
 	}
 }
