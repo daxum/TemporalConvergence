@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class TemporalConvergence {
 	public static final String MODID = "temporalconvergence"; //Remember to change creative tab name in ModItems and lang file if changed.
 	public static final String NAME = "Temporal Convergence";
-	public static final String VERSION = "9001.8";
+	public static final String VERSION = "${version}";
 
 	@Instance(MODID)
 	public static TemporalConvergence instance;

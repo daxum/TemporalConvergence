@@ -5,7 +5,7 @@
   "description": "Still an incomplete mod",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://github.com/daxum/temporalconvergence",
+  "url": "https://github.com/daxum/TemporalConvergence",
   "updateUrl": "",
   "authorList": ["daxum"],
   "credits": "README.txt. It saved everything.",
