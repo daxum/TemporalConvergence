@@ -75,8 +75,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 			else {
 				ioRate += Math.max(powerInserted, powerDrawn) / 10 + 1;
 			}
-		}
-		//If i/o rate needs decreasing
+		} //If i/o rate needs decreasing
 		else if (powerDrawn <= ioRate * 0.7 || powerInserted <= ioRate * 0.7) {
 			if (ioRate > 0)
 				ioRate--;
