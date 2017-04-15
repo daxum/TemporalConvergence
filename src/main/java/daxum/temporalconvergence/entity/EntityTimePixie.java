@@ -144,8 +144,10 @@ public class EntityTimePixie extends EntityFlying {
 			List<AxisAlignedBB> collisions = getPossibleCollisions(nextParentBB);
 
 			for (int i = 0; i < collisions.size(); i++) {
-				if (collisions.get(i).intersectsWith(nextParentBB))
+				if (collisions.get(i).intersectsWith(nextParentBB)) {
 					parent.moveHelper.action = Action.WAIT;
+					break;
+				}
 			}
 		}
 
