@@ -160,6 +160,10 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 			amount -= returnAmount;
 		}
 
+		if (amount <= 0) {
+			sdh.removePowerDim(id);
+		}
+
 		powerDrawn += returnAmount;
 		sdh.markDirty();
 		return returnAmount;
