@@ -1,0 +1,60 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"tex": "temporalconvergence:early_future_block",
+		"effect": "temporalconvergence:early_future_stairs_effect",
+		"particle": "temporalconvergence:early_future_block"
+	},
+	
+	"elements": [
+	    {
+	        "name": "bottom_front",
+	        "from": [0.0, 0.0, 0.0],
+	        "to": [16.0, 8.0, 8.0],
+	        "faces": {
+	            "north": {"texture": "#tex", "cullface": "north"},
+	            "east": {"texture": "#tex", "cullface": "east"},
+	            "west": {"texture": "#tex", "cullface": "west"},
+	            "up": {"texture": "#tex"},
+	            "down": {"texture": "#tex", "cullface": "down"}
+	        }
+	    },
+	
+	    {
+	        "name": "bottom_back",
+	        "from": [0.0, 0.0, 8.0],
+	        "to": [16.0, 8.0, 16.0],
+	        "faces": {
+	            "east": {"texture": "#tex", "cullface": "east"},
+	            "south": {"texture": "#tex", "cullface": "south"},
+	            "west": {"texture": "#tex", "cullface": "west"},
+	            "down": {"texture": "#tex", "cullface": "down"}
+	        }
+	    },
+	
+	    {
+	        "name": "top",
+	        "from": [0.0, 8.0, 8.0],
+	        "to": [16.0, 16.0, 16.0],
+	        "faces": {
+	            "north": {"texture": "#tex"},
+	            "east": {"texture": "#tex", "cullface": "east"},
+	            "south": {"texture": "#tex", "cullface": "south"},
+	            "west": {"texture": "#tex", "cullface": "west"},
+	            "up": {"texture": "#tex", "cullface": "up"}
+	        }
+	    },
+	    
+	    {
+	        "name": "effect_box",
+	        "from": [7.0, 8.0, 1.0],
+	        "to": [9.0, 15.0, 8.0],
+	        "faces": {
+	            "north": {"texture": "#effect"},
+	            "east": {"texture": "#effect"},
+	            "west": {"texture": "#effect"},
+	            "up": {"texture": "#effect"}
+	        }
+	    }
+	]
+}

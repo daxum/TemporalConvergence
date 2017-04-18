@@ -48,7 +48,7 @@ public class TemporalConvergence {
 	@Instance(MODID)
 	public static TemporalConvergence instance;
 
-	public static final Logger LOGGER = LogManager.getLogger("tempConv"); //Why on earth did I choose a 19 letter name?
+	public static final Logger LOGGER = LogManager.getLogger(MODID); //Why on earth did I choose a 19 letter name?
 
 	@SidedProxy(clientSide = "daxum.temporalconvergence.proxy.ClientProxy", serverSide = "daxum.temporalconvergence.proxy.ServerProxy")
 	public static IProxy proxy;

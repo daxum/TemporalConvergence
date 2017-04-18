@@ -41,6 +41,8 @@ public final class ModBlocks {
 	public static final Block TIME_STONE_PILLAR;
 	public static final Block TEST_TELEPORTER;
 	public static final Block DIM_CONTR;
+	public static final Block EARLY_FUTURE_BLOCK;
+	public static final Block FANCY_EARLY_FUTURE_STAIRS;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -63,22 +65,26 @@ public final class ModBlocks {
 		TIME_STONE_PILLAR = new BlockTimeStonePillar();
 		TEST_TELEPORTER = new BlockTestTeleporter();
 		DIM_CONTR = new BlockDimContr();
+		EARLY_FUTURE_BLOCK = new BlockEarlyFuture();
+		FANCY_EARLY_FUTURE_STAIRS = new BlockFancyEarlyFutureStairs();
 	}
 
 	public static void registerBlocks(IForgeRegistry blockRegistry) {
-		blockRegistry.register(ModBlocks.DIM_CONTR);
-		blockRegistry.register(ModBlocks.DIM_GEN);
-		blockRegistry.register(ModBlocks.ORIGIN_STONE);
-		blockRegistry.register(ModBlocks.PEDESTAL);
-		blockRegistry.register(ModBlocks.TEST_TELEPORTER);
-		blockRegistry.register(ModBlocks.TIME_CHEST);
-		blockRegistry.register(ModBlocks.TIME_PLANT);
-		blockRegistry.register(ModBlocks.TIME_SAND);
-		blockRegistry.register(ModBlocks.TIME_STEEL);
-		blockRegistry.register(ModBlocks.TIME_STONE);
-		blockRegistry.register(ModBlocks.TIME_STONE_PILLAR);
-		blockRegistry.register(ModBlocks.TIME_WATER);
-		blockRegistry.register(ModBlocks.TIME_WOOD);
-		blockRegistry.register(ModBlocks.TIME_WOOD_PLANKS);
+		blockRegistry.register(DIM_CONTR);
+		blockRegistry.register(DIM_GEN);
+		blockRegistry.register(ORIGIN_STONE);
+		blockRegistry.register(PEDESTAL);
+		blockRegistry.register(TEST_TELEPORTER);
+		blockRegistry.register(TIME_CHEST);
+		blockRegistry.register(TIME_PLANT);
+		blockRegistry.register(TIME_SAND);
+		blockRegistry.register(TIME_STEEL);
+		blockRegistry.register(TIME_STONE);
+		blockRegistry.register(TIME_STONE_PILLAR);
+		blockRegistry.register(TIME_WATER);
+		blockRegistry.register(TIME_WOOD);
+		blockRegistry.register(TIME_WOOD_PLANKS);
+		blockRegistry.register(EARLY_FUTURE_BLOCK);
+		blockRegistry.register(FANCY_EARLY_FUTURE_STAIRS);
 	}
 }

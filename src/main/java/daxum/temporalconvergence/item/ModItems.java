@@ -62,14 +62,14 @@ public final class ModItems {
 	}
 
 	public static void registerItems(IForgeRegistry itemRegistry) {
-		itemRegistry.register(ModItems.DIM_LINKER);
-		itemRegistry.register(ModItems.TIME_DUST);
-		itemRegistry.register(ModItems.TIME_FREEZER);
-		itemRegistry.register(ModItems.TIME_PEARL);
-		itemRegistry.register(ModItems.TIME_STEEL_INGOT);
-		itemRegistry.register(ModItems.TIME_WOOD_AXE);
-		itemRegistry.register(ModItems.TIME_WOOD_PICK);
-		itemRegistry.register(ModItems.TIME_WOOD_SHOVEL);
+		itemRegistry.register(DIM_LINKER);
+		itemRegistry.register(TIME_DUST);
+		itemRegistry.register(TIME_FREEZER);
+		itemRegistry.register(TIME_PEARL);
+		itemRegistry.register(TIME_STEEL_INGOT);
+		itemRegistry.register(TIME_WOOD_AXE);
+		itemRegistry.register(TIME_WOOD_PICK);
+		itemRegistry.register(TIME_WOOD_SHOVEL);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
@@ -86,5 +86,7 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WATER).setRegistryName(ModBlocks.TIME_WATER.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WOOD).setRegistryName(ModBlocks.TIME_WOOD.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WOOD_PLANKS).setRegistryName(ModBlocks.TIME_WOOD_PLANKS.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BLOCK).setRegistryName(ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.FANCY_EARLY_FUTURE_STAIRS.getRegistryName()));
 	}
 }

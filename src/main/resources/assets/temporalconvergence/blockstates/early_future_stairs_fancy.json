@@ -1,0 +1,16 @@
+{
+	"variants": {
+		"facing=north,part=top": { "model": "temporalconvergence:early_future_stairs_fancy", "y": 180 },
+		"facing=east,part=top": { "model": "temporalconvergence:early_future_stairs_fancy", "y": 270 },
+		"facing=south,part=top": { "model": "temporalconvergence:early_future_stairs_fancy" },
+		"facing=west,part=top": { "model": "temporalconvergence:early_future_stairs_fancy", "y": 90 },
+		"facing=north,part=side": { "model": "temporalconvergence:early_future_stairs_fancy_side", "y": 180 },
+		"facing=east,part=side": { "model": "temporalconvergence:early_future_stairs_fancy_side", "y": 270 },
+		"facing=south,part=side": { "model": "temporalconvergence:early_future_stairs_fancy_side" },
+		"facing=west,part=side": { "model": "temporalconvergence:early_future_stairs_fancy_side", "y": 90 },
+		"facing=north,part=bottom": { "model": "temporalconvergence:early_future_stairs_fancy", "x": 180 },
+		"facing=east,part=bottom": { "model": "temporalconvergence:early_future_stairs_fancy", "y": 90, "x": 180 },
+		"facing=south,part=bottom": { "model": "temporalconvergence:early_future_stairs_fancy", "y": 180, "x": 180 },
+		"facing=west,part=bottom": { "model": "temporalconvergence:early_future_stairs_fancy", "y": 270, "x": 180 }
+	}
+}

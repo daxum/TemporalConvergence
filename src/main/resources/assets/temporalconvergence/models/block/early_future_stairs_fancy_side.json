@@ -1,0 +1,63 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"tex": "temporalconvergence:early_future_block",
+		"effect": "temporalconvergence:early_future_stairs_effect",
+		"particle": "temporalconvergence:early_future_block"
+	},
+	
+	"elements": [
+	    {
+	        "name": "i_dont_even_know_anymore",
+	        "from": [0.0, 0.0, 0.0],
+	        "to": [8.0, 16.0, 8.0],
+	        "faces": {
+	            "north": {"texture": "#tex", "cullface": "north"},
+	            "east": {"texture": "#tex"},
+	            "west": {"texture": "#tex", "cullface": "west"},
+	            "up": {"texture": "#tex", "cullface": "up"},
+	            "down": {"texture": "#tex", "cullface": "down"}
+	        }
+	    },
+	
+	    {
+	        "name": "why_cant_you_rotate_z",
+	        "from": [0.0, 0.0, 8.0],
+	        "to": [8.0, 16.0, 16.0],
+	        "faces": {
+	            "north": {"texture": "#tex", "cullface": "north"},
+	            "east": {"texture": "#tex", "cullface": "east"},
+	            "south": {"texture": "#tex", "cullface": "south"},
+	            "west": {"texture": "#tex", "cullface": "west"},
+	            "up": {"texture": "#tex", "cullface": "up"},
+	            "down": {"texture": "#tex", "cullface": "down"}
+	        }
+	    },
+	
+	    {
+	        "name": "****",
+	        "from": [8.0, 0.0, 8.0],
+	        "to": [16.0, 16.0, 16.0],
+	        "faces": {
+	            "north": {"texture": "#tex"},
+	            "east": {"texture": "#tex", "cullface": "east"},
+	            "south": {"texture": "#tex", "cullface": "south"},
+	            "west": {"texture": "#tex", "cullface": "west"},
+	            "up": {"texture": "#tex", "cullface": "up"},
+	            "down": {"texture": "#tex", "cullface": "down"}
+	        }
+	    },
+	    
+	    {
+	        "name": "effect_box",
+	        "from": [8.0, 7.0, 1.0],
+	        "to": [15.0, 9.0, 8.0],
+	        "faces": {
+	            "north": {"texture": "#effect"},
+	            "east": {"texture": "#effect"},
+	            "up": {"texture": "#effect"},
+	            "down": {"texture": "#effect"}
+	        }
+	    }
+	]
+}
