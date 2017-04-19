@@ -43,7 +43,6 @@ public final class ModBlocks {
 	public static final Block DIM_CONTR;
 	public static final Block EARLY_FUTURE_BLOCK;
 	public static final Block FANCY_EARLY_FUTURE_STAIRS;
-	public static final Block HOLO_STAIRS;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -68,7 +67,6 @@ public final class ModBlocks {
 		DIM_CONTR = new BlockDimContr();
 		EARLY_FUTURE_BLOCK = new BlockEarlyFuture();
 		FANCY_EARLY_FUTURE_STAIRS = new BlockFancyEarlyFutureStairs();
-		HOLO_STAIRS = new BlockHoloStairs();
 	}
 
 	public static void registerBlocks(IForgeRegistry blockRegistry) {
@@ -88,6 +86,5 @@ public final class ModBlocks {
 		blockRegistry.register(TIME_WOOD_PLANKS);
 		blockRegistry.register(EARLY_FUTURE_BLOCK);
 		blockRegistry.register(FANCY_EARLY_FUTURE_STAIRS);
-		blockRegistry.register(HOLO_STAIRS);
 	}
 }
