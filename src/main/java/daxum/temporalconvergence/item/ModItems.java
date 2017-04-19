@@ -48,6 +48,7 @@ public final class ModItems {
 	public static final Item TIME_WOOD_AXE;
 	public static final Item TIME_FREEZER;
 	public static final Item DIM_LINKER;
+	public static final Item EARLY_FUTURE_DOOR;
 
 	static {
 		TIME_PEARL = new ItemBase("time_pearl");
@@ -59,6 +60,7 @@ public final class ModItems {
 		TIME_WOOD_AXE = new ItemTimeWoodAxe();
 		TIME_FREEZER = new ItemTimeFreezer();
 		DIM_LINKER = new ItemDimensionalLinker();
+		EARLY_FUTURE_DOOR = new ItemEarlyFutureDoor();
 	}
 
 	public static void registerItems(IForgeRegistry itemRegistry) {
@@ -70,6 +72,7 @@ public final class ModItems {
 		itemRegistry.register(TIME_WOOD_AXE);
 		itemRegistry.register(TIME_WOOD_PICK);
 		itemRegistry.register(TIME_WOOD_SHOVEL);
+		itemRegistry.register(EARLY_FUTURE_DOOR);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));

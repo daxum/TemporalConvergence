@@ -44,6 +44,7 @@ public final class ModBlocks {
 	public static final Block EARLY_FUTURE_BLOCK;
 	public static final Block FANCY_EARLY_FUTURE_STAIRS;
 	public static final Block EARLY_FUTURE_STAIRS;
+	public static final Block EARLY_FUTURE_DOOR;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -69,6 +70,7 @@ public final class ModBlocks {
 		EARLY_FUTURE_BLOCK = new BlockEarlyFuture();
 		FANCY_EARLY_FUTURE_STAIRS = new BlockFancyEarlyFutureStairs();
 		EARLY_FUTURE_STAIRS = new BlockEarlyFutureStairs();
+		EARLY_FUTURE_DOOR = new BlockEarlyFutureDoor();
 
 	}
 
@@ -90,5 +92,6 @@ public final class ModBlocks {
 		blockRegistry.register(EARLY_FUTURE_BLOCK);
 		blockRegistry.register(FANCY_EARLY_FUTURE_STAIRS);
 		blockRegistry.register(EARLY_FUTURE_STAIRS);
+		blockRegistry.register(EARLY_FUTURE_DOOR);
 	}
 }
