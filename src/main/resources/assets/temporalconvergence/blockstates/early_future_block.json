@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": {"model": "temporalconvergence:early_future_block"}
+		"variant=plain": {"model": "temporalconvergence:early_future_block"}
 	}
 }

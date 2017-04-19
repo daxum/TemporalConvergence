@@ -19,8 +19,82 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 public class BlockEarlyFuture extends BlockBase {
+	public static final PropertyEnum<EnumFutureBlockType> VARIANT = PropertyEnum.create("variant", EnumFutureBlockType.class);
+
 	BlockEarlyFuture() {
 		super("early_future_block");
+		setDefaultState(blockState.getBaseState().withProperty(VARIANT, EnumFutureBlockType.PLAIN));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
+		list.add(new ItemStack(this, 1, EnumFutureBlockType.PLAIN.getMeta()));
+	}
+
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		return new ItemStack(this, 1, state.getValue(VARIANT).getMeta());
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState().withProperty(VARIANT, EnumFutureBlockType.getFromMeta(meta));
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(VARIANT).getMeta();
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[] {VARIANT});
+	}
+
+	@Override
+	public int damageDropped(IBlockState state) {
+		return state.getValue(VARIANT).getMeta();
+	}
+
+	public static enum EnumFutureBlockType implements IStringSerializable {
+		PLAIN;
+
+		public int getMeta() {
+			switch(this) {
+			default:
+			case PLAIN: return 0;
+			}
+		}
+
+		public static EnumFutureBlockType getFromMeta(int meta) {
+			switch(meta) {
+			default:
+			case 0: return PLAIN;
+			}
+		}
+
+		@Override
+		public String getName() {
+			switch(this) {
+			case PLAIN: return "plain";
+			default: return "17th variant";
+			}
+		}
 	}
 }

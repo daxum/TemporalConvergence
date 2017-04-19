@@ -52,7 +52,7 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 
 	@Override
 	public boolean isFullCube(IBlockState state) {
-		return false;
+		return true; //TODO: Fix properly later
 	}
 
 	@Override
