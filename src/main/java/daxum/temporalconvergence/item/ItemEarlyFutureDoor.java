@@ -47,15 +47,15 @@ public class ItemEarlyFutureDoor extends ItemBase {
 		if (!validateDoor(world, player, facing, pos))
 			return EnumActionResult.FAIL;
 
-		ItemStack itemstack = player.getHeldItem(hand);
+		ItemStack stack = player.getHeldItem(hand);
 
-		if (player.canPlayerEdit(pos, facing, itemstack) && ModBlocks.EARLY_FUTURE_DOOR.canPlaceBlockAt(world, pos)) {
+		if (player.canPlayerEdit(pos, facing, stack) && ModBlocks.EARLY_FUTURE_DOOR.canPlaceBlockAt(world, pos)) {
 			placeDoor(world, pos, getLeftPos(player, pos), player.getHorizontalFacing() == EnumFacing.EAST || player.getHorizontalFacing() == EnumFacing.WEST);
 
 			SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, player);
 			world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0f) / 2.0f, soundtype.getPitch() * 0.8f);
 
-			itemstack.shrink(1);
+			stack.shrink(1);
 			return EnumActionResult.SUCCESS;
 		}
 
