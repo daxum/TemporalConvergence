@@ -43,6 +43,7 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	public BlockFancyEarlyFutureStairs() {
 		super("early_future_stairs_fancy");
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(PART, EnumOrientation.BOTTOM));
+		setLightLevel(0.95f);
 	}
 
 	@Override
