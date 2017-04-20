@@ -53,7 +53,7 @@ public class WorldProviderEarlyFuture extends WorldProvider {
 
 	@Override
 	public boolean canRespawnHere() {
-		return false;
+		return true; //Stop beds from exploding. Shouldn't be possible to get trapped
 	}
 
 	@Override
