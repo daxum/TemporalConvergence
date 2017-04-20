@@ -25,7 +25,6 @@ import net.minecraft.util.ITickable;
 
 public class TileEarlyFutureDoor extends TileEntity implements ITickable {
 	public boolean opening = false;
-	public int part = 0;
 	private int openTicks = 0;
 
 	@Override
@@ -33,11 +32,9 @@ public class TileEarlyFutureDoor extends TileEntity implements ITickable {
 		if (world.getBlockState(pos).getValue(BlockEarlyFutureDoor.OPEN))
 			opening = true;
 
-		part = world.getBlockState(pos).getValue(BlockEarlyFutureDoor.PART).getMeta() >> 2 & 3;
-
 		if (opening) {
 			if (openTicks <= 0)
-				openTicks = 121; //20 ticks to open, stays open for 80 ticks, 20 ticks to close
+				openTicks = 41;
 			else if (openTicks == 1)
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockEarlyFutureDoor.OPEN, false));
 			else

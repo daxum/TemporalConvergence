@@ -12,6 +12,7 @@ tile.time_chest.name=Asynchronous Chest
 tile.time_pedestal.name=Timestone Pedestal
 tile.time_plant.name=Time Plant
 tile.time_stone_pillar.name=Timestone Pillar
+tile.early_future_door.name=Futuristic Door
 
 item.time_freezer.name=Weak Temporal Disruptor
 item.time_wood_pickaxe.name=Transitory Pickaxe
@@ -21,6 +22,7 @@ item.time_steel_ingot.name=Temporal Ingot
 item.time_pearl.name=Unstable Pearl
 item.time_dust.name=Temporal Dust
 item.dimensional_linker.name=Dimensional Linker
+item.early_future_door.name=Futuristic Door
 
 fluid.time_water=Time Essence
 

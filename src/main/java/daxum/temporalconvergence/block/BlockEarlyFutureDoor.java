@@ -19,16 +19,20 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileEarlyFutureDoor;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,19 +40,27 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-//TODO: withRotation() and withMirror()
 public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvider {
 	public static final PropertyBool OPEN = PropertyBool.create("open");
 	public static final PropertyBool NORTH_SOUTH = PropertyBool.create("ns");
 	public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
-	public static final AxisAlignedBB OPEN_LEFT_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+	public static final AxisAlignedBB OPEN_LEFT_NS_AABB = new AxisAlignedBB(0.375, 0.0, 0.875, 0.625, 1.0, 1.0);
+	public static final AxisAlignedBB OPEN_RIGHT_NS_AABB = new AxisAlignedBB(0.375, 0.0, 0.0, 0.625, 1.0, 0.125);
+	public static final AxisAlignedBB OPEN_LEFT_WE_AABB = new AxisAlignedBB(0.0, 0.0, 0.375, 0.125, 1.0, 0.625);
+	public static final AxisAlignedBB OPEN_RIGHT_WE_AABB = new AxisAlignedBB(0.875, 0.0, 0.375, 1.0, 1.0, 0.625);
 	public static final AxisAlignedBB NS_AABB = new AxisAlignedBB(0.375, 0.0, 0.0, 0.625, 1.0, 1.0);
 	public static final AxisAlignedBB WE_AABB = new AxisAlignedBB(0.0, 0.0, 0.375, 1.0, 1.0, 0.625);
+	public static final AxisAlignedBB NS_TOP_AABB = new AxisAlignedBB(0.375, 0.875, 0.0, 0.625, 1.0, 1.0);
+	public static final AxisAlignedBB WE_TOP_AABB = new AxisAlignedBB(0.0, 0.875, 0.375, 1.0, 1.0, 0.625);
 
 	public BlockEarlyFutureDoor() {
 		super("early_future_door");
@@ -57,7 +69,55 @@ public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvid
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return state.getValue(OPEN) ? OPEN_LEFT_AABB : state.getValue(NORTH_SOUTH) ? NS_AABB : WE_AABB;
+		return state.getValue(OPEN) ? getOpenAABB(state) : state.getValue(NORTH_SOUTH) ? NS_AABB : WE_AABB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> aabbList, Entity entity, boolean actualState) {
+		if (!state.getValue(OPEN))
+			addCollisionBoxToList(pos, aabb, aabbList, state.getCollisionBoundingBox(world, pos));
+		else {
+			addCollisionBoxToList(pos, aabb, aabbList, getOpenAABB(state));
+
+			if (state.getValue(PART) == EnumPart.TOP_LEFT || state.getValue(PART) == EnumPart.TOP_RIGHT)
+				addCollisionBoxToList(pos, aabb, aabbList, state.getValue(NORTH_SOUTH) ? NS_TOP_AABB : WE_TOP_AABB);
+		}
+	}
+
+	public AxisAlignedBB getOpenAABB(IBlockState state) {
+		if (state.getValue(NORTH_SOUTH)) {
+			if (state.getValue(PART) == EnumPart.BOTTOM_LEFT || state.getValue(PART) == EnumPart.TOP_LEFT)
+				return OPEN_LEFT_NS_AABB;
+			return OPEN_RIGHT_NS_AABB;
+		}
+		else {
+			if (state.getValue(PART) == EnumPart.BOTTOM_LEFT || state.getValue(PART) == EnumPart.TOP_LEFT)
+				return OPEN_LEFT_WE_AABB;
+			return OPEN_RIGHT_WE_AABB;
+		}
+	}
+
+	@Override
+	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+		if (!state.getValue(OPEN))
+			return rayTrace(pos, start, end, state.getBoundingBox(world, pos));
+		else {
+			List<AxisAlignedBB> aabbList = new ArrayList<>();
+
+			aabbList.add(getOpenAABB(state));
+
+			if (state.getValue(PART) == EnumPart.TOP_LEFT || state.getValue(PART) == EnumPart.TOP_RIGHT)
+				aabbList.add(state.getValue(NORTH_SOUTH) ? NS_TOP_AABB : WE_TOP_AABB);
+
+			for (AxisAlignedBB aabb : aabbList) {
+				RayTraceResult rtr = rayTrace(pos, start, end, aabb);
+
+				if (rtr != null)
+					return new RayTraceResult(rtr.hitVec.addVector(pos.getX(), pos.getY(), pos.getZ()), rtr.sideHit, pos);
+			}
+
+			return null;
+		}
 	}
 
 	@Override
@@ -71,19 +131,25 @@ public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvid
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		if (!state.getValue(OPEN)) {
-			setOpening(world, state, pos, true);
+			setOpening(world, state, pos);
 			return true;
 		}
 
 		return false;
 	}
 
-	public void setOpening(World world, IBlockState state, BlockPos pos, boolean open) {
+	@Override
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos changedPos) {
+		if (world.isBlockPowered(pos) && !state.getValue(OPEN))
+			setOpening(world, state, pos);
+	}
+
+	public void setOpening(World world, IBlockState state, BlockPos pos) {
 		for (BlockPos pos2 : getParts(state, pos, true)) {
 			state = world.getBlockState(pos2);
 
 			if (state.getBlock() == this) {
-				world.setBlockState(pos2, state.withProperty(OPEN, open));
+				world.setBlockState(pos2, state.withProperty(OPEN, true));
 			}
 		}
 	}
@@ -112,6 +178,46 @@ public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvid
 	}
 
 	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot) {
+		switch(rot) {
+		case CLOCKWISE_180: return togglePart(state);
+		case CLOCKWISE_90:
+			if (state.getValue(NORTH_SOUTH)) {
+				return state.withProperty(NORTH_SOUTH, false);
+			}
+			else {
+				return togglePart(state).withProperty(NORTH_SOUTH, true);
+			}
+		case COUNTERCLOCKWISE_90:
+			if (state.getValue(NORTH_SOUTH)) {
+				return togglePart(state).withProperty(NORTH_SOUTH, false);
+			}
+			else {
+				return state.withProperty(NORTH_SOUTH, true);
+			}
+		case NONE:
+		default: return state;
+		}
+	}
+
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirror) {
+		if (mirror == Mirror.LEFT_RIGHT)
+			return togglePart(state);
+		return state;
+	}
+
+	public IBlockState togglePart(IBlockState state) {
+		switch(state.getValue(PART)) {
+		case BOTTOM_LEFT: return state.withProperty(PART, EnumPart.BOTTOM_RIGHT);
+		case BOTTOM_RIGHT: return state.withProperty(PART, EnumPart.BOTTOM_LEFT);
+		case TOP_LEFT: return state.withProperty(PART, EnumPart.TOP_RIGHT);
+		case TOP_RIGHT: return state.withProperty(PART, EnumPart.TOP_LEFT);
+		default: return state;
+		}
+	}
+
+	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		IBlockState state = getDefaultState().withProperty(OPEN, (meta & 1) == 1);
 		state = state.withProperty(NORTH_SOUTH, (meta >> 1 & 1) == 1);
@@ -133,6 +239,11 @@ public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvid
 	@Override
 	public boolean isFullCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+		return true;
 	}
 
 	@Override
