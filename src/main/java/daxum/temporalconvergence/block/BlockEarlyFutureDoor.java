@@ -19,22 +19,34 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import java.util.Random;
+
+import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.tileentity.TileEarlyFutureDoor;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockEarlyFutureDoor extends BlockBase {
+//TODO: withRotation() and withMirror()
+public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvider {
 	public static final PropertyBool OPEN = PropertyBool.create("open");
-	public static final PropertyBool NORTH_SOUTH = PropertyBool.create("north_south");
+	public static final PropertyBool NORTH_SOUTH = PropertyBool.create("ns");
 	public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
+	public static final AxisAlignedBB OPEN_LEFT_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	public static final AxisAlignedBB NS_AABB = new AxisAlignedBB(0.375, 0.0, 0.0, 0.625, 1.0, 1.0);
 	public static final AxisAlignedBB WE_AABB = new AxisAlignedBB(0.0, 0.0, 0.375, 1.0, 1.0, 0.625);
 
@@ -45,12 +57,48 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return state.getValue(OPEN) ? NULL_AABB : state.getValue(NORTH_SOUTH) ? NS_AABB : WE_AABB;
+		return state.getValue(OPEN) ? OPEN_LEFT_AABB : state.getValue(NORTH_SOUTH) ? NS_AABB : WE_AABB;
 	}
 
 	@Override
 	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
-		BlockPos posList[] = new BlockPos[3];
+		for (BlockPos pos2 : getParts(state, pos, false)) {
+			if (world.getBlockState(pos2).getBlock() == this)
+				world.setBlockToAir(pos2);
+		}
+	}
+
+	@Override
+	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
+		if (!state.getValue(OPEN)) {
+			setOpening(world, state, pos, true);
+			return true;
+		}
+
+		return false;
+	}
+
+	public void setOpening(World world, IBlockState state, BlockPos pos, boolean open) {
+		for (BlockPos pos2 : getParts(state, pos, true)) {
+			state = world.getBlockState(pos2);
+
+			if (state.getBlock() == this) {
+				world.setBlockState(pos2, state.withProperty(OPEN, open));
+			}
+		}
+	}
+
+	public BlockPos[] getParts(IBlockState state, BlockPos pos, boolean includeGiven) {
+		BlockPos posList[];
+
+		if (includeGiven) {
+			posList = new BlockPos[4];
+			posList[3] = pos;
+		}
+		else {
+			posList = new BlockPos[3];
+		}
+
 		Boolean ns = state.getValue(NORTH_SOUTH);
 
 		switch(state.getValue(PART)) {
@@ -60,10 +108,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 		case TOP_RIGHT: posList[0] = ns ? pos.south() : pos.west(); posList[1] = pos.down(); posList[2] = posList[0].down(); break;
 		}
 
-		for (BlockPos pos2 : posList) {
-			if (world.getBlockState(pos2).getBlock() == this)
-				world.setBlockToAir(pos2);
-		}
+		return posList;
 	}
 
 	@Override
@@ -93,6 +138,21 @@ public class BlockEarlyFutureDoor extends BlockBase {
 	@Override
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] {OPEN, PART, NORTH_SOUTH});
+	}
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return ModItems.EARLY_FUTURE_DOOR;
+	}
+
+	@Override
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+		return new ItemStack(ModItems.EARLY_FUTURE_DOOR);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileEarlyFutureDoor();
 	}
 
 	//To simplify things, "right" is either north or east, and "left" is south or west, depending on orientation

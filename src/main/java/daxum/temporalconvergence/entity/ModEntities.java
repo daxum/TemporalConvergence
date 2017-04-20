@@ -22,6 +22,7 @@ package daxum.temporalconvergence.entity;
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import daxum.temporalconvergence.tileentity.TileDimGen;
+import daxum.temporalconvergence.tileentity.TileEarlyFutureDoor;
 import daxum.temporalconvergence.tileentity.TilePedestal;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import net.minecraft.util.ResourceLocation;
@@ -43,5 +44,6 @@ public final class ModEntities {
 		GameRegistry.registerTileEntity(TileDimGen.class, "dimensional_generator");
 		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
 		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
+		GameRegistry.registerTileEntity(TileEarlyFutureDoor.class, "early_future_door");
 	}
 }

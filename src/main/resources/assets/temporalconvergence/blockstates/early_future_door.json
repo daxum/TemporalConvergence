@@ -1,0 +1,20 @@
+{
+    "variants": {
+		"ns=false,open=false,part=bottom_left": { "model": "temporalconvergence:early_future_door_bottom_closed" },
+		"ns=false,open=true,part=bottom_left": { "model": "temporalconvergence:early_future_door_bottom_open" },
+		"ns=true,open=false,part=bottom_left": { "model": "temporalconvergence:early_future_door_bottom_closed", "y": 270 },
+		"ns=true,open=true,part=bottom_left": { "model": "temporalconvergence:early_future_door_bottom_open", "y": 270 },
+		"ns=false,open=false,part=bottom_right": { "model": "temporalconvergence:early_future_door_bottom_closed", "y": 180 },
+		"ns=false,open=true,part=bottom_right": { "model": "temporalconvergence:early_future_door_bottom_open", "y": 180 },
+		"ns=true,open=false,part=bottom_right": { "model": "temporalconvergence:early_future_door_bottom_closed", "y": 90 },
+		"ns=true,open=true,part=bottom_right": { "model": "temporalconvergence:early_future_door_bottom_open", "y": 90 },
+		"ns=false,open=false,part=top_left": { "model": "temporalconvergence:early_future_door_top_closed" },
+		"ns=false,open=true,part=top_left": { "model": "temporalconvergence:early_future_door_top_open" },
+		"ns=true,open=false,part=top_left": { "model": "temporalconvergence:early_future_door_top_closed", "y": 270 },
+		"ns=true,open=true,part=top_left": { "model": "temporalconvergence:early_future_door_top_open", "y": 270 },
+		"ns=false,open=false,part=top_right": { "model": "temporalconvergence:early_future_door_top_closed", "y": 180 },
+		"ns=false,open=true,part=top_right": { "model": "temporalconvergence:early_future_door_top_open", "y": 180 },
+		"ns=true,open=false,part=top_right": { "model": "temporalconvergence:early_future_door_top_closed", "y": 90 },
+		"ns=true,open=true,part=top_right": { "model": "temporalconvergence:early_future_door_top_open", "y": 90 }
+    }
+}
