@@ -21,11 +21,13 @@ package daxum.temporalconvergence.item;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.ModBlocks;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
@@ -93,5 +95,6 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.FANCY_EARLY_FUTURE_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.EARLY_FUTURE_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_FENCE).setRegistryName(ModBlocks.EARLY_FUTURE_FENCE.getRegistryName()));
+		itemRegistry.register(new ItemSlab(ModBlocks.EARLY_FUTURE_HALF_SLAB, (BlockSlab) ModBlocks.EARLY_FUTURE_HALF_SLAB, (BlockSlab) ModBlocks.EARLY_FUTURE_DOUBLE_SLAB).setRegistryName(ModBlocks.EARLY_FUTURE_HALF_SLAB.getRegistryName()));
 	}
 }

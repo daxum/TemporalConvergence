@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "half=bottom,variant=early_future_block": { "model": "temporalconvergence:early_future_block_slab" },
+        "half=top,variant=early_future_block": { "model": "temporalconvergence:early_future_block_slab_top" }
+    }
+}

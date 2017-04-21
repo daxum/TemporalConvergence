@@ -19,6 +19,7 @@ tile.early_future_door.name=Futuristic Door
 tile.early_future_fence.name=Futuristic Fence
 tile.early_future_stairs.name=Futuristic Stairs
 tile.early_future_stairs_fancy.name=Fancy Futuristic Stairs
+tile.early_future_slab.early_future_block.name=Futuristic Block Slab
 
 item.time_freezer.name=Weak Temporal Disruptor
 item.time_wood_pickaxe.name=Transitory Pickaxe

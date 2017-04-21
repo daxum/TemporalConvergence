@@ -46,6 +46,8 @@ public final class ModBlocks {
 	public static final Block EARLY_FUTURE_STAIRS;
 	public static final Block EARLY_FUTURE_DOOR;
 	public static final Block EARLY_FUTURE_FENCE;
+	public static final Block EARLY_FUTURE_HALF_SLAB;
+	public static final Block EARLY_FUTURE_DOUBLE_SLAB;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -73,7 +75,14 @@ public final class ModBlocks {
 		EARLY_FUTURE_STAIRS = new BlockEarlyFutureStairs();
 		EARLY_FUTURE_DOOR = new BlockEarlyFutureDoor();
 		EARLY_FUTURE_FENCE = new BlockEarlyFutureFence();
-
+		EARLY_FUTURE_HALF_SLAB = new BlockEarlyFutureSlab() {
+			@Override
+			public boolean isDouble() { return false; }
+		};
+		EARLY_FUTURE_DOUBLE_SLAB = new BlockEarlyFutureSlab() {
+			@Override
+			public boolean isDouble() { return true; }
+		};
 	}
 
 	public static void registerBlocks(IForgeRegistry blockRegistry) {
@@ -96,5 +105,7 @@ public final class ModBlocks {
 		blockRegistry.register(EARLY_FUTURE_STAIRS);
 		blockRegistry.register(EARLY_FUTURE_DOOR);
 		blockRegistry.register(EARLY_FUTURE_FENCE);
+		blockRegistry.register(EARLY_FUTURE_HALF_SLAB);
+		blockRegistry.register(EARLY_FUTURE_DOUBLE_SLAB);
 	}
 }
