@@ -19,24 +19,30 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockTimeStonePillar extends BlockBase {
-	private static final PropertyEnum ENDS = PropertyEnum.create("location", EnumEnds.class);
+	private static final PropertyEnum<EnumEnds> ENDS = PropertyEnum.create("location", EnumEnds.class);
 	private static final AxisAlignedBB MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.0, 0.3125, 0.6875, 1.0, 0.6875);
-	private static final AxisAlignedBB BOTTOM_AABB = FULL_BLOCK_AABB;
-	private static final AxisAlignedBB TOP_AABB = new AxisAlignedBB( 0.1875, 0.0, 0.1875, 0.8125, 1.0, 0.8125);
+	private static final AxisAlignedBB BOTTOM_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 1.0);
+	private static final AxisAlignedBB TOP_AABB = new AxisAlignedBB( 0.1875, 0.75, 0.1875, 0.8125, 1.0, 0.8125);
 
 	BlockTimeStonePillar() {
 		super("time_stone_pillar");
@@ -92,18 +98,42 @@ public class BlockTimeStonePillar extends BlockBase {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		switch((EnumEnds) state.getValue(ENDS)) {
-		case BOTH:
-		case BOTTOM: return BOTTOM_AABB;
-		default:
-		case NEITHER: return MIDDLE_AABB;
-		case TOP: return TOP_AABB;
+		return MIDDLE_AABB;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> aabbList, Entity entity, boolean actualState) {
+		addCollisionBoxToList(pos, aabb, aabbList, MIDDLE_AABB);
+
+		EnumEnds ends = state.getValue(ENDS);
+		if (ends == EnumEnds.BOTH || ends == EnumEnds.BOTTOM) {
+			addCollisionBoxToList(pos, aabb, aabbList, BOTTOM_AABB);
+		}
+		if (ends == EnumEnds.BOTH || ends == EnumEnds.TOP) {
+			addCollisionBoxToList(pos, aabb, aabbList, TOP_AABB);
 		}
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return MIDDLE_AABB;
+	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+		List<AxisAlignedBB> aabbList = new ArrayList<>();
+
+		aabbList.add(MIDDLE_AABB);
+
+		EnumEnds ends = state.getValue(ENDS);
+		if (ends == EnumEnds.BOTH || ends == EnumEnds.BOTTOM)
+			aabbList.add(BOTTOM_AABB);
+		if (ends == EnumEnds.BOTH || ends == EnumEnds.TOP)
+			aabbList.add(TOP_AABB);
+
+		for (AxisAlignedBB aabb : aabbList) {
+			RayTraceResult rtr = rayTrace(pos, start, end, aabb);
+
+			if (rtr != null)
+				return new RayTraceResult(rtr.hitVec.addVector(pos.getX(), pos.getY(), pos.getZ()), rtr.sideHit, pos);
+		}
+
+		return null;
 	}
 
 	@Override
@@ -119,7 +149,7 @@ public class BlockTimeStonePillar extends BlockBase {
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		switch((EnumEnds) state.getValue(ENDS)) {
+		switch(state.getValue(ENDS)) {
 		default:
 		case BOTH: return 0;
 		case NEITHER: return 1;
