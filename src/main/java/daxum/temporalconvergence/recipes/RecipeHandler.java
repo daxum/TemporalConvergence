@@ -40,6 +40,9 @@ public final class RecipeHandler {
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.PEDESTAL), "sss", " s ", "sss", 's', ModBlocks.TIME_STONE);
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.DIM_GEN), " c ", "dsd", "sss", 'c', Items.CLOCK, 'd', Items.DIAMOND, 's', ModBlocks.TIME_STONE);
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.TIME_STONE_PILLAR, 4), "s" , "s", 's', ModBlocks.TIME_STONE);
+		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_STAIRS, 8), "f  ", "ff ", "fff", 'f', new ItemStack(ModBlocks.EARLY_FUTURE_BLOCK, 1, 0));
+		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_HALF_SLAB, 6), "fff", 'f', new ItemStack(ModBlocks.EARLY_FUTURE_BLOCK, 1, 0));
+		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_BLOCK), "f", "f", 'f', new ItemStack(ModBlocks.EARLY_FUTURE_HALF_SLAB, 1, 0));
 
 		//If I can make timeplants shearable, this'll go away
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TIME_PEARL), ModBlocks.TIME_PLANT);
