@@ -1,8 +1,17 @@
 {
-	"variants": {
-		"location=single": { "model": "temporalconvergence:time_stone_pillar_both" },
-        "location=top": { "model": "temporalconvergence:time_stone_pillar_top" },
-        "location=bottom": { "model": "temporalconvergence:time_stone_pillar_bottom" },
-        "location=middle": { "model": "temporalconvergence:time_stone_pillar" }
-	}
+    "multipart": [
+        {   
+            "apply": { "model": "temporalconvergence:time_stone_pillar" }
+        },
+        
+        {   
+            "when": { "top": "true" },
+            "apply": { "model": "temporalconvergence:time_stone_pillar_top" }
+        },
+        
+        {   
+            "when": { "bottom": "true" },
+            "apply": { "model": "temporalconvergence:time_stone_pillar_bottom" }
+        }
+    ]
 }
