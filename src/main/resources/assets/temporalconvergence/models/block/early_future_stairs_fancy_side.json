@@ -5,7 +5,7 @@
 		"effect": "temporalconvergence:early_future_stairs_effect",
 		"particle": "temporalconvergence:early_future_block"
 	},
-	
+
 	"elements": [
 	    {
 	        "name": "i_dont_even_know_anymore",
@@ -19,7 +19,7 @@
 	            "down": {"texture": "#tex", "cullface": "down"}
 	        }
 	    },
-	
+
 	    {
 	        "name": "why_cant_you_rotate_z",
 	        "from": [0.0, 0.0, 8.0],
@@ -33,7 +33,7 @@
 	            "down": {"texture": "#tex", "cullface": "down"}
 	        }
 	    },
-	
+
 	    {
 	        "name": "****",
 	        "from": [8.0, 0.0, 8.0],
@@ -47,7 +47,7 @@
 	            "down": {"texture": "#tex", "cullface": "down"}
 	        }
 	    },
-	    
+
 	    {
 	        "name": "effect_box",
 	        "from": [8.0, 7.0, 1.0],

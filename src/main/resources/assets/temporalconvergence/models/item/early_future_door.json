@@ -3,7 +3,7 @@
 	"textures": {
 	    "door": "temporalconvergence:early_future_door"
 	},
-	
+
 	"elements": [
 	    {
 	        "name": "left_side",
@@ -18,7 +18,7 @@
 	            "down": { "texture": "#door", "uv": [0.0, 0.0, 1.0, 1.0] }
 	        }
 	    },
-	    
+
 	    {
 	        "name": "right_side",
 	        "from": [15.0, 0.0, 6.0],
@@ -32,7 +32,7 @@
 	            "down": { "texture": "#door", "uv": [0.0, 0.0, 1.0, 1.0] }
 	        }
 	    },
-	    
+
 	    {
 	        "name": "top",
 	        "from": [1.0, 14.0, 6.0],
@@ -44,7 +44,7 @@
 	            "down": { "texture": "#door", "uv": [0.0, 4.0, 16.0, 8.0] }
 	        }
 	    },
-	    
+
 	    {
 	        "name": "door_left",
 	        "from": [1.0, 0.0, 7.0],
@@ -55,7 +55,7 @@
 	            "down": { "texture": "#door", "uv": [0.0, 12.0, 16.0, 16.0] }
 	        }
 	    },
-	    
+
 	    {
 	        "name": "door_right",
 	        "from": [8.0, 0.0, 7.0],

@@ -1,15 +1,15 @@
 {
     "multipart": [
-        {   
+        {
             "apply": { "model": "temporalconvergence:time_stone_pillar" }
         },
-        
-        {   
+
+        {
             "when": { "top": "true" },
             "apply": { "model": "temporalconvergence:time_stone_pillar_top" }
         },
-        
-        {   
+
+        {
             "when": { "bottom": "true" },
             "apply": { "model": "temporalconvergence:time_stone_pillar_bottom" }
         }

@@ -4,7 +4,7 @@
 		"door": "temporalconvergence:early_future_door",
 		"particle": "temporalconvergence:early_future_block"
 	},
-	
+
 	"elements": [
 	    {
 	        "name": "wall",
@@ -18,7 +18,7 @@
 	            "down": { "texture": "#door", "uv": [0.0, 0.0, 1.0, 1.0] }
 	        }
 	    },
-	    
+
 	    {
 	        "name": "door",
 	        "from": [2.0, 0.0, 7.0],

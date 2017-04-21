@@ -1,11 +1,11 @@
 {
 	"parent": "minecraft:block/block",
-	
+
 	"textures": {
 		"timeStone": "temporalconvergence:time_stone",
 		"particle": "temporalconvergence:time_stone"
 	},
-	
+
 	"elements": [
 		{
 			"name": "pillar",
@@ -18,8 +18,8 @@
 				"north": { "texture": "#timeStone", "uv": [5.0, 4.0, 11.0, 12.0] }
 			}
 		},
-		
-		
+
+
 		{
 			"name": "pillar_top",
 			"from": [3.0, 12.0, 3.0],
@@ -33,7 +33,7 @@
 				"down": { "texture": "#timeStone" }
 			}
 		},
-		
+
 		{
 			"name": "pillar_bottom",
 			"from": [0.0, 0.0, 0.0],

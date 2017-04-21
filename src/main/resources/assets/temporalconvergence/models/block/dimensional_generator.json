@@ -1,13 +1,13 @@
 {
 	"parent": "minecraft:block/block",
-	
+
 	"textures": {
 		"timeStone": "temporalconvergence:time_stone",
 		"dimGenTop": "temporalconvergence:dimensional_generator_top",
 		"dimGenSide": "temporalconvergence:dimensional_generator_side",
 		"particle": "temporalconvergence:time_stone"
 	},
-	
+
 	"elements": [
 		{
 			"name": "pedestal_base",
@@ -22,7 +22,7 @@
 				"down": { "texture": "#timeStone", "cullface": "down" }
 			}
 		},
-		
+
 		{
 			"name": "pedestal_middle",
 			"from": [5.0, 3.0, 5.0],
@@ -34,7 +34,7 @@
 				"north": { "texture": "#timeStone" }
 			}
 		},
-		
+
 		{
 			"name": "pedestal_top",
 			"from": [1.0, 11.0, 1.0],
