@@ -79,6 +79,8 @@ public class ContainerTimeChest extends Container {
 			if (current.getCount() == 0)
 				slot.putStack(ItemStack.EMPTY);
 
+			slot.onSlotChanged();
+
 			if (current.getCount() == previous.getCount())
 				return ItemStack.EMPTY;
 		}
