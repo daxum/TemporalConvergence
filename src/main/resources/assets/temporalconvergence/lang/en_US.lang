@@ -12,7 +12,13 @@ tile.time_chest.name=Asynchronous Chest
 tile.time_pedestal.name=Timestone Pedestal
 tile.time_plant.name=Time Plant
 tile.time_stone_pillar.name=Timestone Pillar
+tile.dimensional_generator.name=Dimensional Generator
+tile.dim_controller.name=Dimensional Controller
+tile.early_future_block.name=Futuristic Block
 tile.early_future_door.name=Futuristic Door
+tile.early_future_fence.name=Futuristic Fence
+tile.early_future_stairs.name=Futuristic Stairs
+tile.early_future_stairs_fancy.name=Fancy Futuristic Stairs
 
 item.time_freezer.name=Weak Temporal Disruptor
 item.time_wood_pickaxe.name=Transitory Pickaxe

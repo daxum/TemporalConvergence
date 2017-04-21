@@ -92,5 +92,6 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BLOCK).setRegistryName(ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.FANCY_EARLY_FUTURE_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.EARLY_FUTURE_STAIRS.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_FENCE).setRegistryName(ModBlocks.EARLY_FUTURE_FENCE.getRegistryName()));
 	}
 }

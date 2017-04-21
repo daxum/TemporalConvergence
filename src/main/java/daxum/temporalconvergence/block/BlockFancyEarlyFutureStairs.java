@@ -20,6 +20,8 @@
 package daxum.temporalconvergence.block;
 
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
@@ -41,7 +43,7 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	public static final PropertyEnum PART = PropertyEnum.create("part", EnumOrientation.class);
 
 	public BlockFancyEarlyFutureStairs() {
-		super("early_future_stairs_fancy");
+		super(Material.IRON, "early_future_stairs_fancy", 2.0f, 10.0f, "pickaxe", 0, SoundType.METAL);
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(PART, EnumOrientation.BOTTOM));
 		setLightLevel(0.95f);
 	}

@@ -19,6 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -37,7 +39,7 @@ public class BlockEarlyFuture extends BlockBase {
 	public static final PropertyEnum<EnumFutureBlockType> VARIANT = PropertyEnum.create("variant", EnumFutureBlockType.class);
 
 	BlockEarlyFuture() {
-		super("early_future_block");
+		super(Material.IRON, "early_future_block", 2.0f, 10.0f, "pickaxe", 0, SoundType.METAL);
 		setDefaultState(blockState.getBaseState().withProperty(VARIANT, EnumFutureBlockType.PLAIN));
 	}
 
