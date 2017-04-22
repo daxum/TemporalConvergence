@@ -41,10 +41,7 @@ public class ItemTimeDust extends ItemBase {
 
 			((BlockFluidTimeWater)justPlaced).checkAllButUp(item.getEntityWorld(), item.getPosition());
 
-			if (item.getEntityItem().getCount() == 1)
-				item.setDead();
-			else
-				item.getEntityItem().shrink(1);
+			item.getEntityItem().shrink(1);
 		}
 
 		return false;
