@@ -91,7 +91,7 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WATER).setRegistryName(ModBlocks.TIME_WATER.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WOOD).setRegistryName(ModBlocks.TIME_WOOD.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WOOD_PLANKS).setRegistryName(ModBlocks.TIME_WOOD_PLANKS.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BLOCK).setRegistryName(ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BLOCK) {@Override public int getMetadata(int damage) { return damage; }}.setRegistryName(ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName()).setHasSubtypes(true));
 		itemRegistry.register(new ItemBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.FANCY_EARLY_FUTURE_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.EARLY_FUTURE_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_FENCE).setRegistryName(ModBlocks.EARLY_FUTURE_FENCE.getRegistryName()));

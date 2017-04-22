@@ -60,6 +60,7 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.TEST_TELEPORTER)); //Why?
 		registerRender(Item.getItemFromBlock(ModBlocks.DIM_CONTR));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BLOCK));
+		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BLOCK), 1, ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName().toString() + "_floor");
 		registerRender(Item.getItemFromBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_STAIRS));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_FENCE));
@@ -78,6 +79,10 @@ public class ClientProxy implements IProxy {
 
 	public void registerRender(Item item) {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+	}
+
+	public void registerRender(Item item, int meta, String name) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name, "inventory"));
 	}
 
 	@Override

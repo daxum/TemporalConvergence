@@ -47,6 +47,7 @@ public class BlockEarlyFuture extends BlockBase {
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
 		list.add(new ItemStack(this, 1, EnumFutureBlockType.PLAIN.getMeta()));
+		list.add(new ItemStack(this, 1, EnumFutureBlockType.FLOOR.getMeta()));
 	}
 
 	@Override
@@ -75,28 +76,32 @@ public class BlockEarlyFuture extends BlockBase {
 	}
 
 	public static enum EnumFutureBlockType implements IStringSerializable {
-		PLAIN;
+		PLAIN(0, "plain"),
+		FLOOR(1, "floor");
+
+		private int meta;
+		private String name;
+
+		private EnumFutureBlockType(int m, String n) {
+			meta = m;
+			name = n;
+		}
 
 		public int getMeta() {
-			switch(this) {
-			default:
-			case PLAIN: return 0;
-			}
+			return meta;
 		}
 
 		public static EnumFutureBlockType getFromMeta(int meta) {
 			switch(meta) {
 			default:
 			case 0: return PLAIN;
+			case 1: return FLOOR;
 			}
 		}
 
 		@Override
 		public String getName() {
-			switch(this) {
-			case PLAIN: return "plain";
-			default: return "17th variant";
-			}
+			return name;
 		}
 	}
 }

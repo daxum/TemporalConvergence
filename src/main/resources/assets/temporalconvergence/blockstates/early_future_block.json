@@ -1,5 +1,6 @@
 {
 	"variants": {
-		"variant=plain": {"model": "temporalconvergence:early_future_block"}
+		"variant=plain": {"model": "temporalconvergence:early_future_block"},
+		"variant=floor": {"model": "temporalconvergence:early_future_block_floor"}
 	}
 }
