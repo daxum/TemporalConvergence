@@ -20,25 +20,46 @@
 package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.item.ModItems;
-import net.minecraft.block.BlockRotatedPillar;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 
-public class BlockTimeWood extends BlockRotatedPillar {
+public class BlockTimeWood extends BlockLog {
 	public BlockTimeWood() {
-		super(Material.WOOD);
 		setCreativeTab(ModItems.TEMPCONVTAB);
 		setUnlocalizedName("time_wood");
 		setRegistryName("time_wood");
-		setHardness(2.0f);
 		setHarvestLevel("axe", 0);
-		setSoundType(SoundType.WOOD);
+
+		setDefaultState(blockState.getBaseState().withProperty(LOG_AXIS, EnumAxis.Y));
 	}
 
 	@Override
-	public boolean isWood(IBlockAccess world, BlockPos pos) {
-		return world.getBlockState(pos).getBlock() == this;
+	public MapColor getMapColor(IBlockState state) {
+		return MapColor.CYAN;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[] {LOG_AXIS});
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState().withProperty(LOG_AXIS, EnumAxis.values()[meta & 3]);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		switch(state.getValue(LOG_AXIS)) {
+		case X: return 0;
+		case Y: return 1;
+		case Z: return 2;
+		case NONE:
+		default: return 3;
+
+		}
 	}
 }

@@ -21,6 +21,7 @@ package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.fluid.ModFluids;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -96,7 +97,15 @@ public class BlockFluidTimeWater extends BlockFluidClassic {
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 3.4f);
 		}
 		else if (OreDictionary.containsMatch(false, OreDictionary.getOres("logWood"), new ItemStack(toConvert, 1, OreDictionary.WILDCARD_VALUE))) {
-			world.setBlockState(pos, ModBlocks.TIME_WOOD.getDefaultState());
+			IBlockState state = world.getBlockState(pos);
+
+			if (state.getProperties().containsKey(BlockLog.LOG_AXIS)) {
+				world.setBlockState(pos, ModBlocks.TIME_WOOD.getDefaultState().withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS)));
+			}
+			else {
+				world.setBlockState(pos, ModBlocks.TIME_WOOD.getDefaultState());
+			}
+
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 3.4f);
 		}
 	}
