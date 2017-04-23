@@ -64,8 +64,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable {
 			if (rand.nextInt(amountSpawned / 10 + 4) == 0 && amountSpawned <= 50) {
 				EntityTimePixie toSpawn = new EntityTimePixie(world);
 
-				toSpawn.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-						MathHelper.wrapDegrees(rand.nextFloat() * 360.0F), 0.0F);
+				toSpawn.setLocationAndAngles(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, MathHelper.wrapDegrees(rand.nextFloat() * 360.0F), 0.0F);
 				toSpawn.rotationYawHead = toSpawn.rotationYaw;
 				toSpawn.renderYawOffset = toSpawn.rotationYaw;
 				toSpawn.onInitialSpawn(world.getDifficultyForLocation(pos), null);
@@ -79,8 +78,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable {
 	// pos is the location of the block whose neighbor changed, changed is what
 	// was there before, changedPos is the position of the block that changed
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block changed, BlockPos changedPos) {
-		if (changedPos.equals(pos.down()) && !world.getBlockState(changedPos).getBlock()
-				.canSustainPlant(world.getBlockState(changedPos), world, pos.down(), EnumFacing.UP, this)) {
+		if (changedPos.equals(pos.down()) && !world.getBlockState(changedPos).getBlock().canSustainPlant(world.getBlockState(changedPos), world, pos.down(), EnumFacing.UP, this)) {
 			dropBlockAsItem(world, pos, state, 0);
 			world.setBlockToAir(pos);
 		}
