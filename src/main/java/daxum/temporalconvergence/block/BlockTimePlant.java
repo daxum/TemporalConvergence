@@ -24,6 +24,7 @@ import java.util.Random;
 import daxum.temporalconvergence.entity.EntityTimePixie;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
@@ -114,6 +115,10 @@ public class BlockTimePlant extends BlockBase implements IPlantable {
 	public SoundType getSoundType() {
 		return SoundType.PLANT;
 
+	}
+
+	public MapColor getMapColor() {
+		return MapColor.FOLIAGE;
 	}
 
 	@Override
