@@ -67,10 +67,7 @@ public final class RecipeHandler {
 		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 4, 10)); //Test recipe
 		DimGenRecipes.addRecipe(new ItemStack(Items.CLAY_BALL), new ItemStack(Items.NETHER_STAR), new ItemStack(Blocks.DRAGON_EGG, 2)); //Balanced test recipe
 
-		initDimInput();
-	}
-
-	public static void initDimInput() {
+		//Dimension input
 		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.TIME_DUST), EnumTier.TIER1, EnumBoostingType.INITIAL_AMOUNT);
 		DimGenRecipes.addDimensionInput(new ItemStack(ModBlocks.TIME_WOOD), EnumTier.TIER1, EnumBoostingType.IO_RATE);
 		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.TIME_PEARL), EnumTier.TIER1, EnumBoostingType.STORAGE_AMOUNT);
