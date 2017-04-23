@@ -42,12 +42,11 @@ public class BlockFluidTimeWater extends BlockFluidClassic {
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighbor, BlockPos neighborPos) {
-		super.neighborChanged(state, world, pos, neighbor, neighborPos);
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block oldNeighbor, BlockPos neighborPos) {
+		super.neighborChanged(state, world, pos, oldNeighbor, neighborPos);
 
-		Block newNeighbor = world.getBlockState(neighborPos).getBlock();
 		if (!neighborPos.equals(pos.up())) {
-			convert(world, neighborPos, newNeighbor);
+			checkAndReplace(world, neighborPos);
 		}
 	}
 
@@ -84,11 +83,8 @@ public class BlockFluidTimeWater extends BlockFluidClassic {
 	}
 
 	public void checkAndReplace(World world, BlockPos pos) {
-		Block checked = world.getBlockState(pos).getBlock();
-		convert(world, pos, checked);
-	}
+		Block toConvert = world.getBlockState(pos).getBlock();
 
-	private void convert(World world, BlockPos pos, Block toConvert) {
 		if (toConvert == ModBlocks.TIME_WOOD || toConvert == ModBlocks.TIME_STEEL)
 			return;
 
