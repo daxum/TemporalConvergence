@@ -143,16 +143,13 @@ public class EntityTimePixie extends EntityFlying {
 			AxisAlignedBB nextParentBB = parent.getEntityBoundingBox().offset(expectedMotion[0], expectedMotion[1], expectedMotion[2]);
 			List<AxisAlignedBB> collisions = getPossibleCollisions(nextParentBB);
 
-			for (int i = 0; i < collisions.size(); i++) {
-				if (collisions.get(i).intersectsWith(nextParentBB)) {
-					parent.moveHelper.action = Action.WAIT;
-					break;
-				}
+			if (!collisions.isEmpty()) {
+				parent.moveHelper.action = Action.WAIT;
 			}
 		}
 
 		public List<AxisAlignedBB> getPossibleCollisions(AxisAlignedBB toCheck) {
-			List<AxisAlignedBB> out = new ArrayList();
+			List<AxisAlignedBB> out = new ArrayList<>();
 
 			boolean xDif = Math.floor(toCheck.maxX) != Math.floor(toCheck.minX);
 			boolean yDif = Math.floor(toCheck.maxY) != Math.floor(toCheck.minY);
@@ -163,10 +160,9 @@ public class EntityTimePixie extends EntityFlying {
 				for (int j = 0; j <= (yDif ? 1 : 0); j++) {
 					for (int k = 0; k <= (zDif ? 1 : 0); k++) {
 						BlockPos pos = new BlockPos(i == 0 ? toCheck.minX : toCheck.maxX, j == 0 ? toCheck.minY : toCheck.maxY, k == 0 ? toCheck.minZ : toCheck.maxZ);
-						AxisAlignedBB candidate = parent.world.getBlockState(pos).getCollisionBoundingBox(parent.world, pos);
-
-						if (candidate != null)
-							out.add(candidate.offset(pos));
+						parent.world.getBlockState(pos).addCollisionBoxToList(parent.world, pos, toCheck, out, parent, false);
+						if (!out.isEmpty())
+							return out;
 					}
 				}
 			}
