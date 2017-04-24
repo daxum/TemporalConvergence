@@ -1,0 +1,20 @@
+{
+    "textures": {
+        "side": "temporalconvergence:rewound_soil"
+    },
+
+    "elements": [
+        {
+            "name": "oneisstilltheloneliestnumber",
+            "from": [0.0, 15.0, 0.0],
+            "to": [16.0, 16.0, 1.0],
+            "faces": {
+                "north": { "texture": "#side", "uv": [0.0, 0.0, 1.0, 1.0], "cullface": "north" },
+                "east": { "texture": "#side", "uv": [0.0, 0.0, 1.0, 1.0], "cullface": "east" },
+                "south": { "texture": "#side", "uv": [0.0, 0.0, 1.0, 1.0] },
+                "west": { "texture": "#side", "uv": [0.0, 0.0, 1.0, 1.0], "cullface": "west" },
+                "up": { "texture": "#side", "uv": [0.0, 0.0, 1.0, 1.0], "cullface": "up" }
+            }
+        }
+    ]
+}

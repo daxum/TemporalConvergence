@@ -1,0 +1,25 @@
+{
+    "parent": "minecraft:block/block",
+
+    "textures": {
+        "top": "temporalconvergence:rewound_soil_top",
+        "side": "temporalconvergence:rewound_soil",
+        "particle": "temporalconvergence:rewound_soil_top"
+    },
+
+    "elements": [
+        {
+            "name": "oneistheloneliestnumber",
+            "from": [0.0, 0.0, 0.0],
+            "to": [16.0, 15.0, 16.0],
+            "faces": {
+                "north": { "texture": "#side", "uv": [0.0, 0.0, 16.0, 16.0], "cullface": "north" },
+                "east": { "texture": "#side", "uv": [0.0, 0.0, 16.0, 16.0], "cullface": "east" },
+                "south": { "texture": "#side", "uv": [0.0, 0.0, 16.0, 16.0], "cullface": "south" },
+                "west": { "texture": "#side", "uv": [0.0, 0.0, 16.0, 16.0], "cullface": "west" },
+                "up": { "texture": "#top", "cullface": "up" },
+                "down": { "texture": "#side", "cullface": "down" }
+            }
+        }
+    ]
+}
