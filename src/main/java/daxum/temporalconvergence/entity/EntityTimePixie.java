@@ -104,6 +104,11 @@ public class EntityTimePixie extends EntityFlying {
 		return true;
 	}
 
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+
 	private static class AIFlyRandomly extends EntityAIBase {
 		private final EntityTimePixie parent;
 
