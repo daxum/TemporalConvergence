@@ -71,5 +71,6 @@ public final class RecipeHandler {
 		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.TIME_DUST), EnumTier.TIER1, EnumBoostingType.INITIAL_AMOUNT);
 		DimGenRecipes.addDimensionInput(new ItemStack(ModBlocks.TIME_WOOD), EnumTier.TIER1, EnumBoostingType.IO_RATE);
 		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.TIME_PEARL), EnumTier.TIER1, EnumBoostingType.STORAGE_AMOUNT);
+		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.REWOUND_TIME_SEEDS), EnumTier.TIER2, EnumBoostingType.IO_RATE);
 	}
 }
