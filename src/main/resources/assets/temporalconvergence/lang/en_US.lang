@@ -30,6 +30,7 @@ item.time_pearl.name=Unstable Pearl
 item.time_dust.name=Temporal Dust
 item.dimensional_linker.name=Dimensional Linker
 item.early_future_door.name=Futuristic Door
+item.rewound_time_seeds.name=Rewound Time Seeds
 
 fluid.time_water=Time Essence
 
