@@ -49,6 +49,7 @@ public final class ModBlocks {
 	public static final Block EARLY_FUTURE_HALF_SLAB;
 	public static final Block EARLY_FUTURE_DOUBLE_SLAB;
 	public static final Block REWOUND_SOIL;
+	public static final Block REWOUND_TIME;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -60,6 +61,7 @@ public final class ModBlocks {
 				return world.getBlockState(pos).getBlock() == this;
 			}
 		};
+
 		TIME_WOOD = new BlockTimeWood();
 		TIME_SAND = new BlockTimeSand();
 		TIME_PLANT = new BlockTimePlant();
@@ -84,6 +86,7 @@ public final class ModBlocks {
 			public boolean isDouble() { return true; }
 		};
 		REWOUND_SOIL = new BlockRewoundTimeSoil();
+		REWOUND_TIME = new BlockRewoundTime();
 	}
 
 	public static void registerBlocks(IForgeRegistry blockRegistry) {
@@ -109,5 +112,6 @@ public final class ModBlocks {
 		blockRegistry.register(EARLY_FUTURE_HALF_SLAB);
 		blockRegistry.register(EARLY_FUTURE_DOUBLE_SLAB);
 		blockRegistry.register(REWOUND_SOIL);
+		blockRegistry.register(REWOUND_TIME);
 	}
 }

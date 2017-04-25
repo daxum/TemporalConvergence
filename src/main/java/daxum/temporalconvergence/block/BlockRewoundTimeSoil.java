@@ -20,6 +20,7 @@
 package daxum.temporalconvergence.block;
 
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -50,6 +51,7 @@ public class BlockRewoundTimeSoil extends BlockBase {
 	public BlockRewoundTimeSoil() {
 		super(Material.GROUND, "rewound_soil", 0.6f, 3.0f, "shovel", 0, SoundType.SLIME);
 		setDefaultState(blockState.getBaseState().withProperty(NORTH, true).withProperty(EAST, true).withProperty(SOUTH, true).withProperty(WEST, true));
+		setTickRandomly(true);
 	}
 
 	@Override
@@ -75,6 +77,12 @@ public class BlockRewoundTimeSoil extends BlockBase {
 	@Override
 	public boolean isFullCube(IBlockState state) {
 		return false;
+	}
+
+	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+		if (world.isAirBlock(pos.up()) && rand.nextInt(15) == 0)
+			world.setBlockState(pos.up(), ModBlocks.REWOUND_TIME.getDefaultState());
 	}
 
 	@Override

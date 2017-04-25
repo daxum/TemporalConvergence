@@ -44,6 +44,7 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.TIME_FREEZER);
 		registerRender(ModItems.DIM_LINKER);
 		registerRender(ModItems.EARLY_FUTURE_DOOR);
+		registerRender(ModItems.REWOUND_TIME_SEEDS);
 
 		//Blocks
 		registerRender(Item.getItemFromBlock(ModBlocks.ORIGIN_STONE));

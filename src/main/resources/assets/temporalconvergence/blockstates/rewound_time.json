@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "age=0": { "model": "temporalconvergence:rewound_time_stage0" },
+        "age=1": { "model": "temporalconvergence:rewound_time_stage1" },
+        "age=2": { "model": "temporalconvergence:rewound_time_stage2" },
+        "age=3": { "model": "temporalconvergence:rewound_time_stage3" },
+        "age=4": { "model": "temporalconvergence:rewound_time_stage4" },
+        "age=5": { "model": "temporalconvergence:rewound_time_stage5" },
+        "age=6": { "model": "temporalconvergence:rewound_time_stage6" },
+        "age=7": { "model": "temporalconvergence:rewound_time_stage7" }
+    }
+}
