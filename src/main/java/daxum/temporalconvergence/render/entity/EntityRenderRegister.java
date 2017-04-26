@@ -19,6 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.render.entity;
 
+import daxum.temporalconvergence.entity.EntityBossAIScreen;
 import daxum.temporalconvergence.entity.EntityFrozen;
 import daxum.temporalconvergence.entity.EntityTimePixie;
 import daxum.temporalconvergence.render.tileentity.TileDimContrRenderer;
@@ -36,6 +37,7 @@ public final class EntityRenderRegister {
 	public static void init() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityTimePixie.class, RenderTimePixie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityFrozen.class, RenderFrozenEntity::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityBossAIScreen.class, RenderBossAIScreen::new);
 
 		initTileEntity();
 	}
