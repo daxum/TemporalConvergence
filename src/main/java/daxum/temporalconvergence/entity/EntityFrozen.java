@@ -29,7 +29,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-//Apparently there's a pr to forge that would make this irrelevant. It would probably also fix all the loading bugs. Would have problems with unfreezing, though...
+//Stopped working on this because it'll be removed when I stop being lazy and update my forge
 public class EntityFrozen extends Entity {
 	private Entity frozen;
 	private int unFreezeCount = 0;
