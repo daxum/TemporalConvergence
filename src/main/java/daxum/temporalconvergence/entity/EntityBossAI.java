@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.nbt.NBTTagCompound;
@@ -184,7 +186,7 @@ public class EntityBossAI extends EntityLiving implements IMob {
 
 	@Override
 	public boolean getIsInvulnerable() {
-		return super.getIsInvulnerable() || dataManager.get(STATE) != 3;
+		return super.getIsInvulnerable() || getState() != 3;
 	}
 
 	@Override
@@ -202,6 +204,9 @@ public class EntityBossAI extends EntityLiving implements IMob {
 	protected void kill() {
 		setDead(); //See onKillCommand()
 	}
+
+	@Override
+	public boolean isOnLadder() { return false; }
 
 	@Override
 	public void addPotionEffect(PotionEffect potioneffectIn) {} //Immune to potion effects (They can probably still be added via map if really necessary)
@@ -253,5 +258,52 @@ public class EntityBossAI extends EntityLiving implements IMob {
 
 	private void setState(int state) {
 		dataManager.set(STATE, (byte) state);
+	}
+
+	public int getState() {
+		return dataManager.get(STATE);
+	}
+
+	@Override
+	public void fall(float distance, float damageMultiplier) {
+		if (getState() == 3)
+			super.fall(distance, damageMultiplier);
+	}
+
+	@Override
+	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
+		if (getState() == 3)
+			super.updateFallState(y, onGroundIn, state, pos);
+	}
+
+	//Mostly copied from EntityFlying - couldn't extend because it's only flying some of the time
+	@Override
+	public void moveEntityWithHeading(float strafe, float forward) {
+		if (getState() == 3) {
+			super.moveEntityWithHeading(strafe, forward);
+			return;
+		}
+
+		float f = 0.91f;
+
+		if (onGround) {
+			f *= world.getBlockState(new BlockPos(MathHelper.floor(posX), MathHelper.floor(getEntityBoundingBox().minY) - 1, MathHelper.floor(posZ))).getBlock().slipperiness;
+		}
+
+		float f1 = 0.16277136f / (f * f * f);
+		moveRelative(strafe, forward, onGround ? 0.1f * f1 : 0.02f);
+		move(MoverType.SELF, motionX, motionY, motionZ);
+		motionX *= f;
+		motionY *= f;
+		motionZ *= f;
+	}
+
+	//An interesting strategy
+	@Override
+	public void setInWeb() {
+		if (getState() == 3) {
+			isInWeb = true;
+			fallDistance = 0.0f;
+		}
 	}
 }
