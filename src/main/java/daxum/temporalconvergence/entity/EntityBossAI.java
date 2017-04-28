@@ -28,6 +28,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIFindEntityNearestPlayer;
+import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -43,24 +47,28 @@ import net.minecraft.world.World;
 
 public class EntityBossAI extends EntityLiving implements IMob {
 	public static final DataParameter<Byte> STATE = EntityDataManager.createKey(EntityBossAI.class, DataSerializers.BYTE); //0 - spawning, 1 - spark, 2 - in screen, 3 - ball, 4 - dying
+	public static final DataParameter<Integer> SPAWN_TICKS = EntityDataManager.createKey(EntityBossAI.class, DataSerializers.VARINT);
 	private List<EntityBossAIScreen> screens = new ArrayList();
 	private EntityBossAIScreen activeScreen = null;
 	private BlockPos initialPos = BlockPos.ORIGIN;
 	private AxisAlignedBB searchAABB = null; //set with initialPos
 	private boolean needsLoadRebind = false;
 	private UUID loadedScreenID;
+	private int shieldAmount = 50;
 
 	public EntityBossAI(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
 		experienceValue = 75;
 		isImmuneToFire = true;
+		moveHelper = new MoveHelper(this);
 	}
 
 	@Override
 	public void entityInit() {
 		super.entityInit();
 		dataManager.register(STATE, (byte)0);
+		dataManager.register(SPAWN_TICKS, 0);
 	}
 
 	@Override
@@ -72,8 +80,24 @@ public class EntityBossAI extends EntityLiving implements IMob {
 	}
 
 	@Override
+	protected void initEntityAI() {
+		//State 0
+		tasks.addTask(0, new AISpawn());
+
+		//State 1
+		tasks.addTask(2, new AIFlyAround());
+
+		//State 3
+		tasks.addTask(1, new AIRunAroundHelplessly());
+
+		//Other
+		targetTasks.addTask(0, new EntityAIFindEntityNearestPlayer(this));
+	}
+
+	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData) {
 		setInitialPos(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)));
+		dataManager.set(SPAWN_TICKS, 300);
 		initScreens();
 
 		return livingData;
@@ -142,6 +166,11 @@ public class EntityBossAI extends EntityLiving implements IMob {
 			needsLoadRebind = false;
 		}
 
+		if (getState() == 3)
+			noClip = false;
+		else
+			noClip = true;
+
 		super.onUpdate();
 	}
 
@@ -165,7 +194,32 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		else
 			amount = Math.min(amount, 15.0f);
 
+		if (getState() == 1) {
+			shieldAmount -= MathHelper.floor(amount);
+
+			if (shieldAmount <= 0) {
+				shieldAmount = 50;
+				setState(3);
+				moveHelper.action = Action.WAIT;
+			}
+
+			return false;
+		}
+
 		return super.attackEntityFrom(source, amount);
+	}
+
+	public float getAdjustedDamage(float amount) {
+		if (getState() == 3) {
+			float healthBeforeSwitch = getHealth() % 50;
+			amount = Math.min(amount, healthBeforeSwitch);
+		}
+
+		return Math.min(amount, 15.0f);
+	}
+
+	public boolean shouldSwitchToSpark() {
+		return getHealth() % 50 == 0;
 	}
 
 	//Probably going to be doing weird things with damage later, putting this here in case I forget
@@ -223,8 +277,11 @@ public class EntityBossAI extends EntityLiving implements IMob {
 
 		comp.setByte("state", dataManager.get(STATE));
 		comp.setBoolean("inscreen", activeScreen != null);
+		comp.setInteger("shield", shieldAmount);
 		if (activeScreen != null)
 			comp.setUniqueId("screenid", activeScreen.getPersistentID());
+		if (dataManager.get(SPAWN_TICKS) > 0)
+			comp.setInteger("spawn", dataManager.get(SPAWN_TICKS));
 		comp.setLong("initpos", initialPos.toLong());
 	}
 
@@ -233,6 +290,8 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		super.readEntityFromNBT(comp);
 
 		dataManager.set(STATE, comp.getByte("state"));
+		dataManager.set(SPAWN_TICKS, comp.getInteger("spawn"));
+		shieldAmount = comp.getInteger("shield");
 		needsLoadRebind = activeScreen == null && comp.getBoolean("inscreen");
 		if (needsLoadRebind)
 			loadedScreenID = comp.getUniqueId("screenid");
@@ -304,6 +363,120 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		if (getState() == 3) {
 			isInWeb = true;
 			fallDistance = 0.0f;
+		}
+	}
+
+	public class AISpawn extends EntityAIBase {
+		public AISpawn() {
+			setMutexBits(7);
+		}
+
+		@Override
+		public void startExecuting() {
+			moveHelper.setMoveTo(posX, posY + 2, posZ, 0.05);
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return getState() == 0 && dataManager.get(SPAWN_TICKS) > 0;
+		}
+
+		@Override
+		public void updateTask() {
+			dataManager.set(SPAWN_TICKS, dataManager.get(SPAWN_TICKS) - 1);
+
+			if (dataManager.get(SPAWN_TICKS) <= 0) {
+				setState(1);
+			}
+		}
+	}
+
+	public class AIFlyAround extends EntityAIBase {
+		public AIFlyAround() {
+			setMutexBits(1);
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return getState() == 1;
+		}
+
+		@Override
+		public void updateTask() {
+			if (!moveHelper.isUpdating()) {
+				int x = rand.nextInt(MathHelper.floor(searchAABB.maxX - searchAABB.minX)) + MathHelper.floor(searchAABB.minX);
+				int y = rand.nextInt(MathHelper.floor(searchAABB.maxY - searchAABB.minY)) + MathHelper.floor(searchAABB.minY);
+				int z = rand.nextInt(MathHelper.floor(searchAABB.maxZ - searchAABB.minZ)) + MathHelper.floor(searchAABB.minZ);
+
+				moveHelper.setMoveTo(x, y, z, 0.45);
+			}
+		}
+	}
+
+	public class AIRunAroundHelplessly extends EntityAIBase {
+		private int ticksUntilRecovery = 0;
+
+		public AIRunAroundHelplessly() {
+			setMutexBits(1);
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return getState() == 3;
+		}
+
+		@Override
+		public void resetTask() {
+			ticksUntilRecovery = 0;
+		}
+
+		@Override
+		public void startExecuting() {
+			ticksUntilRecovery = rand.nextInt(600) + 600;
+		}
+
+		@Override
+		public void updateTask() {
+			ticksUntilRecovery--;
+
+			if (ticksUntilRecovery <= 0) {
+				setState(1);
+			}
+		}
+	}
+
+	public static class MoveHelper extends EntityMoveHelper {
+		private int moveTicks = 0;
+
+		public MoveHelper(EntityLiving entityliving) {
+			super(entityliving);
+		}
+
+		@Override
+		public void onUpdateMoveHelper() {
+			if (!isUpdating()) return;
+
+			moveTicks++;
+
+			double x = posX - entity.posX;
+			double y = posY - entity.posY;
+			double z = posZ - entity.posZ;
+			double distance = Math.sqrt(x*x + y*y + z*z);
+
+			if (moveTicks > 100 || speed > distance || distance < 0.5) {
+				action = Action.WAIT;
+				moveTicks = 0;
+			}
+			else {
+				double ratio = speed / distance;
+
+				entity.motionX = x * ratio;
+				entity.motionY = y * ratio;
+				entity.motionZ = z * ratio;
+
+				float yaw = (float)(MathHelper.atan2(z, x) * (180.0 / Math.PI)) - 90.0f;
+				entity.rotationYaw = limitAngle(entity.rotationYaw, yaw, 90.0f);
+			}
 		}
 	}
 }

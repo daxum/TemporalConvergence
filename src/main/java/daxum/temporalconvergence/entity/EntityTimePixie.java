@@ -183,7 +183,7 @@ public class EntityTimePixie extends EntityFlying {
 
 		@Override
 		public void onUpdateMoveHelper() {
-			if (action != EntityMoveHelper.Action.MOVE_TO) return;
+			if (!isUpdating()) return;
 
 			double x = posX - entity.posX;
 			double y = posY - entity.posY;
