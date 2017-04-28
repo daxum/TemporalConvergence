@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import daxum.temporalconvergence.TemporalConvergence;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
@@ -166,8 +167,12 @@ public class EntityBossAI extends EntityLiving implements IMob {
 			needsLoadRebind = false;
 		}
 
-		if (getState() == 3)
+		if (getState() == 3) {
 			noClip = false;
+
+			for (int i = 0; i < 5; i++)
+				TemporalConvergence.proxy.spawnWaterParticle(world, posX + width/2, posY + height, posZ + height / 2, -motionX, 1.0, -motionZ);
+		}
 		else
 			noClip = true;
 
@@ -428,6 +433,7 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		@Override
 		public void resetTask() {
 			ticksUntilRecovery = 0;
+			moveHelper.action = Action.WAIT;
 		}
 
 		@Override
@@ -442,14 +448,23 @@ public class EntityBossAI extends EntityLiving implements IMob {
 			if (ticksUntilRecovery <= 0) {
 				setState(1);
 			}
+
+			if (recentlyHit > 58 || !moveHelper.isUpdating() && rand.nextInt(5) == 0) {
+				int x = rand.nextInt(MathHelper.floor(searchAABB.maxX - searchAABB.minX)) + MathHelper.floor(searchAABB.minX);
+				int z = rand.nextInt(MathHelper.floor(searchAABB.maxZ - searchAABB.minZ)) + MathHelper.floor(searchAABB.minZ);
+
+				moveHelper.setMoveTo(x, posY, z, 0.5);
+			}
 		}
 	}
 
 	public static class MoveHelper extends EntityMoveHelper {
+		private final EntityBossAI entity;
 		private int moveTicks = 0;
 
-		public MoveHelper(EntityLiving entityliving) {
-			super(entityliving);
+		public MoveHelper(EntityBossAI ebai) {
+			super(ebai);
+			entity = ebai;
 		}
 
 		@Override
@@ -461,7 +476,7 @@ public class EntityBossAI extends EntityLiving implements IMob {
 			double x = posX - entity.posX;
 			double y = posY - entity.posY;
 			double z = posZ - entity.posZ;
-			double distance = Math.sqrt(x*x + y*y + z*z);
+			double distance = Math.sqrt(x*x + entity.getState() == 3 ? 0 : y*y + z*z);
 
 			if (moveTicks > 100 || speed > distance || distance < 0.5) {
 				action = Action.WAIT;
@@ -470,9 +485,16 @@ public class EntityBossAI extends EntityLiving implements IMob {
 			else {
 				double ratio = speed / distance;
 
-				entity.motionX = x * ratio;
-				entity.motionY = y * ratio;
-				entity.motionZ = z * ratio;
+				if (entity.getState() != 3) {
+					entity.motionX = x * ratio;
+					entity.motionY = y * ratio;
+					entity.motionZ = z * ratio;
+				}
+				else {
+					ratio /= 2.0;
+					entity.motionX += x * ratio;
+					entity.motionZ += z * ratio;
+				}
 
 				float yaw = (float)(MathHelper.atan2(z, x) * (180.0 / Math.PI)) - 90.0f;
 				entity.rotationYaw = limitAngle(entity.rotationYaw, yaw, 90.0f);

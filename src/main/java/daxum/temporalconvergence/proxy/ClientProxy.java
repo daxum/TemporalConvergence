@@ -27,6 +27,7 @@ import daxum.temporalconvergence.render.entity.EntityRenderRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 
@@ -90,5 +91,10 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {
 		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDimGenCraft(world, posX, posY, posZ, targetX, targetY, targetZ));
+	}
+
+	@Override
+	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz) {
+		world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x, y, z, vx, vy, vz, 0);
 	}
 }
