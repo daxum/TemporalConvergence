@@ -1,0 +1,21 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "texture": "temporalconvergence:future_button",
+        "particle": "temporalconvergence:early_future_block"
+    },
+
+    "elements": [
+        {   "from": [ 5, 6, 6 ],
+            "to": [ 11, 10, 10 ],
+            "faces": {
+                "down":  { "uv": [0, 0, 0, 0], "texture": "#texture" },
+                "up":    { "uv": [0, 0, 0, 0], "texture": "#texture" },
+                "north": { "uv": [0, 8, 10, 16], "texture": "#texture" },
+                "south": { "uv": [0, 8, 10, 16], "texture": "#texture" },
+                "west":  { "uv": [0, 0, 0, 0], "texture": "#texture" },
+                "east":  { "uv": [0, 0, 0, 0], "texture": "#texture" }
+            }
+        }
+    ]
+}

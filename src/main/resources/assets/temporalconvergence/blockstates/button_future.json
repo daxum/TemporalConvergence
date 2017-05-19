@@ -1,0 +1,16 @@
+{
+    "variants": {
+        "facing=north,powered=true": {"model": "temporalconvergence:button_future_on", "x": 90},
+        "facing=east,powered=true": {"model": "temporalconvergence:button_future_on", "x": 90, "y": 90},
+        "facing=south,powered=true": {"model": "temporalconvergence:button_future_on", "x": 90, "y": 180},
+        "facing=west,powered=true": {"model": "temporalconvergence:button_future_on", "x": 90, "y": 270},
+        "facing=up,powered=true": {"model": "temporalconvergence:button_future_on"},
+        "facing=down,powered=true": {"model": "temporalconvergence:button_future_on", "x": 180},
+        "facing=north,powered=false": {"model": "temporalconvergence:button_future_off", "x": 90},
+        "facing=east,powered=false": {"model": "temporalconvergence:button_future_off", "x": 90, "y": 90},
+        "facing=south,powered=false": {"model": "temporalconvergence:button_future_off", "x": 90, "y": 180},
+        "facing=west,powered=false": {"model": "temporalconvergence:button_future_off", "x": 90, "y": 270},
+        "facing=up,powered=false": {"model": "temporalconvergence:button_future_off"},
+        "facing=down,powered=false": {"model": "temporalconvergence:button_future_off", "x": 180}
+    }
+}

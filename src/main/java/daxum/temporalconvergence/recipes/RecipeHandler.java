@@ -49,6 +49,7 @@ public final class RecipeHandler {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.TIME_WOOD_PLANKS, 4),  ModBlocks.TIME_WOOD);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TIME_STEEL_INGOT, 9), ModBlocks.TIME_STEEL);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.DIM_LINKER), ModItems.TIME_PEARL, Items.GLOWSTONE_DUST);
+		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_BUTTON, 4), ModBlocks.EARLY_FUTURE_BLOCK);
 
 		GameRegistry.addSmelting(ModBlocks.TIME_SAND, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
 
