@@ -19,9 +19,12 @@
  **************************************************************************/
 package daxum.temporalconvergence.item;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import daxum.temporalconvergence.entity.EntityFrozen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
@@ -44,6 +47,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemTimeFreezer extends ItemBase {
+	private static Map<UUID, FrozenEntityEntry> frozenList = new HashMap<>();
+	private static List<UUID> toRemove = new ArrayList<>();
+
 	public ItemTimeFreezer() {
 		super("time_freezer");
 		addPropertyOverride(new ResourceLocation("active"), new IItemPropertyGetter() {
@@ -84,18 +90,18 @@ public class ItemTimeFreezer extends ItemBase {
 			for (int i = 0; i < entities.size(); i++) {
 				Entity current = entities.get(i);
 
-				if (current instanceof EntityFrozen) {
-					EntityFrozen frozen = (EntityFrozen) current;
-					frozen.reFreeze();
+				if (frozenList.containsKey(current.getPersistentID())) {
+					FrozenEntityEntry frozen = frozenList.get(current.getPersistentID());
+					frozen.resetTimer();
 
 					used = true;
 
-					if (isBossProjectile(frozen.getFrozenEntity()))
+					if (isBossProjectile(frozen.frozen))
 						usedBoss = true;
 				} //TODO: Add additional through config, optional boss projecile, blacklist
-				else if (current instanceof IProjectile || current instanceof EntityFireball || current instanceof EntityShulkerBullet) {
-					world.spawnEntity(new EntityFrozen(world, current));
-
+				else if (!current.updateBlocked && (current instanceof IProjectile || current instanceof EntityFireball || current instanceof EntityShulkerBullet)) {
+					current.updateBlocked = true;
+					frozenList.put(current.getPersistentID(), new FrozenEntityEntry(current, entity));
 					used = true;
 
 					if (isBossProjectile(current)) //All boss projectiles cause 10x durability loss
@@ -182,5 +188,49 @@ public class ItemTimeFreezer extends ItemBase {
 			tooltip.add("Activated");
 		else
 			tooltip.add("Deactivated");
+	}
+
+	public static void updateFrozenList() {
+		for (Map.Entry<UUID, FrozenEntityEntry> val : frozenList.entrySet()) {
+			if (val.getValue().shouldUnfreeze()) {
+				frozenList.get(val.getKey()).unfreeze();
+				toRemove.add(val.getKey());
+			}
+			else {
+				frozenList.get(val.getKey()).unfreezeTimer++;
+			}
+		}
+
+		for (UUID uuid : toRemove) {
+			frozenList.remove(uuid);
+		}
+
+		toRemove.clear();
+	}
+
+	public static void unfreezeAllInDim(int dimid) {
+		for (Map.Entry<UUID, FrozenEntityEntry> val : frozenList.entrySet()) {
+			if (val.getValue().frozen.world.provider.getDimension() == dimid) {
+				frozenList.get(val.getKey()).unfreeze();
+				toRemove.add(val.getKey());
+			}
+		}
+
+		for (UUID uuid : toRemove) {
+			frozenList.remove(uuid);
+		}
+
+		toRemove.clear();
+	}
+
+	public static class FrozenEntityEntry {
+		public final Entity frozen;
+		public final Entity friezer;
+		public int unfreezeTimer = 0;
+
+		public FrozenEntityEntry(Entity fn, Entity fr) { frozen = fn; friezer = fr; }
+		public void unfreeze() { frozen.updateBlocked = false; }
+		public void resetTimer() { unfreezeTimer = 0; }
+		public boolean shouldUnfreeze() { return !frozen.updateBlocked || frozen.isDead || friezer.isDead || unfreezeTimer > 2; }
 	}
 }
