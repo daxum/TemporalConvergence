@@ -98,7 +98,7 @@ public class ItemTimeFreezer extends ItemBase {
 
 					if (isBossProjectile(frozen.frozen))
 						usedBoss = true;
-				} //TODO: Add additional through config, optional boss projecile, blacklist
+				} //TODO: Add additional through config, optional boss projectile, blacklist
 				else if (!current.updateBlocked && (current instanceof IProjectile || current instanceof EntityFireball || current instanceof EntityShulkerBullet)) {
 					current.updateBlocked = true;
 					frozenList.put(current.getPersistentID(), new FrozenEntityEntry(current, entity));
