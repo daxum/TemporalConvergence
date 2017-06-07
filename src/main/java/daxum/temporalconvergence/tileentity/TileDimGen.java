@@ -41,7 +41,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileDimGen extends TileEntity implements ITickable {
-	protected ItemStackHandler inventory = new SingleInventory(this);
+	protected ItemStackHandler inventory = new DimGenInventory(this);
 	protected BlockPos[] pedLocs = new BlockPos[12];
 	protected BlockPos prevPos = BlockPos.ORIGIN;
 	protected AxisAlignedBB fullClock;
@@ -499,12 +499,21 @@ public class TileDimGen extends TileEntity implements ITickable {
 		prevPos = pos;
 	}
 
-	public static class SingleInventory extends ItemStackHandler {
+	public static class DimGenInventory extends ItemStackHandler {
 		private final TileDimGen parent;
 
-		public SingleInventory(TileDimGen tp) {
-			super();
+		public DimGenInventory(TileDimGen tp) {
+			super(1);
 			parent = tp;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if (parent.canRemoveItem()) {
+				return super.extractItem(slot, amount, simulate);
+			}
+
+			return ItemStack.EMPTY;
 		}
 
 		@Override

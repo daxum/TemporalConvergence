@@ -54,26 +54,30 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float notWorldx, float notWorldy, float notWorldz) {
-		if (!world.isRemote && world.getTileEntity(pos) instanceof TileDimGen) {
+		if (!world.isRemote && player != null && world.getTileEntity(pos) instanceof TileDimGen) {
 			if (player.isSneaking()) {
+				//Sneak-right click to craft
 				((TileDimGen) world.getTileEntity(pos)).setCrafting();
 			}
-			else if (((TileDimGen)world.getTileEntity(pos)).canRemoveItem()) {
-				ItemStackHandler inventory = ((TileDimGen)world.getTileEntity(pos)).getInventory();
-				ItemStack playerStack = player.getHeldItemMainhand();
-				ItemStack invStack = inventory.getStackInSlot(0);
+			else {
+				ItemStackHandler inventory = ((TileDimGen) world.getTileEntity(pos)).getInventory();
+				ItemStack inventoryStack = inventory.extractItem(0, 1, true);
+				ItemStack playerStack = player.getHeldItem(hand);
 
-				if (!invStack.isEmpty()) {
-					world.spawnEntity(new EntityItem(world, pos.getX() + 0.5f, pos.getY() + 1.0f, pos.getZ() + 0.5f, invStack));
-					inventory.setStackInSlot(0, ItemStack.EMPTY);
+				//If an item can be inserted, insert it.
+				if (inventoryStack.isEmpty() && !playerStack.isEmpty()) {
+					ItemStack remainder = inventory.insertItem(0, playerStack, false);
+					player.setHeldItem(hand, remainder);
 				}
-				else if (!playerStack.isEmpty()) {
-					inventory.setStackInSlot(0, playerStack.splitStack(1));
+				//Otherwise, try to take an item out
+				else {
+					inventoryStack = inventory.extractItem(0, 1, false);
+					world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, inventoryStack));
 				}
 			}
 		}
 
-		return true;
+		return true; //What is this return value for?
 	}
 
 	@Override
