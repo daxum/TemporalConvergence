@@ -42,10 +42,10 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class TileDimGen extends TileEntity implements ITickable {
 	public static final int PEDESTAL_COUNT = 12;
-	public static final int WARMUP_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingStage == WARMUP)
+	public static final int WARMUP_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == WARMUP)
 	public static final int CRAFT_INIT_STEP = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
-	public static final int NUM_ROTATIONS_CRAFTING = 14; //The number of times the minute hand does a full rotation in the CraftingStages.CRAFTING stage
-	public static final int CRAFTING_TIME = PEDESTAL_COUNT * CRAFT_INIT_STEP * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING stage
+	public static final int NUM_ROTATIONS_CRAFTING = 14; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
+	public static final int CRAFTING_TIME = PEDESTAL_COUNT * CRAFT_INIT_STEP * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
 	public static final int END_TIME = 75; //The amount of time in ticks the END phase takes
 	public static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
 
@@ -54,8 +54,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private BlockPos prevPos = BlockPos.ORIGIN;
 	private AxisAlignedBB fullClock; //Rendering bounding box for when it's crafting
 	private AxisAlignedBB smallClock; //Rendering bounding box for when it's not crafting
-	private CraftingStages craftingStage = CraftingStages.NOT_CRAFTING; //TODO: Change stage to state, this is getting confusing
-	private int ticksInStage = 0; //Number of ticks spent in the current crafting stage. Not set if not crafting.
+	private CraftingStates craftingState = CraftingStates.NOT_CRAFTING;
+	private int ticksInState = 0; //Number of ticks spent in the current crafting state. Not set if not crafting.
 	private List<ItemStack> currentRecipe = new ArrayList<>(); //The item inputs to the currently active recipe. Does not contain center input. Values are removed as they're consumed
 	private ItemStack recipeOutput = ItemStack.EMPTY; //The cached value of the output of the current recipe
 	private boolean[] activePedestals = new boolean[PEDESTAL_COUNT]; //The pedestals being used to craft the current recipe
@@ -79,79 +79,79 @@ public class TileDimGen extends TileEntity implements ITickable {
 			prevRotations[i] = rotations[i];
 		}
 
-		if (craftingStage.isCrafting()) {
+		if (craftingState.isCrafting()) {
 			markDirty();
 
-			if (craftingStage == CraftingStages.WARMUP) {
-				if (ticksInStage >= WARMUP_TIME) {
-					transitionToStage(CraftingStages.CRAFTING);
+			if (craftingState == CraftingStates.WARMUP) {
+				if (ticksInState >= WARMUP_TIME) {
+					transitionToState(CraftingStates.CRAFTING);
 				}
 				else {
-					ticksInStage++;
+					ticksInState++;
 				}
 			}
-			else if (craftingStage == CraftingStages.CRAFTING) {
-				if (ticksInStage >= CRAFTING_TIME) {
-					transitionToStage(CraftingStages.END_SUCCESS);
+			else if (craftingState == CraftingStates.CRAFTING) {
+				if (ticksInState >= CRAFTING_TIME) {
+					transitionToState(CraftingStates.END_SUCCESS);
 					inventory.setStackInSlot(0, recipeOutput);
 				}
-				else if (ticksInStage <= CRAFT_INIT_STEP * PEDESTAL_COUNT && ticksInStage % CRAFT_INIT_STEP == 0) {
-					int pedestalNumber = ticksInStage / CRAFT_INIT_STEP;
+				else if (ticksInState <= CRAFT_INIT_STEP * PEDESTAL_COUNT && ticksInState % CRAFT_INIT_STEP == 0) {
+					int pedestalNumber = ticksInState / CRAFT_INIT_STEP;
 
 					if (isPedestalActive(pedestalNumber) && !tryConsumeItem(pedestalNumber)) {
-						craftingStage = CraftingStages.STALLED;
+						craftingState = CraftingStates.STALLED;
 						sendBlockUpdate();
 					}
 					else {
 						//Item was successfully consumed and crafting can continue, or the pedestal wasn't required to have an item to consume
-						ticksInStage++;
+						ticksInState++;
 					}
 				}
 				else {
 					//All items have already been consumed
-					ticksInStage++;
+					ticksInState++;
 				}
 			}
-			else if (craftingStage == CraftingStages.STALLED) {
-				int pedestalNumber = ticksInStage / CRAFT_INIT_STEP;
+			else if (craftingState == CraftingStates.STALLED) {
+				int pedestalNumber = ticksInState / CRAFT_INIT_STEP;
 
 				if (tryConsumeItem(pedestalNumber)) {
-					transitionToStage(CraftingStages.CRAFTING);
+					transitionToState(CraftingStates.CRAFTING);
 				}
 			}
-			else if (craftingStage == CraftingStages.END_SUCCESS || craftingStage == CraftingStages.END_FAIL) {
-				if (ticksInStage >= END_TIME) {
-					if (craftingStage == CraftingStages.END_SUCCESS) {
-						transitionToStage(CraftingStages.END_POST_SUCCESS);
+			else if (craftingState == CraftingStates.END_SUCCESS || craftingState == CraftingStates.END_FAIL) {
+				if (ticksInState >= END_TIME) {
+					if (craftingState == CraftingStates.END_SUCCESS) {
+						transitionToState(CraftingStates.END_POST_SUCCESS);
 					}
 					else {
 						resetCraftingState();
 					}
 				}
 				else {
-					ticksInStage++;
+					ticksInState++;
 				}
 			}
-			else if (craftingStage == CraftingStages.END_POST_SUCCESS) {
-				if (ticksInStage >= POST_SUCCESS_TIME) {
+			else if (craftingState == CraftingStates.END_POST_SUCCESS) {
+				if (ticksInState >= POST_SUCCESS_TIME) {
 					resetCraftingState();
 				}
 				else {
-					ticksInStage++;
+					ticksInState++;
 				}
 			}
 		}
 	}
 
-	private void transitionToStage(CraftingStages stage) {
-		craftingStage = stage;
-		ticksInStage = 0;
+	private void transitionToState(CraftingStates state) {
+		craftingState = state;
+		ticksInState = 0;
 		sendBlockUpdate();
 	}
 
-	protected void setTime(int stage) {
+	protected void setTime(int state) {
 		if (world.isRemote) {
-			if (stage == 0) {
+			if (state == 0) {
 				rotations[0] = 0.0f; //Not sure why this sometimes isn't set right
 				rotations[1] = (world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f;
 				rotations[2] = rotations[1] % 30.0f / 30.0f * 360.0f;
@@ -162,7 +162,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 						prevRotations[i] -= 360.0;
 				}
 			}
-			else if (stage == 1) {
+			else if (state == 1) {
 				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
 
 				if (rotations[0] >= 720.0f)
@@ -171,7 +171,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 				for (int i = 1; i < rotations.length; i++)
 					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
 			}
-			else if (stage == 2) {
+			else if (state == 2) {
 				rotations[0] = 720.0f;
 				rotations[1] = (400.0f - craftTicks) / 400.0f * 360.0f + 1440;
 				rotations[2] = 1800.0f + (400.0f - craftTicks) / 400.0f * 5040.0f;
@@ -188,7 +188,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 					prevRotations[3] -= 5040.0f;
 				}
 			}
-			else if (stage == 3) {
+			else if (state == 3) {
 				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
 
 				if (rotations[0] <= 0.0f)
@@ -222,12 +222,12 @@ public class TileDimGen extends TileEntity implements ITickable {
 	}
 
 	public void tryStartCrafting() {
-		if (!world.isRemote && !craftingStage.isCrafting()) {
+		if (!world.isRemote && !craftingState.isCrafting()) {
 			List<ItemStack> pedestalInputs = getItemsFromPedestals();
 
 			if (canCraftUsing(pedestalInputs)) {
-				craftingStage = CraftingStages.WARMUP;
-				ticksInStage = 0;
+				craftingState = CraftingStates.WARMUP;
+				ticksInState = 0;
 				currentRecipe = pedestalInputs;
 				recipeOutput = DimGenRecipes.getOutput(inventory.getStackInSlot(0), pedestalInputs);
 				setActivePedestals();
@@ -238,8 +238,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 	}
 
 	private void resetCraftingState() {
-		craftingStage = CraftingStages.NOT_CRAFTING;
-		ticksInStage = 0;
+		craftingState = CraftingStates.NOT_CRAFTING;
+		ticksInState = 0;
 		currentRecipe.clear();
 		recipeOutput = ItemStack.EMPTY;
 		resetActivePedestals();
@@ -382,21 +382,21 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (craftingStage.isCrafting())
+		if (craftingState.isCrafting())
 			return fullClock;
 		return smallClock;
 	}
 
 	public int getTicksInState() {
-		return ticksInStage;
+		return ticksInState;
 	}
 
-	public CraftingStages getCraftingStage() {
-		return craftingStage;
+	public CraftingStates getCraftingState() {
+		return craftingState;
 	}
 
 	public boolean canRemoveItem() {
-		return craftingStage != CraftingStages.END_SUCCESS;
+		return craftingState != CraftingStates.END_SUCCESS;
 	}
 
 	public float getRotationDegrees() {
@@ -476,7 +476,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 	}
 
-	public static enum CraftingStages {
+	public static enum CraftingStates {
 		NOT_CRAFTING,
 		WARMUP,
 		CRAFTING,
