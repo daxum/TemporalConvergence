@@ -73,8 +73,8 @@ public final class DimGenRecipes {
 		itemInputs.add(new DimBuilderItem(input, tier, type));
 	}
 
-	public static boolean isValid(ItemStack centerInput, List<ItemStack> inputs) {
-		return (inputs.size() == 2 || inputs.size() == 4 || inputs.size() == 8 || inputs.size() == 12) && !getOutput(centerInput, inputs).isEmpty();
+	public static boolean isValidRecipe(ItemStack centerInput, List<ItemStack> inputs) {
+		return inputs.size() <= 12 && !getOutput(centerInput, inputs).isEmpty();
 	}
 
 	public static ItemStack getOutput(ItemStack centerInput, List<ItemStack> inputs) {

@@ -57,7 +57,7 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 		if (!world.isRemote && player != null && world.getTileEntity(pos) instanceof TileDimGen) {
 			if (player.isSneaking()) {
 				//Sneak-right click to craft
-				((TileDimGen) world.getTileEntity(pos)).setCrafting();
+				((TileDimGen) world.getTileEntity(pos)).tryStartCrafting();
 			}
 			else {
 				ItemStackHandler inventory = ((TileDimGen) world.getTileEntity(pos)).getInventory();
@@ -94,7 +94,7 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos changedPos) {
 		if (!world.isRemote && world.isBlockPowered(pos) && world.getTileEntity(pos) instanceof TileDimGen)
-			((TileDimGen)world.getTileEntity(pos)).setCrafting();
+			((TileDimGen)world.getTileEntity(pos)).tryStartCrafting();
 	}
 
 	@Override
