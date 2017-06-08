@@ -28,6 +28,7 @@ import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.recipes.DimGenRecipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -37,6 +38,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -49,16 +51,17 @@ public class TileDimGen extends TileEntity implements ITickable {
 	public static final int END_TIME = 75; //The amount of time in ticks the END phase takes
 	public static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
 
+	//All of these values need to be written to / read from nbt
 	private ItemStackHandler inventory = new DimGenInventory(this);
-	private BlockPos[] pedLocs = new BlockPos[PEDESTAL_COUNT]; //Cache of pedestal locations, starting at north (12 o' clock) and going clockwise
-	private BlockPos prevPos = BlockPos.ORIGIN;
-	private AxisAlignedBB fullClock; //Rendering bounding box for when it's crafting
-	private AxisAlignedBB smallClock; //Rendering bounding box for when it's not crafting
 	private CraftingStates craftingState = CraftingStates.NOT_CRAFTING;
 	private int ticksInState = 0; //Number of ticks spent in the current crafting state. Not set if not crafting.
 	private List<ItemStack> currentRecipe = new ArrayList<>(); //The item inputs to the currently active recipe. Does not contain center input. Values are removed as they're consumed
 	private ItemStack recipeOutput = ItemStack.EMPTY; //The cached value of the output of the current recipe
 	private boolean[] activePedestals = new boolean[PEDESTAL_COUNT]; //The pedestals being used to craft the current recipe
+
+	//These are caches that don't need to be saved
+	private BlockPos[] pedLocs = new BlockPos[PEDESTAL_COUNT]; //Cache of pedestal locations, starting at north (12 o' clock) and going clockwise
+	private BlockPos prevPos = BlockPos.ORIGIN;
 
 	//The below are used for rendering only
 	public float scale = 1.0f;
@@ -94,6 +97,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 				if (ticksInState >= CRAFTING_TIME) {
 					transitionToState(CraftingStates.END_SUCCESS);
 					inventory.setStackInSlot(0, recipeOutput);
+					recipeOutput = ItemStack.EMPTY;
 				}
 				else if (ticksInState <= CRAFT_INIT_STEP * PEDESTAL_COUNT && ticksInState % CRAFT_INIT_STEP == 0) {
 					int pedestalNumber = ticksInState / CRAFT_INIT_STEP;
@@ -283,7 +287,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			return activePedestals[i];
 		}
 		else {
-			TemporalConvergence.LOGGER.warn("isPedestalActive() called with invalid index " + i + ". Valid range is [0, " + PEDESTAL_COUNT + ")");
+			TemporalConvergence.LOGGER.warn("isPedestalActive() called with invalid index {}. Valid range is [0, {})", i, PEDESTAL_COUNT);
 		}
 
 		return false;
@@ -316,36 +320,109 @@ public class TileDimGen extends TileEntity implements ITickable {
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
 		comp.setTag("inv", inventory.serializeNBT());
-		comp.setBoolean("craft", crafting);
-		comp.setFloat("scale", scale);
-		comp.setInteger("ctick", craftTicks);
+		comp.setInteger("craft", craftingState.ordinal());
 
-		if (crafting)
-			for (int i = 0; i < currentRecipe.size(); i++)
-				comp.setTag("cur" + i, currentRecipe.get(i).serializeNBT());
+		if (craftingState.isCrafting()) {
+			if (currentRecipe.size() > 0) {
+				comp.setTag("currentRecipe", serializeCurrentRecipe());
+			}
+
+			if (!recipeOutput.isEmpty()) {
+				comp.setTag("output", recipeOutput.serializeNBT());
+			}
+
+			comp.setInteger("stateTicks", ticksInState);
+			comp = serializeActivePedestals(comp);
+		}
 
 		return super.writeToNBT(comp);
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound comp) {
-		if (comp.hasKey("inv"))
-			inventory.deserializeNBT(comp.getCompoundTag("inv"));
-		if (comp.hasKey("craft"))
-			crafting = comp.getBoolean("craft");
-		if (comp.hasKey("scale"))
-			scale = comp.getFloat("scale");
-		if (comp.hasKey("ctick"))
-			craftTicks = comp.getInteger("ctick");
+	private NBTTagList serializeCurrentRecipe() {
+		NBTTagList recipeList = new NBTTagList();
 
-		currentRecipe.clear();
-		for (int i = 0; i < 13; i++) {
-			if (!comp.hasKey("cur" + i))
-				break;
-			currentRecipe.add(new ItemStack((NBTTagCompound) comp.getTag("cur" + i)));
+		for (int i = 0; i < currentRecipe.size(); i++) {
+			recipeList.appendTag(currentRecipe.get(i).serializeNBT());
 		}
 
-		super.readFromNBT(comp);
+		return recipeList;
+	}
+
+	private NBTTagCompound serializeActivePedestals(NBTTagCompound comp) {
+		int pedestalValues = 0;
+
+		for (int i = 0; i < activePedestals.length; i++) {
+			pedestalValues = pedestalValues | (activePedestals[i] ? 1 << i : 0);
+		}
+
+		comp.setInteger("activePedestals", pedestalValues);
+		return comp;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound comp) {
+		super.readFromNBT(comp); //Needs to be at the top because position is used below
+
+		if (comp.hasKey("inv", Constants.NBT.TAG_COMPOUND)) {
+			inventory.deserializeNBT(comp.getCompoundTag("inv"));
+		}
+
+		if (comp.hasKey("craft", Constants.NBT.TAG_INT)) {
+			int craftOrdinal = comp.getInteger("craft");
+			CraftingStates[] craftingStateList = CraftingStates.values();
+
+			if (craftOrdinal >= 0 && craftOrdinal < craftingStateList.length) {
+				craftingState = craftingStateList[craftOrdinal];
+			}
+		}
+		else {
+			TemporalConvergence.LOGGER.error("Failed to load crafting state for dimGen at {}", pos);
+			craftingState = CraftingStates.NOT_CRAFTING;
+		}
+
+		if (craftingState.isCrafting()) {
+			if (comp.hasKey("stateTicks", Constants.NBT.TAG_INT)) {
+				ticksInState = comp.getInteger("stateTicks");
+			}
+
+			if (comp.hasKey("output", Constants.NBT.TAG_COMPOUND)) {
+				recipeOutput = new ItemStack(comp.getCompoundTag("output"));
+			}
+
+			if (comp.hasKey("currentRecipe", Constants.NBT.TAG_LIST)) {
+				deserializeCurrentRecipe(comp.getTagList("currentRecipe", Constants.NBT.TAG_COMPOUND));
+			}
+
+			deserializeActivePedestals(comp);
+
+			//TODO: Validate crafting state
+		}
+	}
+
+	private void deserializeCurrentRecipe(NBTTagList recipeList) {
+		currentRecipe.clear();
+		for (int i = 0; i < recipeList.tagCount() && i < PEDESTAL_COUNT; i++) {
+			currentRecipe.add(new ItemStack(recipeList.getCompoundTagAt(i)));
+		}
+
+		if (recipeList.tagCount() > PEDESTAL_COUNT) {
+			TemporalConvergence.LOGGER.error("Encountered a list of unexpected size {} while reading nbt for dimGen at {}. Maximum size is {}.", recipeList.tagCount(), pos, PEDESTAL_COUNT);
+		}
+	}
+
+	private void deserializeActivePedestals(NBTTagCompound comp) {
+		resetActivePedestals();
+
+		if (comp.hasKey("activePedestals", Constants.NBT.TAG_INT)) {
+			int pedestalValues = comp.getInteger("activePedestals");
+
+			for (int i = 0; i < activePedestals.length; i++) {
+				activePedestals[i] = (pedestalValues >> i & 1) == 1;
+			}
+		}
+		else {
+			TemporalConvergence.LOGGER.error("Missing activePedestals tag for dimGen at {}", pos);
+		}
 	}
 
 	@Override
@@ -379,6 +456,9 @@ public class TileDimGen extends TileEntity implements ITickable {
 	public ItemStackHandler getInventory() {
 		return inventory;
 	}
+
+	private AxisAlignedBB fullClock; //Rendering bounding box for when it's crafting
+	private AxisAlignedBB smallClock; //Rendering bounding box for when it's not crafting
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
@@ -476,6 +556,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 	}
 
+	//The order these values are declared should not be changed, because it will break saving and loading
 	public static enum CraftingStates {
 		NOT_CRAFTING,
 		WARMUP,
