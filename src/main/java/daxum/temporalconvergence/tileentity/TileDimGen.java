@@ -26,6 +26,7 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.BlockDimGen;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.recipes.DimGenRecipes;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,13 +44,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileDimGen extends TileEntity implements ITickable {
-	public static final int PEDESTAL_COUNT = 12;
-	public static final int WARMUP_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == WARMUP)
-	public static final int CRAFT_INIT_STEP = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
-	public static final int NUM_ROTATIONS_CRAFTING = 14; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
-	public static final int CRAFTING_TIME = PEDESTAL_COUNT * CRAFT_INIT_STEP * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
-	public static final int END_TIME = 75; //The amount of time in ticks the END phase takes
-	public static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
+	private static final int PEDESTAL_COUNT = 12;
+	private static final int STARTUP_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == STARTUP)
+	private static final int TICKS_BETWEEN_PEDESTALS = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
+	private static final int NUM_ROTATIONS_CRAFTING = 4; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
+	private static final int CRAFTING_TIME = PEDESTAL_COUNT * TICKS_BETWEEN_PEDESTALS * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
+	private static final int END_TIME = 75; //The amount of time in ticks the END phase takes
+	private static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
 
 	//All of these values need to be written to / read from nbt
 	private ItemStackHandler inventory = new DimGenInventory(this);
@@ -62,12 +63,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 	//These are caches that don't need to be saved
 	private BlockPos[] pedLocs = new BlockPos[PEDESTAL_COUNT]; //Cache of pedestal locations, starting at north (12 o' clock) and going clockwise
 	private BlockPos prevPos = BlockPos.ORIGIN;
-
-	//The below are used for rendering only
-	public float scale = 1.0f;
-	public float prevScale = 1.0f;
-	public float[] rotations = {0.0f, 0.0f, 0.0f, 0.0f}; //Face, hour, minute, second
-	public float[] prevRotations = {0.0f, 0.0f, 0.0f, 0.0f};
+	private IBlockState blockState = ModBlocks.DIM_GEN.getDefaultState();
 
 	@Override
 	public void update() {
@@ -76,17 +72,14 @@ public class TileDimGen extends TileEntity implements ITickable {
 			onLoad();
 		}
 
-		//Set previous variables for rendering
-		prevScale = scale;
-		for (int i = 0; i < rotations.length; i++) {
-			prevRotations[i] = rotations[i];
-		}
+		updateBlockState();
+		doClientUpdate();
 
 		if (craftingState.isCrafting()) {
 			markDirty();
 
-			if (craftingState == CraftingStates.WARMUP) {
-				if (ticksInState >= WARMUP_TIME) {
+			if (craftingState == CraftingStates.STARTUP) {
+				if (ticksInState >= STARTUP_TIME) {
 					transitionToState(CraftingStates.CRAFTING);
 				}
 				else {
@@ -95,12 +88,12 @@ public class TileDimGen extends TileEntity implements ITickable {
 			}
 			else if (craftingState == CraftingStates.CRAFTING) {
 				if (ticksInState >= CRAFTING_TIME) {
-					transitionToState(CraftingStates.END_SUCCESS);
 					inventory.setStackInSlot(0, recipeOutput);
 					recipeOutput = ItemStack.EMPTY;
+					transitionToState(CraftingStates.END_SUCCESS);
 				}
-				else if (ticksInState <= CRAFT_INIT_STEP * PEDESTAL_COUNT && ticksInState % CRAFT_INIT_STEP == 0) {
-					int pedestalNumber = ticksInState / CRAFT_INIT_STEP;
+				else if (ticksInState < TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT && ticksInState % TICKS_BETWEEN_PEDESTALS == 0) { //If the minute hand is pointing to a pedestal
+					int pedestalNumber = ticksInState / TICKS_BETWEEN_PEDESTALS;
 
 					if (isPedestalActive(pedestalNumber) && !tryConsumeItem(pedestalNumber)) {
 						craftingState = CraftingStates.STALLED;
@@ -117,16 +110,18 @@ public class TileDimGen extends TileEntity implements ITickable {
 				}
 			}
 			else if (craftingState == CraftingStates.STALLED) {
-				int pedestalNumber = ticksInState / CRAFT_INIT_STEP;
+				int pedestalNumber = ticksInState / TICKS_BETWEEN_PEDESTALS;
 
 				if (tryConsumeItem(pedestalNumber)) {
-					transitionToState(CraftingStates.CRAFTING);
+					craftingState = CraftingStates.CRAFTING;
+					ticksInState++;
+					sendBlockUpdate();
 				}
 			}
-			else if (craftingState == CraftingStates.END_SUCCESS || craftingState == CraftingStates.END_FAIL) {
+			else if (craftingState.isEnd()) {
 				if (ticksInState >= END_TIME) {
-					if (craftingState == CraftingStates.END_SUCCESS) {
-						transitionToState(CraftingStates.END_POST_SUCCESS);
+					if (craftingState.hasSucceeded()) {
+						transitionToState(CraftingStates.POST_SUCCESS);
 					}
 					else {
 						resetCraftingState();
@@ -136,7 +131,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 					ticksInState++;
 				}
 			}
-			else if (craftingState == CraftingStates.END_POST_SUCCESS) {
+			else if (craftingState == CraftingStates.POST_SUCCESS) {
 				if (ticksInState >= POST_SUCCESS_TIME) {
 					resetCraftingState();
 				}
@@ -147,108 +142,79 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 	}
 
-	private void transitionToState(CraftingStates state) {
-		craftingState = state;
-		ticksInState = 0;
-		sendBlockUpdate();
-	}
-
-	protected void setTime(int state) {
-		if (world.isRemote) {
-			if (state == 0) {
-				rotations[0] = 0.0f; //Not sure why this sometimes isn't set right
-				rotations[1] = (world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f;
-				rotations[2] = rotations[1] % 30.0f / 30.0f * 360.0f;
-				rotations[3] = rotations[2] % 30.0f / 30.0f * 360.0f;
-
-				for (int i = 1; i < rotations.length; i++) {
-					if (rotations[i] < prevRotations[i])
-						prevRotations[i] -= 360.0;
-				}
-			}
-			else if (state == 1) {
-				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
-
-				if (rotations[0] >= 720.0f)
-					rotations[0] = 720.0f;
-
-				for (int i = 1; i < rotations.length; i++)
-					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
-			}
-			else if (state == 2) {
-				rotations[0] = 720.0f;
-				rotations[1] = (400.0f - craftTicks) / 400.0f * 360.0f + 1440;
-				rotations[2] = 1800.0f + (400.0f - craftTicks) / 400.0f * 5040.0f;
-				rotations[3] = 7200.0f - (400.0f - craftTicks) / 400.0f * 5040.0f;
-
-				if (rotations[3] == 7200.0f)
-					prevRotations[3] += 5040.0f;
-
-				if (rotations[1] >= 1800.0f) {
-					rotations[1] = 1440.0f;
-					rotations[2] = 1800.0f;
-					rotations[3] = 2160.0f;
-					prevRotations[1] -= 360.0f;
-					prevRotations[3] -= 5040.0f;
-				}
-			}
-			else if (state == 3) {
-				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
-
-				if (rotations[0] <= 0.0f)
-					rotations[0] = 0.0f;
-
-				for (int i = 1; i < rotations.length; i++)
-					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
-			}
-		}
-	}
-
-	private void spawnParticles() {
-		if (world.isRemote) {
-			for (int i = 0; i < PEDESTAL_COUNT; i++) {
-				if (activePedestals[i]) {
-					spawnParticlesAt(pedLocs[i]);
-				}
-			}
-		}
-	}
-
-	private void spawnParticlesAt(BlockPos toPos) {
-		int number = (int) (10 * MathHelper.sin(180.0f * (craftTicks / 400.0f) * (float)Math.PI / 180.0f));
-
-		for (int i = 0; i < number; i++) {
-			double offX = Math.random() * 0.5 + 0.25;
-			double offY = Math.random() * 0.25 + 1.2;
-			double offZ = Math.random() * 0.5 + 0.25;
-			TemporalConvergence.proxy.spawnDimGenParticle(world, toPos.getX() + offX, toPos.getY() + offY, toPos.getZ() + offZ, pos.getX() + 0.5, pos.getY() + 1.325, pos.getZ() + 0.5);
-		}
-	}
-
 	public void tryStartCrafting() {
 		if (!world.isRemote && !craftingState.isCrafting()) {
 			List<ItemStack> pedestalInputs = getItemsFromPedestals();
 
 			if (canCraftUsing(pedestalInputs)) {
-				craftingState = CraftingStates.WARMUP;
-				ticksInState = 0;
 				currentRecipe = pedestalInputs;
 				recipeOutput = DimGenRecipes.getOutput(inventory.getStackInSlot(0), pedestalInputs);
 				setActivePedestals();
-
-				sendBlockUpdate();
+				transitionToState(CraftingStates.STARTUP);
 			}
 		}
 	}
 
-	private void resetCraftingState() {
-		craftingState = CraftingStates.NOT_CRAFTING;
+	public boolean isPedestalActive(int i) {
+		if (i >= 0 && i < PEDESTAL_COUNT) {
+			return activePedestals[i];
+		}
+		else {
+			TemporalConvergence.LOGGER.warn("isPedestalActive() called with invalid index {}. Valid range is [0, {})", i, PEDESTAL_COUNT);
+		}
+
+		return false;
+	}
+
+	public ItemStackHandler getInventory() {
+		return inventory;
+	}
+
+	public int getTicksInState() {
+		return ticksInState;
+	}
+
+	public CraftingStates getCraftingState() {
+		return craftingState;
+	}
+
+	public boolean canRemoveItem() {
+		return craftingState != CraftingStates.END_SUCCESS;
+	}
+
+	public float getRotationDegrees() {
+		switch (blockState.getValue(BlockDimGen.FACING)) {
+		default:
+		case NORTH: return 0;
+		case EAST: return 270;
+		case SOUTH: return 180;
+		case WEST: return 90;
+		}
+	}
+
+	private void stopIfCrafting() {
+		if (craftingState.isCrafting() && !craftingState.isEnd()) {
+			if (craftingState.isInCraftingStep()) {
+				transitionToState(CraftingStates.END_FAIL_CRAFT);
+			}
+			else {
+				transitionToState(CraftingStates.END_FAIL);
+			}
+		}
+	}
+
+	private void transitionToState(CraftingStates state) {
+		craftingState = state;
 		ticksInState = 0;
+		sendBlockUpdate();
+		TemporalConvergence.LOGGER.info("Transitioned to state {}", state);
+	}
+
+	private void resetCraftingState() {
 		currentRecipe.clear();
 		recipeOutput = ItemStack.EMPTY;
 		resetActivePedestals();
-
-		sendBlockUpdate();
+		transitionToState(CraftingStates.NOT_CRAFTING);
 	}
 
 	private boolean canCraftUsing(List<ItemStack> stacks) {
@@ -282,17 +248,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 	}
 
-	public boolean isPedestalActive(int i) {
-		if (i >= 0 && i < PEDESTAL_COUNT) {
-			return activePedestals[i];
-		}
-		else {
-			TemporalConvergence.LOGGER.warn("isPedestalActive() called with invalid index {}. Valid range is [0, {})", i, PEDESTAL_COUNT);
-		}
-
-		return false;
-	}
-
 	private ItemStack getItemFromPedestalAt(BlockPos position) {
 		if (world.getTileEntity(position) instanceof TilePedestal) {
 			return ((TilePedestal)world.getTileEntity(position)).getInventory().getStackInSlot(0).copy();
@@ -317,21 +272,196 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 	}
 
+	private void updateBlockState() {
+		if (world.getBlockState(pos).getBlock() == ModBlocks.DIM_GEN) {
+			blockState = world.getBlockState(pos);
+		}
+		else {
+			blockState = ModBlocks.DIM_GEN.getDefaultState();
+		}
+	}
+
+	//-----------------------------------------------Data Structures-----------------------------------------------
+
+	//The order these values are declared should not be changed, because it will break saving and loading
+	public static enum CraftingStates {
+		NOT_CRAFTING,
+		STARTUP,
+		CRAFTING,
+		STALLED,
+		END_SUCCESS,
+		END_FAIL, //If the crafting failed during the startup step
+		END_FAIL_CRAFT, //If the crafting failed during the crafting step
+		POST_SUCCESS;
+
+		public boolean isCrafting() {
+			return this != NOT_CRAFTING;
+		}
+
+		public boolean hasSucceeded() {
+			return this == END_SUCCESS || this == POST_SUCCESS;
+		}
+
+		public boolean isEnd() {
+			return this == END_SUCCESS || this == END_FAIL || this == END_FAIL_CRAFT;
+		}
+
+		public boolean isInCraftingStep() {
+			return this == CRAFTING || this == STALLED;
+		}
+	}
+
+	private static class DimGenInventory extends ItemStackHandler {
+		private final TileDimGen parent;
+
+		public DimGenInventory(TileDimGen tp) {
+			super(1);
+			parent = tp;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			if (parent.canRemoveItem()) {
+				parent.stopIfCrafting();
+				return super.extractItem(slot, amount, simulate);
+			}
+
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return 1;
+		}
+
+		@Override
+		protected void onContentsChanged(int slot) {
+			parent.sendBlockUpdate();
+		}
+	}
+
+	//----------------------------------------------Client-only stuff----------------------------------------------
+
+	public float scale = 1.0f;
+	public float prevScale = 1.0f;
+	public float[] rotations = {0.0f, 0.0f, 0.0f, 0.0f}; //Face, hour, minute, second
+	public float[] prevRotations = {0.0f, 0.0f, 0.0f, 0.0f};
+	private AxisAlignedBB fullClockBB; //Rendering bounding box for when it's crafting
+	private AxisAlignedBB smallClockBB; //Rendering bounding box for when it's not crafting
+
+	private void doClientUpdate() {
+		if (world.isRemote) {
+			//Set previous variables for rendering
+			prevScale = scale;
+			for (int i = 0; i < rotations.length; i++) {
+				prevRotations[i] = rotations[i];
+			}
+
+			//Update clock rotations/scale
+			setTimeForState();
+
+			//Spawn particles
+		}
+	}
+
+	private void setTimeForState() {
+		if (world.isRemote) {
+			if (craftingState == CraftingStates.NOT_CRAFTING || craftingState == CraftingStates.POST_SUCCESS) {
+				rotations[0] = 0.0f; //Not sure why this sometimes isn't set right
+				rotations[1] = (world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f;
+				rotations[2] = rotations[1] % 30.0f / 30.0f * 360.0f;
+				rotations[3] = rotations[2] % 30.0f / 30.0f * 360.0f;
+
+				for (int i = 1; i < rotations.length; i++) {
+					if (rotations[i] < prevRotations[i])
+						prevRotations[i] -= 360.0;
+				}
+			}
+			else if (craftingState == CraftingStates.STARTUP) {
+				scale = scale + 0.2f;
+				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
+
+				if (rotations[0] >= 720.0f)
+					rotations[0] = 720.0f;
+
+				for (int i = 1; i < rotations.length; i++)
+					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
+			}
+			else if (craftingState == CraftingStates.CRAFTING) {
+				rotations[0] = 720.0f;
+				rotations[1] = (400.0f - ticksInState) / 400.0f * 360.0f + 1440;
+				rotations[2] = 1800.0f + (400.0f - ticksInState) / 400.0f * 5040.0f;
+				rotations[3] = 7200.0f - (400.0f - ticksInState) / 400.0f * 5040.0f;
+
+				if (rotations[3] == 7200.0f)
+					prevRotations[3] += 5040.0f;
+
+				if (rotations[1] >= 1800.0f) {
+					rotations[1] = 1440.0f;
+					rotations[2] = 1800.0f;
+					rotations[3] = 2160.0f;
+					prevRotations[1] -= 360.0f;
+					prevRotations[3] -= 5040.0f;
+				}
+			}
+			else if (craftingState == CraftingStates.END_SUCCESS || craftingState == CraftingStates.END_FAIL) {
+				scale = scale - 0.2f;
+				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
+
+				if (rotations[0] <= 0.0f)
+					rotations[0] = 0.0f;
+
+				for (int i = 1; i < rotations.length; i++)
+					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
+			}
+		}
+	}
+
+	private void spawnParticles() {
+		if (world.isRemote) {
+			for (int i = 0; i < PEDESTAL_COUNT; i++) {
+				if (activePedestals[i]) {
+					spawnParticlesAt(pedLocs[i]);
+				}
+			}
+		}
+	}
+
+	private void spawnParticlesAt(BlockPos toPos) {
+		int number = (int) (10 * MathHelper.sin(180.0f * (ticksInState / 400.0f) * (float)Math.PI / 180.0f));
+
+		for (int i = 0; i < number; i++) {
+			double offX = Math.random() * 0.5 + 0.25;
+			double offY = Math.random() * 0.25 + 1.2;
+			double offZ = Math.random() * 0.5 + 0.25;
+			TemporalConvergence.proxy.spawnDimGenParticle(world, toPos.getX() + offX, toPos.getY() + offY, toPos.getZ() + offZ, pos.getX() + 0.5, pos.getY() + 1.325, pos.getZ() + 0.5);
+		}
+	}
+
+	//-----------------------------------------------NBT stuff below-----------------------------------------------
+
+	private static final String INVENTORY_KEY = "inventory";
+	private static final String CRAFTING_STATE_KEY = "craftingState";
+	private static final String CURRENT_RECIPE_KEY = "currentRecipe";
+	private static final String RECIPE_OUTPUT_KEY = "output";
+	private static final String STATE_TICKS_KEY = "stateTicks";
+	private static final String ACTIVE_PEDESTALS_KEY = "activePedestals";
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
-		comp.setTag("inv", inventory.serializeNBT());
-		comp.setInteger("craft", craftingState.ordinal());
+		comp.setTag(INVENTORY_KEY, inventory.serializeNBT());
+		comp.setInteger(CRAFTING_STATE_KEY, craftingState.ordinal());
 
 		if (craftingState.isCrafting()) {
 			if (currentRecipe.size() > 0) {
-				comp.setTag("currentRecipe", serializeCurrentRecipe());
+				comp.setTag(CURRENT_RECIPE_KEY, serializeCurrentRecipe());
 			}
 
 			if (!recipeOutput.isEmpty()) {
-				comp.setTag("output", recipeOutput.serializeNBT());
+				comp.setTag(RECIPE_OUTPUT_KEY, recipeOutput.serializeNBT());
 			}
 
-			comp.setInteger("stateTicks", ticksInState);
+			comp.setInteger(STATE_TICKS_KEY, ticksInState);
 			comp = serializeActivePedestals(comp);
 		}
 
@@ -355,7 +485,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			pedestalValues = pedestalValues | (activePedestals[i] ? 1 << i : 0);
 		}
 
-		comp.setInteger("activePedestals", pedestalValues);
+		comp.setInteger(ACTIVE_PEDESTALS_KEY, pedestalValues);
 		return comp;
 	}
 
@@ -363,12 +493,12 @@ public class TileDimGen extends TileEntity implements ITickable {
 	public void readFromNBT(NBTTagCompound comp) {
 		super.readFromNBT(comp); //Needs to be at the top because position is used below
 
-		if (comp.hasKey("inv", Constants.NBT.TAG_COMPOUND)) {
-			inventory.deserializeNBT(comp.getCompoundTag("inv"));
+		if (comp.hasKey(INVENTORY_KEY, Constants.NBT.TAG_COMPOUND)) {
+			inventory.deserializeNBT(comp.getCompoundTag(INVENTORY_KEY));
 		}
 
-		if (comp.hasKey("craft", Constants.NBT.TAG_INT)) {
-			int craftOrdinal = comp.getInteger("craft");
+		if (comp.hasKey(CRAFTING_STATE_KEY, Constants.NBT.TAG_INT)) {
+			int craftOrdinal = comp.getInteger(CRAFTING_STATE_KEY);
 			CraftingStates[] craftingStateList = CraftingStates.values();
 
 			if (craftOrdinal >= 0 && craftOrdinal < craftingStateList.length) {
@@ -381,16 +511,16 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 
 		if (craftingState.isCrafting()) {
-			if (comp.hasKey("stateTicks", Constants.NBT.TAG_INT)) {
-				ticksInState = comp.getInteger("stateTicks");
+			if (comp.hasKey(STATE_TICKS_KEY, Constants.NBT.TAG_INT)) {
+				ticksInState = comp.getInteger(STATE_TICKS_KEY);
 			}
 
-			if (comp.hasKey("output", Constants.NBT.TAG_COMPOUND)) {
-				recipeOutput = new ItemStack(comp.getCompoundTag("output"));
+			if (comp.hasKey(RECIPE_OUTPUT_KEY, Constants.NBT.TAG_COMPOUND)) {
+				recipeOutput = new ItemStack(comp.getCompoundTag(RECIPE_OUTPUT_KEY));
 			}
 
-			if (comp.hasKey("currentRecipe", Constants.NBT.TAG_LIST)) {
-				deserializeCurrentRecipe(comp.getTagList("currentRecipe", Constants.NBT.TAG_COMPOUND));
+			if (comp.hasKey(CURRENT_RECIPE_KEY, Constants.NBT.TAG_LIST)) {
+				deserializeCurrentRecipe(comp.getTagList(CURRENT_RECIPE_KEY, Constants.NBT.TAG_COMPOUND));
 			}
 
 			deserializeActivePedestals(comp);
@@ -413,8 +543,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private void deserializeActivePedestals(NBTTagCompound comp) {
 		resetActivePedestals();
 
-		if (comp.hasKey("activePedestals", Constants.NBT.TAG_INT)) {
-			int pedestalValues = comp.getInteger("activePedestals");
+		if (comp.hasKey(ACTIVE_PEDESTALS_KEY, Constants.NBT.TAG_INT)) {
+			int pedestalValues = comp.getInteger(ACTIVE_PEDESTALS_KEY);
 
 			for (int i = 0; i < activePedestals.length; i++) {
 				activePedestals[i] = (pedestalValues >> i & 1) == 1;
@@ -423,6 +553,20 @@ public class TileDimGen extends TileEntity implements ITickable {
 		else {
 			TemporalConvergence.LOGGER.error("Missing activePedestals tag for dimGen at {}", pos);
 		}
+	}
+
+	//------------------------------Boiler-plate stuff that probably won't change much-----------------------------
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 1;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		if (craftingState.isCrafting())
+			return fullClockBB;
+		return smallClockBB;
 	}
 
 	@Override
@@ -453,51 +597,18 @@ public class TileDimGen extends TileEntity implements ITickable {
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)inventory : super.getCapability(cap, face);
 	}
 
-	public ItemStackHandler getInventory() {
-		return inventory;
-	}
-
-	private AxisAlignedBB fullClock; //Rendering bounding box for when it's crafting
-	private AxisAlignedBB smallClock; //Rendering bounding box for when it's not crafting
-
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		if (craftingState.isCrafting())
-			return fullClock;
-		return smallClock;
-	}
-
-	public int getTicksInState() {
-		return ticksInState;
-	}
-
-	public CraftingStates getCraftingState() {
-		return craftingState;
-	}
-
-	public boolean canRemoveItem() {
-		return craftingState != CraftingStates.END_SUCCESS;
-	}
-
-	public float getRotationDegrees() {
-		if (world.getBlockState(pos).getBlock() == ModBlocks.DIM_GEN) {
-			switch (world.getBlockState(pos).getValue(BlockDimGen.FACING)) {
-			default:
-			case NORTH: return 0;
-			case EAST: return 270;
-			case SOUTH: return 180;
-			case WEST: return 90;
-			}
+	private void sendBlockUpdate() {
+		if (!world.isRemote) {
+			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
+			markDirty();
 		}
-
-		return 0;
 	}
 
 	@Override
 	public void onLoad() {
 		//Still a bit buggy due to chunk culling
-		fullClock = new AxisAlignedBB(pos.add(-6, 0, -6), pos.add(6, 1, 6));
-		smallClock = new AxisAlignedBB(pos, pos.add(1, 1, 1));
+		fullClockBB = new AxisAlignedBB(pos.add(-6, 0, -6), pos.add(6, 1, 6));
+		smallClockBB = new AxisAlignedBB(pos, pos.add(1, 1, 1));
 
 		//Cache pedestal locations
 		pedLocs[0] = pos.north(6);
@@ -514,64 +625,5 @@ public class TileDimGen extends TileEntity implements ITickable {
 		pedLocs[11] = pos.north(5).west(3);
 
 		prevPos = pos;
-	}
-
-	public void sendBlockUpdate() {
-		if (!world.isRemote) {
-			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
-			markDirty();
-		}
-	}
-
-	@Override
-	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
-	}
-
-	public static class DimGenInventory extends ItemStackHandler {
-		private final TileDimGen parent;
-
-		public DimGenInventory(TileDimGen tp) {
-			super(1);
-			parent = tp;
-		}
-
-		@Override
-		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if (parent.canRemoveItem()) {
-				return super.extractItem(slot, amount, simulate);
-			}
-
-			return ItemStack.EMPTY;
-		}
-
-		@Override
-		public int getSlotLimit(int slot) {
-			return 1;
-		}
-
-		@Override
-		protected void onContentsChanged(int slot) {
-			parent.sendBlockUpdate();
-		}
-	}
-
-	//The order these values are declared should not be changed, because it will break saving and loading
-	public static enum CraftingStates {
-		NOT_CRAFTING,
-		WARMUP,
-		CRAFTING,
-		STALLED,
-		END_SUCCESS,
-		END_FAIL,
-		END_POST_SUCCESS;
-
-		public boolean isCrafting() {
-			return this != NOT_CRAFTING;
-		}
-
-		public boolean hasSucceeded() {
-			return this == END_SUCCESS || this == END_POST_SUCCESS;
-		}
 	}
 }
