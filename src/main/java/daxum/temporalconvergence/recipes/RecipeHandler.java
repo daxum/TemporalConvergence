@@ -21,8 +21,6 @@ package daxum.temporalconvergence.recipes;
 
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
-import daxum.temporalconvergence.recipes.DimGenRecipes.EnumBoostingType;
-import daxum.temporalconvergence.recipes.DimGenRecipes.EnumTier;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -67,11 +65,5 @@ public final class RecipeHandler {
 		DimGenRecipes.addRecipe(new ItemStack(Items.COAL), new ItemStack(Items.DIAMOND), new ItemStack(Items.CLOCK, 8)); //Test recipe
 		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 4, 10)); //Test recipe
 		DimGenRecipes.addRecipe(new ItemStack(Items.CLAY_BALL), new ItemStack(Items.NETHER_STAR), new ItemStack(Blocks.DRAGON_EGG, 2)); //Balanced test recipe
-
-		//Dimension input
-		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.TIME_DUST), EnumTier.TIER1, EnumBoostingType.INITIAL_AMOUNT);
-		DimGenRecipes.addDimensionInput(new ItemStack(ModBlocks.TIME_WOOD), EnumTier.TIER1, EnumBoostingType.IO_RATE);
-		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.TIME_PEARL), EnumTier.TIER1, EnumBoostingType.STORAGE_AMOUNT);
-		DimGenRecipes.addDimensionInput(new ItemStack(ModItems.REWOUND_TIME_SEEDS), EnumTier.TIER2, EnumBoostingType.IO_RATE);
 	}
 }
