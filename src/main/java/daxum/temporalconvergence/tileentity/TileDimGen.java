@@ -43,12 +43,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileDimGen extends TileEntity implements ITickable {
-	private static final int PEDESTAL_COUNT = 12;
+	public static final int PEDESTAL_COUNT = 12;
 	private static final int START_AND_END_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == STARTUP) and shrink back when done
 	private static final int TICKS_BETWEEN_PEDESTALS = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
 	private static final int NUM_ROTATIONS_CRAFTING = 4; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
 	private static final int CRAFTING_TIME = PEDESTAL_COUNT * TICKS_BETWEEN_PEDESTALS * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
-	private static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
+	private static final int POST_SUCCESS_TIME = 30; //Ticks to spend in the END_POST_SUCCESS state
 
 	//All of these values need to be written to / read from nbt
 	private ItemStackHandler inventory = new DimGenInventory(this);
@@ -344,6 +344,75 @@ public class TileDimGen extends TileEntity implements ITickable {
 		return (scale - prevScale) * partialTicks + prevScale;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public float getScaleForPedestal(int pedestalNum, float partialTicks) {
+		if (craftingState.isInCraftingStep()) {
+			float ticksRelativeToPedestal = ticksInState - pedestalNum * TICKS_BETWEEN_PEDESTALS + partialTicks;
+			float pedestalScale = 0.25f * ticksRelativeToPedestal / (TICKS_BETWEEN_PEDESTALS * 2);
+
+			return MathHelper.clamp(pedestalScale, 0.0f, 0.25f);
+		}
+		else {
+			TemporalConvergence.LOGGER.warn("getScaleForPedestal() called outside of crafting step");
+			return 0.0f;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getPedestalTransparency(float partialTicks) {
+		if (craftingState.isInCraftingStep()) {
+			float firstRotationTime = TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT;
+			float transparency = 1.0f - (ticksInState + partialTicks - firstRotationTime) / (CRAFTING_TIME - firstRotationTime);
+
+			return MathHelper.clamp(transparency, 0.0f, 1.0f);
+		}
+		else {
+			TemporalConvergence.LOGGER.warn("getPedestalTransparency() called outside of crafting step");
+			return 0.0f;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public BlockPos getPedestalLoc(int pedestalNum) {
+		if (pedestalNum >= 0 && pedestalNum < pedLocs.length) {
+			return pedLocs[pedestalNum];
+		}
+
+		return BlockPos.ORIGIN;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getCenterScale(float partialTicks) {
+		if (craftingState.isInCraftingStep() || craftingState == CraftingStates.END_SUCCESS) {
+			return 0.25f;
+		}
+		else if (craftingState == CraftingStates.POST_SUCCESS) {
+			return (ticksInState + partialTicks) / POST_SUCCESS_TIME * 4.75f + 0.25f;
+		}
+		else {
+			TemporalConvergence.LOGGER.warn("Invalid call to getCenterScale()");
+			return 0.0f;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getCenterTransparency(float partialTicks) {
+		if (craftingState.isInCraftingStep()) {
+			float firstRotationTime = TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT;
+			return MathHelper.clamp((ticksInState + partialTicks - firstRotationTime) / (CRAFTING_TIME - firstRotationTime), 0.0f, 1.0f);
+		}
+		else if (craftingState == CraftingStates.END_SUCCESS) {
+			return 1.0f;
+		}
+		else if (craftingState == CraftingStates.POST_SUCCESS) {
+			return MathHelper.clamp(1.0f - (ticksInState + partialTicks) / POST_SUCCESS_TIME, 0.0f, 1.0f);
+		}
+		else {
+			TemporalConvergence.LOGGER.warn("Invalid call to getCenterTransparency()");
+			return 0.0f;
+		}
+	}
+
 	private void doClientUpdate() {
 		if (world.isRemote) {
 			//Set previous variables
@@ -355,7 +424,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			//Update clock rotations/scale
 			setTimeForState();
 
-			//spawnParticles();
+			spawnParticles();
 		}
 	}
 
@@ -403,15 +472,21 @@ public class TileDimGen extends TileEntity implements ITickable {
 	}
 
 	private void spawnParticles() {
-		for (int i = 0; i < PEDESTAL_COUNT; i++) {
-			if (activePedestals[i]) {
-				spawnParticlesAt(pedLocs[i]);
+		if (craftingState == CraftingStates.CRAFTING) {
+			for (int i = 0; i < PEDESTAL_COUNT; i++) {
+				if (activePedestals[i]) {
+					spawnParticlesAt(pedLocs[i]);
+				}
 			}
 		}
 	}
 
 	private void spawnParticlesAt(BlockPos toPos) {
-		int number = (int) (10 * MathHelper.sin(180.0f * (ticksInState / 400.0f) * (float)Math.PI / 180.0f));
+		int number = (int) (10 * MathHelper.sin(180.0f * ((float)ticksInState / CRAFTING_TIME) * (float)Math.PI / 180.0f));
+
+		if (ticksInState <= TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT) {
+			number = Math.random() >= 0.7 ? 1 : 0;
+		}
 
 		for (int i = 0; i < number; i++) {
 			double offX = Math.random() * 0.5 + 0.25;

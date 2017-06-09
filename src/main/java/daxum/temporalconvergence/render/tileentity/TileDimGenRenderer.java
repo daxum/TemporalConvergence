@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -55,12 +56,22 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		renderClock(te.getScaleForRender(partialTicks), te.getRotationForRender(ClockPart.FACE, partialTicks), te.getRotationForRender(ClockPart.HOUR_HAND,
 				partialTicks), te.getRotationForRender(ClockPart.MINUTE_HAND, partialTicks), te.getRotationForRender(ClockPart.SECOND_HAND, partialTicks));
 
-		GlStateManager.disableBlend();
+
 		GlStateManager.enableCull();
+		GlStateManager.translate(0.0f, 0.1f, 0.0f);
 		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
 
 		renderItem(te, partialTicks);
 
+		GlStateManager.translate(0.0f, 0.25f, 0.0f);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+
+		renderCraftSpheres(te, partialTicks);
+
+		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
 
@@ -116,22 +127,40 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 	}
 
 	private void renderItem(TileDimGen te, float partialTicks) {
-		GlStateManager.translate(0.0f, 0.1f, 0.0f);
-
 		if (!(te.getCraftingState() == CraftingStates.END_SUCCESS)){
 			RenderHelper.renderItem(te.getWorld().getTotalWorldTime(), te.getInventory().getStackInSlot(0), te.getPos(), partialTicks, false);
 		}
 	}
 
 	private void renderCraftSpheres(TileDimGen te, float partialTicks) {
+		CraftingStates state = te.getCraftingState();
 
+		if (state.isInCraftingStep()) {
+			for (int i = 0; i < TileDimGen.PEDESTAL_COUNT; i++) {
+				if (te.isPedestalActive(i)) {
+					GlStateManager.pushMatrix();
+
+					BlockPos pedLoc = te.getPedestalLoc(i);
+					BlockPos centerLoc = te.getPos();
+					GlStateManager.translate(pedLoc.getX() - centerLoc.getX(), pedLoc.getY() - centerLoc.getY(), pedLoc.getZ() - centerLoc.getZ());
+
+					renderSingleSphere(te.getScaleForPedestal(i, partialTicks), te.getPedestalTransparency(partialTicks));
+
+					GlStateManager.popMatrix();
+				}
+			}
+
+			GlStateManager.translate(0.0f, -0.05f, 0.0f);
+			renderSingleSphere(te.getCenterScale(partialTicks), te.getCenterTransparency(partialTicks));
+		}
+		else if (state.hasSucceeded()) {
+			GlStateManager.translate(0.0f, -0.05f, 0.0f);
+			renderSingleSphere(te.getCenterScale(partialTicks), te.getCenterTransparency(partialTicks));
+		}
 	}
 
 	private void renderSingleSphere(float radius, float transparency) {
 		GlStateManager.pushMatrix();
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, transparency);
 
 		bindTexture(SPHERE);
@@ -141,8 +170,6 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 
 		RenderHelper.renderSphere(radius * 1.12f, 10, 0.0f, 0.5f, 0.5f, 0.5f, false);
 
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
 	}
 }
