@@ -21,13 +21,8 @@ package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.tileentity.TileDimGen;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -35,8 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -44,12 +37,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockDimGen extends BlockBase implements ITileEntityProvider {
-	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockDimGen() {
 		super("dimensional_generator", 5.0f, 30.0f, "pickaxe", 2);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 
 	@Override
@@ -130,41 +121,5 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
-	}
-
-	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
-
-		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
-			enumfacing = EnumFacing.NORTH;
-		}
-
-		return getDefaultState().withProperty(FACING, enumfacing);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getIndex();
-	}
-
-	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot) {
-		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-	}
-
-	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirror) {
-		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING});
 	}
 }

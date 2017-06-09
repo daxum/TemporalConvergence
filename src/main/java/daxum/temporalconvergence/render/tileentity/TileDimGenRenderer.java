@@ -52,9 +52,8 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.disableLighting();
 
 		//Full size has a scale of 15.0
-		renderClock(te.getBlockRotation(), te.getScaleForRender(partialTicks), te.getRotationForRender(ClockPart.FACE, partialTicks),
-				te.getRotationForRender(ClockPart.HOUR_HAND, partialTicks), te.getRotationForRender(ClockPart.MINUTE_HAND, partialTicks),
-				te.getRotationForRender(ClockPart.SECOND_HAND, partialTicks));
+		renderClock(te.getScaleForRender(partialTicks), te.getRotationForRender(ClockPart.FACE, partialTicks), te.getRotationForRender(ClockPart.HOUR_HAND,
+				partialTicks), te.getRotationForRender(ClockPart.MINUTE_HAND, partialTicks), te.getRotationForRender(ClockPart.SECOND_HAND, partialTicks));
 
 		GlStateManager.disableBlend();
 		GlStateManager.enableCull();
@@ -66,9 +65,9 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 	}
 
 	//Rotations in degrees from 12:00 (clockwise)
-	private void renderClock(float facing, float scale, float clockRot, float hourRot, float minuteRot, float secondRot) {
+	private void renderClock(float scale, float clockRot, float hourRot, float minuteRot, float secondRot) {
 		GlStateManager.pushMatrix();
-		GlStateManager.rotate(360 - clockRot + facing, 0.0f, 1.0f, 0.f);
+		GlStateManager.rotate(360.0f - clockRot, 0.0f, 1.0f, 0.f);
 
 		Tessellator tess = Tessellator.getInstance();
 		VertexBuffer vb = tess.getBuffer();

@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daxum.temporalconvergence.TemporalConvergence;
-import daxum.temporalconvergence.block.BlockDimGen;
-import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.recipes.DimGenRecipes;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -64,7 +61,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 	//These are caches that don't need to be saved
 	private BlockPos[] pedLocs = new BlockPos[PEDESTAL_COUNT]; //Cache of pedestal locations, starting at north (12 o' clock) and going clockwise
 	private BlockPos prevPos = BlockPos.ORIGIN;
-	private IBlockState blockState = ModBlocks.DIM_GEN.getDefaultState();
 
 	@Override
 	public void update() {
@@ -73,7 +69,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 			onLoad();
 		}
 
-		updateBlockState();
 		doClientUpdate();
 		TemporalConvergence.LOGGER.info("State: {} | ticksInState: {}", craftingState, ticksInState);
 		if (craftingState.isCrafting()) {
@@ -186,16 +181,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 		return craftingState != CraftingStates.END_SUCCESS;
 	}
 
-	public float getBlockRotation() {
-		switch (blockState.getValue(BlockDimGen.FACING)) {
-		default:
-		case NORTH: return 0;
-		case EAST: return 270;
-		case SOUTH: return 180;
-		case WEST: return 90;
-		}
-	}
-
 	private void stopIfCrafting() {
 		if (craftingState.isCrafting() && !craftingState.isEnd()) {
 			if (craftingState.isInCraftingStep()) {
@@ -274,15 +259,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private void clearPedestal(BlockPos position) {
 		if (world.getTileEntity(position) instanceof TilePedestal) {
 			((TilePedestal)world.getTileEntity(position)).getInventory().setStackInSlot(0, ItemStack.EMPTY);
-		}
-	}
-
-	private void updateBlockState() {
-		if (world.getBlockState(pos).getBlock() == ModBlocks.DIM_GEN) {
-			blockState = world.getBlockState(pos);
-		}
-		else {
-			blockState = ModBlocks.DIM_GEN.getDefaultState();
 		}
 	}
 
