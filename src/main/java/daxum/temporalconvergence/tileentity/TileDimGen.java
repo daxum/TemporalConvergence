@@ -48,7 +48,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private static final int TICKS_BETWEEN_PEDESTALS = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
 	private static final int NUM_ROTATIONS_CRAFTING = 4; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
 	private static final int CRAFTING_TIME = PEDESTAL_COUNT * TICKS_BETWEEN_PEDESTALS * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
-	private static final int POST_SUCCESS_TIME = 30; //Ticks to spend in the END_POST_SUCCESS state
+	private static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
 
 	//All of these values need to be written to / read from nbt
 	private ItemStackHandler inventory = new DimGenInventory(this);
@@ -387,7 +387,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			return 0.25f;
 		}
 		else if (craftingState == CraftingStates.POST_SUCCESS) {
-			return (ticksInState + partialTicks) / POST_SUCCESS_TIME * 4.75f + 0.25f;
+			return (ticksInState + partialTicks) / POST_SUCCESS_TIME * 1.75f + 0.25f;
 		}
 		else {
 			TemporalConvergence.LOGGER.warn("Invalid call to getCenterScale()");
@@ -459,7 +459,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS;
 			rotations[1] = 360.0f * percentComplete;
 			rotations[2] = 360.0f * NUM_ROTATIONS_CRAFTING * percentComplete;
-			rotations[3] = rotations[2] % 60.0f / 60.0f * 360.0f;
+			rotations[3] = rotations[1];
 		}
 		else if (craftingState.isEnd()) {
 			float inversePercentComplete = 1.0f - (float)ticksInState / START_AND_END_TIME;
