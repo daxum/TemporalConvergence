@@ -119,7 +119,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.translate(0.0f, 0.1f, 0.0f);
 
 		if (!(te.getCraftingState() == CraftingStates.END_SUCCESS)){
-			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), te.getInventory().getStackInSlot(0), te.hashCode(), partialTicks, false);
+			RenderHelper.renderItem(te.getWorld().getTotalWorldTime(), te.getInventory().getStackInSlot(0), te.getPos(), partialTicks, false);
 		}
 	}
 

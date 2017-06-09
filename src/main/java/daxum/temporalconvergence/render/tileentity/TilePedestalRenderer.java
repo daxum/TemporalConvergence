@@ -31,7 +31,7 @@ public class TilePedestalRenderer extends TileEntitySpecialRenderer<TilePedestal
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
 
-		RenderHelper.renderItem(te, te.getInventory().getStackInSlot(0), partialTicks, true);
+		RenderHelper.renderItem(te.getWorld().getTotalWorldTime(), te.getInventory().getStackInSlot(0), te.getPos(), partialTicks, true);
 
 		GlStateManager.popMatrix();
 	}

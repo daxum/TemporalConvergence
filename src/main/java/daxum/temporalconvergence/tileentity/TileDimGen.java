@@ -70,7 +70,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 		}
 
 		doClientUpdate();
-		TemporalConvergence.LOGGER.info("State: {} | ticksInState: {}", craftingState, ticksInState);
+
 		if (craftingState.isCrafting()) {
 			markDirty();
 

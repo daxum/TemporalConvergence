@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -48,7 +49,7 @@ public final class RenderHelper {
 	//rotationOffset is used to randomize rotation, and should be the same every time the function is called. If it doesn't need to be randomized, use the version below
 	//Translate should be called before this function to position the item
 	//Time is world time or similar
-	public static void renderItem(int time, ItemStack stack, int rotationOffset, float partialTicks, boolean shouldBob) {
+	public static void renderItem(long time, ItemStack stack, int rotationOffset, float partialTicks, boolean shouldBob) {
 		if (!stack.isEmpty()) {
 			int offset = rotationOffset * 7;
 			float angle = (time + partialTicks + offset) / 20.0f * (180f / PIF);
@@ -64,8 +65,12 @@ public final class RenderHelper {
 		}
 	}
 
-	public static void renderItem(int time, ItemStack stack, float partialTicks, boolean shouldBob) {
+	public static void renderItem(long time, ItemStack stack, float partialTicks, boolean shouldBob) {
 		renderItem(time, stack, 0, partialTicks, shouldBob);
+	}
+
+	public static void renderItem(long time, ItemStack stack, BlockPos rotationRandomizer, float partialTicks, boolean shouldBob) {
+		renderItem(time, stack, rotationRandomizer.getX() + rotationRandomizer.getY() + rotationRandomizer.getZ(), partialTicks, shouldBob);
 	}
 
 	//Helper function because I'm tired of typing all three values

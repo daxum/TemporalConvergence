@@ -45,7 +45,7 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 		if (te.renderScale <= 0 && te.getId() == -1) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);
-			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), UNBOUND_LINKER, 0, 0, 0, partialTicks, false);
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), UNBOUND_LINKER, 0, partialTicks, false);
 			GlStateManager.popMatrix();
 			return;
 		}
@@ -54,7 +54,7 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 			te.renderScale = 0;
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);
-			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), BOUND_LINKER, 0, 0, 0, partialTicks, false);
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), BOUND_LINKER, 0, partialTicks, false);
 			GlStateManager.popMatrix();
 			return;
 		}
