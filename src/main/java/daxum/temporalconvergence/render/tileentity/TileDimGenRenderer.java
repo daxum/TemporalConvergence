@@ -61,6 +61,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.translate(0.0f, 0.1f, 0.0f);
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
+		GlStateManager.depthMask(true); //For some reason this was off. Don't know why or how
 
 		renderItem(te, partialTicks);
 
