@@ -23,6 +23,8 @@ import org.lwjgl.opengl.GL11;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileDimGen;
+import daxum.temporalconvergence.tileentity.TileDimGen.ClockPart;
+import daxum.temporalconvergence.tileentity.TileDimGen.CraftingStates;
 import daxum.temporalconvergence.util.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,36 +32,35 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
-	private static final ResourceLocation CLOCK_TEXTURE = new ResourceLocation(TemporalConvergence.MODID + ":textures/dimensional_generator_clock.png");
-	private static final ResourceLocation CLOCK_HANDS = new ResourceLocation(TemporalConvergence.MODID + ":textures/dimensional_generator_clock_hands.png");
-	private static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID + ":textures/sphere_textures.png");
+	private static final ResourceLocation CLOCK_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/dimensional_generator_clock.png");
+	private static final ResourceLocation CLOCK_HANDS = new ResourceLocation(TemporalConvergence.MODID, "textures/dimensional_generator_clock_hands.png");
+	private static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID, "textures/sphere_textures.png");
 
 	@Override
 	public void renderTileEntityAt(TileDimGen te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(transformX + 0.5f, transformY + 0.95f, transformZ + 0.5f);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		GlStateManager.enableNormalize(); //What does this even do?
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableCull();
 		GlStateManager.disableLighting();
 
 		//Full size has a scale of 15.0
-		renderClock(te.getRotation(), (te.scale - te.prevScale) * partialTicks + te.prevScale,
-				(te.rotations[0] - te.prevRotations[0]) * partialTicks + te.prevRotations[0],
-				(te.rotations[1] - te.prevRotations[1]) * partialTicks + te.prevRotations[1],
-				(te.rotations[2] - te.prevRotations[2]) * partialTicks + te.prevRotations[2],
-				(te.rotations[3] - te.prevRotations[3]) * partialTicks + te.prevRotations[3]);
+		renderClock(te.getBlockRotation(), te.getScaleForRender(partialTicks), te.getRotationForRender(ClockPart.FACE, partialTicks),
+				te.getRotationForRender(ClockPart.HOUR_HAND, partialTicks), te.getRotationForRender(ClockPart.MINUTE_HAND, partialTicks),
+				te.getRotationForRender(ClockPart.SECOND_HAND, partialTicks));
 
 		GlStateManager.disableBlend();
-		GlStateManager.disableNormalize();
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 
-		renderAnimations(te, partialTicks);
+		renderItem(te, partialTicks);
 
 		GlStateManager.popMatrix();
 	}
@@ -115,114 +116,16 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.popMatrix();
 	}
 
-	private void renderAnimations(TileDimGen te, float partialTicks) {
+	private void renderItem(TileDimGen te, float partialTicks) {
 		GlStateManager.translate(0.0f, 0.1f, 0.0f);
-		int stage = te.getCraftingStage();
 
-		if (!(stage == 3 && te.wasSuccessful()))
-			RenderHelper.renderItem(te, te.getInventory().getStackInSlot(0), partialTicks, false);
-
-		if (stage == 2 || stage == 3 && te.wasSuccessful()) {
-			GlStateManager.translate(0.0f, 0.25f, 0.0f);
-			renderCraftSpheres(te.getRecipeSize() - 1, te.getCraftTime(), partialTicks, te.isNS());
-		}
-		else if (stage == 4) {
-			GlStateManager.translate(0.0f, 0.25f, 0.0f);
-			float ratio = (400 - te.getCraftTime() - partialTicks) / 15.0f;
-			renderSingleSphere(1.5f * (1.0f - ratio) + 0.25f, ratio);
+		if (!(te.getCraftingState() == CraftingStates.END_SUCCESS)){
+			RenderHelper.renderItem((int) te.getWorld().getTotalWorldTime(), te.getInventory().getStackInSlot(0), te.hashCode(), partialTicks, false);
 		}
 	}
 
-	private void renderCraftSpheres(int amount, int stage, float partialTicks, boolean twoNS) {
-		if (stage <= 10) {
-			renderSphereAmount(amount, 0.25f * (stage + partialTicks) / 10.0f, twoNS, 1.0f);
-		}
-		else {
-			renderSphereAmount(amount, 0.25f, twoNS, 1.0f - (stage + partialTicks - 10.0f) / 390.0f);
-			GlStateManager.translate(0.0f, -0.1f, 0.0f);
-			renderSingleSphere(0.25f, (stage + partialTicks - 10.0f) / 390.0f);
-		}
-	}
+	private void renderCraftSpheres(TileDimGen te, float partialTicks) {
 
-	//Oh god why
-	private void renderSphereAmount(int amount, float radius, boolean twoNS, float transparency) {
-		GlStateManager.pushMatrix();
-
-		switch(amount) {
-		case 2:
-			if (twoNS) {
-				GlStateManager.translate(0.0f, 0.0f, 6.0f);
-				renderSingleSphere(radius, transparency);
-				GlStateManager.translate(0.0f, 0.0f, -12.0f);
-				renderSingleSphere(radius, transparency);
-			}
-			else {
-				GlStateManager.translate(6.0f, 0.0f, 0.0f);
-				renderSingleSphere(radius, transparency);
-				GlStateManager.translate(-12.0f, 0.0f, 0.0f);
-				renderSingleSphere(radius, transparency);
-			}
-			break;
-
-		case 4:
-			GlStateManager.translate(0.0f, 0.0f, 6.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(0.0f, 0.0f, -12.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(6.0f, 0.0f, 6.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-12.0f, 0.0f, 0.0f);
-			renderSingleSphere(radius, transparency);
-			break;
-
-		case 8:
-			GlStateManager.translate(3.0f, 0.0f, 5.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(2.0f, 0.0f, -2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(0.0f, 0.0f, -6.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-2.0f, 0.0f, -2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-6.0f, 0.0f, 0.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-2.0f, 0.0f, 2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(0.0f, 0.0f, 6.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(2.0f, 0.0f, 2.0f);
-			renderSingleSphere(radius, transparency);
-			break;
-
-		case 12:
-			GlStateManager.translate(3.0f, 0.0f, 5.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(2.0f, 0.0f, -2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(1.0f, 0.0f, -3.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-1.0f, 0.0f, -3.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-2.0f, 0.0f, -2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-3.0f, 0.0f, -1.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-3.0f, 0.0f, 1.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-2.0f, 0.0f, 2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(-1.0f, 0.0f, 3.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(1.0f, 0.0f, 3.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(2.0f, 0.0f, 2.0f);
-			renderSingleSphere(radius, transparency);
-			GlStateManager.translate(3.0f, 0.0f, 1.0f);
-			renderSingleSphere(radius, transparency);
-			break;
-		}
-
-		GlStateManager.popMatrix();
 	}
 
 	private void renderSingleSphere(float radius, float transparency) {

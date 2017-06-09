@@ -33,8 +33,6 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,11 +45,12 @@ public final class RenderHelper {
 
 	public static final float PIF = (float) Math.PI; //PI as a float, to save annoyance over casting
 
-	//x, y, and z are used to randomize rotation a bit, and are safe to set to zero. For tile entities, just put the position (use helper function below)
+	//rotationOffset is used to randomize rotation, and should be the same every time the function is called. If it doesn't need to be randomized, use the version below
 	//Translate should be called before this function to position the item
-	public static void renderItem(int time, ItemStack stack, int x, int y, int z, float partialTicks, boolean shouldBob) {
+	//Time is world time or similar
+	public static void renderItem(int time, ItemStack stack, int rotationOffset, float partialTicks, boolean shouldBob) {
 		if (!stack.isEmpty()) {
-			int offset = (x + y + z) * 7;
+			int offset = rotationOffset * 7;
 			float angle = (time + partialTicks + offset) / 20.0f * (180f / PIF);
 			float bobHeight = shouldBob ? MathHelper.sin((time + partialTicks + offset) / 10.0f) * 0.1f + 0.1f : 0.0f;
 
@@ -65,12 +64,8 @@ public final class RenderHelper {
 		}
 	}
 
-	public static void renderItem(int time, ItemStack stack, BlockPos pos, float partialTicks, boolean shouldBob) {
-		renderItem(time, stack, pos.getX(), pos.getY(), pos.getZ(), partialTicks, shouldBob);
-	}
-
-	public static void renderItem(TileEntity te, ItemStack stack, float partialTicks, boolean shouldBob) {
-		renderItem((int) te.getWorld().getTotalWorldTime(), stack, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ(), partialTicks, shouldBob);
+	public static void renderItem(int time, ItemStack stack, float partialTicks, boolean shouldBob) {
+		renderItem(time, stack, 0, partialTicks, shouldBob);
 	}
 
 	//Helper function because I'm tired of typing all three values

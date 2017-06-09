@@ -40,16 +40,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileDimGen extends TileEntity implements ITickable {
 	private static final int PEDESTAL_COUNT = 12;
-	private static final int STARTUP_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == STARTUP)
+	private static final int START_AND_END_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == STARTUP) and shrink back when done
 	private static final int TICKS_BETWEEN_PEDESTALS = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
 	private static final int NUM_ROTATIONS_CRAFTING = 4; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
 	private static final int CRAFTING_TIME = PEDESTAL_COUNT * TICKS_BETWEEN_PEDESTALS * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
-	private static final int END_TIME = 75; //The amount of time in ticks the END phase takes
 	private static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
 
 	//All of these values need to be written to / read from nbt
@@ -74,12 +75,12 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 		updateBlockState();
 		doClientUpdate();
-
+		TemporalConvergence.LOGGER.info("State: {} | ticksInState: {}", craftingState, ticksInState);
 		if (craftingState.isCrafting()) {
 			markDirty();
 
 			if (craftingState == CraftingStates.STARTUP) {
-				if (ticksInState >= STARTUP_TIME) {
+				if (ticksInState >= START_AND_END_TIME) {
 					transitionToState(CraftingStates.CRAFTING);
 				}
 				else {
@@ -92,11 +93,11 @@ public class TileDimGen extends TileEntity implements ITickable {
 					recipeOutput = ItemStack.EMPTY;
 					transitionToState(CraftingStates.END_SUCCESS);
 				}
-				else if (ticksInState < TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT && ticksInState % TICKS_BETWEEN_PEDESTALS == 0) { //If the minute hand is pointing to a pedestal
+				else if (!world.isRemote && ticksInState < TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT && ticksInState % TICKS_BETWEEN_PEDESTALS == 0) { //If the minute hand is pointing to a pedestal
 					int pedestalNumber = ticksInState / TICKS_BETWEEN_PEDESTALS;
 
 					if (isPedestalActive(pedestalNumber) && !tryConsumeItem(pedestalNumber)) {
-						craftingState = CraftingStates.STALLED;
+						craftingState = CraftingStates.STALLED; //Do not use transitionToState() because it resets ticksInState
 						sendBlockUpdate();
 					}
 					else {
@@ -113,13 +114,13 @@ public class TileDimGen extends TileEntity implements ITickable {
 				int pedestalNumber = ticksInState / TICKS_BETWEEN_PEDESTALS;
 
 				if (tryConsumeItem(pedestalNumber)) {
-					craftingState = CraftingStates.CRAFTING;
+					craftingState = CraftingStates.CRAFTING; //Do not use transitionToState() because it resets ticksInState
 					ticksInState++;
 					sendBlockUpdate();
 				}
 			}
 			else if (craftingState.isEnd()) {
-				if (ticksInState >= END_TIME) {
+				if (ticksInState >= START_AND_END_TIME) {
 					if (craftingState.hasSucceeded()) {
 						transitionToState(CraftingStates.POST_SUCCESS);
 					}
@@ -139,6 +140,9 @@ public class TileDimGen extends TileEntity implements ITickable {
 					ticksInState++;
 				}
 			}
+		}
+		else {
+			ticksInState = 0; //Fix rare desync
 		}
 	}
 
@@ -182,7 +186,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 		return craftingState != CraftingStates.END_SUCCESS;
 	}
 
-	public float getRotationDegrees() {
+	public float getBlockRotation() {
 		switch (blockState.getValue(BlockDimGen.FACING)) {
 		default:
 		case NORTH: return 0;
@@ -198,7 +202,9 @@ public class TileDimGen extends TileEntity implements ITickable {
 				transitionToState(CraftingStates.END_FAIL_CRAFT);
 			}
 			else {
-				transitionToState(CraftingStates.END_FAIL);
+				craftingState = CraftingStates.END_FAIL; //Don't use transitionToState() because it would mess up the clock scale
+				ticksInState = START_AND_END_TIME - ticksInState;
+				sendBlockUpdate();
 			}
 		}
 	}
@@ -207,7 +213,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 		craftingState = state;
 		ticksInState = 0;
 		sendBlockUpdate();
-		TemporalConvergence.LOGGER.info("Transitioned to state {}", state);
 	}
 
 	private void resetCraftingState() {
@@ -342,16 +347,30 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	//----------------------------------------------Client-only stuff----------------------------------------------
 
-	public float scale = 1.0f;
-	public float prevScale = 1.0f;
-	public float[] rotations = {0.0f, 0.0f, 0.0f, 0.0f}; //Face, hour, minute, second
-	public float[] prevRotations = {0.0f, 0.0f, 0.0f, 0.0f};
+	private static final float MAX_SCALE = 15.0f;
+	private static final float MIN_SCALE = 1.0f;
+	private static final float CLOCK_FACE_ROTATIONS = 2; //Number of full rotations the clock face makes during the startup and end states
+
+	private float scale = 1.0f;
+	private float prevScale = 1.0f;
+	private float[] rotations = {0.0f, 0.0f, 0.0f, 0.0f}; //Face, hour, minute, second
+	private float[] prevRotations = {0.0f, 0.0f, 0.0f, 0.0f};
 	private AxisAlignedBB fullClockBB; //Rendering bounding box for when it's crafting
 	private AxisAlignedBB smallClockBB; //Rendering bounding box for when it's not crafting
 
+	@SideOnly(Side.CLIENT)
+	public float getRotationForRender(ClockPart part, float partialTicks) {
+		return (rotations[part.ordinal()] - prevRotations[part.ordinal()]) * partialTicks + prevRotations[part.ordinal()];
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getScaleForRender(float partialTicks) {
+		return (scale - prevScale) * partialTicks + prevScale;
+	}
+
 	private void doClientUpdate() {
 		if (world.isRemote) {
-			//Set previous variables for rendering
+			//Set previous variables
 			prevScale = scale;
 			for (int i = 0; i < rotations.length; i++) {
 				prevRotations[i] = rotations[i];
@@ -360,69 +379,57 @@ public class TileDimGen extends TileEntity implements ITickable {
 			//Update clock rotations/scale
 			setTimeForState();
 
-			//Spawn particles
+			//spawnParticles();
 		}
 	}
 
+	//CraftingStates.STALLED purposely omitted
 	private void setTimeForState() {
-		if (world.isRemote) {
-			if (craftingState == CraftingStates.NOT_CRAFTING || craftingState == CraftingStates.POST_SUCCESS) {
-				rotations[0] = 0.0f; //Not sure why this sometimes isn't set right
-				rotations[1] = (world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f;
-				rotations[2] = rotations[1] % 30.0f / 30.0f * 360.0f;
-				rotations[3] = rotations[2] % 30.0f / 30.0f * 360.0f;
+		if (craftingState == CraftingStates.NOT_CRAFTING || craftingState == CraftingStates.POST_SUCCESS) {
+			scale = MIN_SCALE;
+			rotations[0] = 0.0f; //Not sure why this sometimes isn't set right
+			rotations[1] = (world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f;
+			rotations[2] = rotations[1] % 30.0f / 30.0f * 360.0f;
+			rotations[3] = rotations[2] % 30.0f / 30.0f * 360.0f;
 
-				for (int i = 1; i < rotations.length; i++) {
-					if (rotations[i] < prevRotations[i])
-						prevRotations[i] -= 360.0;
-				}
+			for (int i = 1; i < rotations.length; i++) {
+				if (rotations[i] < prevRotations[i])
+					prevRotations[i] -= 360.0;
 			}
-			else if (craftingState == CraftingStates.STARTUP) {
-				scale = scale + 0.2f;
-				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
+		}
+		else if (craftingState == CraftingStates.STARTUP) {
+			float percentComplete = (float)ticksInState / START_AND_END_TIME;
 
-				if (rotations[0] >= 720.0f)
-					rotations[0] = 720.0f;
+			scale = (MAX_SCALE - MIN_SCALE) * percentComplete + MIN_SCALE;
+			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS * percentComplete;
 
-				for (int i = 1; i < rotations.length; i++)
-					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
-			}
-			else if (craftingState == CraftingStates.CRAFTING) {
-				rotations[0] = 720.0f;
-				rotations[1] = (400.0f - ticksInState) / 400.0f * 360.0f + 1440;
-				rotations[2] = 1800.0f + (400.0f - ticksInState) / 400.0f * 5040.0f;
-				rotations[3] = 7200.0f - (400.0f - ticksInState) / 400.0f * 5040.0f;
+			for (int i = 1; i < rotations.length; i++)
+				rotations[i] = 360.0f * (i + 3) * percentComplete;
+		}
+		else if (craftingState == CraftingStates.CRAFTING) {
+			float percentComplete = (float)ticksInState / CRAFTING_TIME;
 
-				if (rotations[3] == 7200.0f)
-					prevRotations[3] += 5040.0f;
+			scale = MAX_SCALE;
 
-				if (rotations[1] >= 1800.0f) {
-					rotations[1] = 1440.0f;
-					rotations[2] = 1800.0f;
-					rotations[3] = 2160.0f;
-					prevRotations[1] -= 360.0f;
-					prevRotations[3] -= 5040.0f;
-				}
-			}
-			else if (craftingState == CraftingStates.END_SUCCESS || craftingState == CraftingStates.END_FAIL) {
-				scale = scale - 0.2f;
-				rotations[0] = 720.0f * ((scale - 1) / 14.0f);
+			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS;
+			rotations[1] = 360.0f * percentComplete;
+			rotations[2] = 360.0f * NUM_ROTATIONS_CRAFTING * percentComplete;
+			rotations[3] = rotations[2] % 60.0f / 60.0f * 360.0f;
+		}
+		else if (craftingState.isEnd()) {
+			float inversePercentComplete = 1.0f - (float)ticksInState / START_AND_END_TIME;
+			scale = (MAX_SCALE - MIN_SCALE) * inversePercentComplete + MIN_SCALE;
+			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS * inversePercentComplete;
 
-				if (rotations[0] <= 0.0f)
-					rotations[0] = 0.0f;
-
-				for (int i = 1; i < rotations.length; i++)
-					rotations[i] = 360.0f * (i + 3) * (rotations[0] / 720.0f);
-			}
+			for (int i = 1; i < rotations.length; i++)
+				rotations[i] = 360.0f * (i + 3) * inversePercentComplete;
 		}
 	}
 
 	private void spawnParticles() {
-		if (world.isRemote) {
-			for (int i = 0; i < PEDESTAL_COUNT; i++) {
-				if (activePedestals[i]) {
-					spawnParticlesAt(pedLocs[i]);
-				}
+		for (int i = 0; i < PEDESTAL_COUNT; i++) {
+			if (activePedestals[i]) {
+				spawnParticlesAt(pedLocs[i]);
 			}
 		}
 	}
@@ -436,6 +443,13 @@ public class TileDimGen extends TileEntity implements ITickable {
 			double offZ = Math.random() * 0.5 + 0.25;
 			TemporalConvergence.proxy.spawnDimGenParticle(world, toPos.getX() + offX, toPos.getY() + offY, toPos.getZ() + offZ, pos.getX() + 0.5, pos.getY() + 1.325, pos.getZ() + 0.5);
 		}
+	}
+
+	public enum ClockPart {
+		FACE,
+		HOUR_HAND,
+		MINUTE_HAND,
+		SECOND_HAND;
 	}
 
 	//-----------------------------------------------NBT stuff below-----------------------------------------------
@@ -481,6 +495,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private NBTTagCompound serializeActivePedestals(NBTTagCompound comp) {
 		int pedestalValues = 0;
 
+		//Pack the boolean array into an integer. Much easier than saving the values separately
 		for (int i = 0; i < activePedestals.length; i++) {
 			pedestalValues = pedestalValues | (activePedestals[i] ? 1 << i : 0);
 		}
