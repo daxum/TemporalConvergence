@@ -101,7 +101,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 					}
 				}
 				else {
-					//All items have already been consumed
+					//All items have already been consumed, or this is a client world
 					ticksInState++;
 				}
 			}
@@ -167,10 +167,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	public ItemStackHandler getInventory() {
 		return inventory;
-	}
-
-	public int getTicksInState() {
-		return ticksInState;
 	}
 
 	public CraftingStates getCraftingState() {
