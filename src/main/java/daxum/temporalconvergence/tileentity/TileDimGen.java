@@ -329,14 +329,13 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	private float scale = 1.0f;
 	private float prevScale = 1.0f;
-	private float[] rotations = {0.0f, 0.0f, 0.0f, 0.0f}; //Face, hour, minute, second
-	private float[] prevRotations = {0.0f, 0.0f, 0.0f, 0.0f};
+	private Angle[] rotations = {new Angle(), new Angle(), new Angle(), new Angle()}; //Face, hour, minute, second
 	private AxisAlignedBB fullClockBB; //Rendering bounding box for when it's crafting
 	private AxisAlignedBB smallClockBB; //Rendering bounding box for when it's not crafting
 
 	@SideOnly(Side.CLIENT)
 	public float getRotationForRender(ClockPart part, float partialTicks) {
-		return (rotations[part.ordinal()] - prevRotations[part.ordinal()]) * partialTicks + prevRotations[part.ordinal()];
+		return rotations[part.ordinal()].getRotation(partialTicks);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -415,11 +414,8 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	private void doClientUpdate() {
 		if (world.isRemote) {
-			//Set previous variables
+			//Set previous scale
 			prevScale = scale;
-			for (int i = 0; i < rotations.length; i++) {
-				prevRotations[i] = rotations[i];
-			}
 
 			//Update clock rotations/scale
 			setTimeForState();
@@ -432,42 +428,37 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private void setTimeForState() {
 		if (craftingState == CraftingStates.NOT_CRAFTING || craftingState == CraftingStates.POST_SUCCESS) {
 			scale = MIN_SCALE;
-			rotations[0] = 0.0f; //Not sure why this sometimes isn't set right
-			rotations[1] = (world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f;
-			rotations[2] = rotations[1] % 30.0f / 30.0f * 360.0f;
-			rotations[3] = rotations[2] % 30.0f / 30.0f * 360.0f;
-
-			for (int i = 1; i < rotations.length; i++) {
-				if (rotations[i] < prevRotations[i])
-					prevRotations[i] -= 360.0;
-			}
+			rotations[0].setAngle(0.0f, true); //Not sure why this sometimes isn't set right
+			rotations[1].setAngle((world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f, true);
+			rotations[2].setAngle(rotations[1].getAngle() % 30.0f / 30.0f * 360.0f, true);
+			rotations[3].setAngle(rotations[2].getAngle() % 30.0f / 30.0f * 360.0f, true);
 		}
 		else if (craftingState == CraftingStates.STARTUP) {
 			float percentComplete = (float)ticksInState / START_AND_END_TIME;
 
 			scale = (MAX_SCALE - MIN_SCALE) * percentComplete + MIN_SCALE;
-			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS * percentComplete;
+			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS * percentComplete, true);
 
 			for (int i = 1; i < rotations.length; i++)
-				rotations[i] = 360.0f * (i + 3) * percentComplete;
+				rotations[i].setAngle(360.0f * (i + 3) * percentComplete, true);
 		}
 		else if (craftingState == CraftingStates.CRAFTING) {
 			float percentComplete = (float)ticksInState / CRAFTING_TIME;
 
 			scale = MAX_SCALE;
 
-			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS;
-			rotations[1] = 360.0f * percentComplete;
-			rotations[2] = 360.0f * NUM_ROTATIONS_CRAFTING * percentComplete;
-			rotations[3] = rotations[1];
+			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS, true);
+			rotations[1].setAngle(360.0f * percentComplete, true);
+			rotations[2].setAngle(360.0f * NUM_ROTATIONS_CRAFTING * percentComplete, true);
+			rotations[3].setAngle(rotations[1].getAngle(), true);
 		}
 		else if (craftingState.isEnd()) {
 			float inversePercentComplete = 1.0f - (float)ticksInState / START_AND_END_TIME;
 			scale = (MAX_SCALE - MIN_SCALE) * inversePercentComplete + MIN_SCALE;
-			rotations[0] = 360.0f * CLOCK_FACE_ROTATIONS * inversePercentComplete;
+			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS * inversePercentComplete, false);
 
 			for (int i = 1; i < rotations.length; i++)
-				rotations[i] = 360.0f * (i + 3) * inversePercentComplete;
+				rotations[i].setAngle(360.0f * (i + 3) * inversePercentComplete, false);
 		}
 	}
 
@@ -501,6 +492,43 @@ public class TileDimGen extends TileEntity implements ITickable {
 		HOUR_HAND,
 		MINUTE_HAND,
 		SECOND_HAND;
+	}
+
+	private class Angle {
+		private float prevAngle = 0;
+		private float angle = 0;
+
+		public float getRotation(float partialTicks) {
+			return (angle - prevAngle) * partialTicks + prevAngle;
+		}
+
+		public float getAngle() {
+			return angle;
+		}
+
+		public void setAngle(float newAngle, boolean clockwise) {
+			while (newAngle > 360.0f) {
+				newAngle -= 360.0f;
+			}
+
+			while (newAngle < 0.0f) {
+				newAngle += 360.0f;
+			}
+
+			prevAngle = angle;
+			angle = newAngle;
+
+			if (clockwise) {
+				if (angle < prevAngle) {
+					prevAngle -= 360.0f;
+				}
+			}
+			else {
+				if (angle > prevAngle) {
+					prevAngle += 360.0f;
+				}
+			}
+		}
 	}
 
 	//-----------------------------------------------NBT stuff below-----------------------------------------------
