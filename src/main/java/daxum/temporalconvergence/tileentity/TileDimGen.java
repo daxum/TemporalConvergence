@@ -373,6 +373,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 			return pedLocs[pedestalNum];
 		}
 
+		TemporalConvergence.LOGGER.error("getPedestalLoc() called with invalid index {}. Valid range is [0, {})", pedestalNum, pedLocs.length);
 		return BlockPos.ORIGIN;
 	}
 
