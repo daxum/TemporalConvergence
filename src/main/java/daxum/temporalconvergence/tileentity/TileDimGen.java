@@ -48,7 +48,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private static final int TICKS_BETWEEN_PEDESTALS = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
 	private static final int NUM_ROTATIONS_CRAFTING = 4; //The number of times the minute hand does a full rotation in the CraftingStates.CRAFTING state
 	private static final int CRAFTING_TIME = PEDESTAL_COUNT * TICKS_BETWEEN_PEDESTALS * NUM_ROTATIONS_CRAFTING; //The total number of ticks spent in the CRAFTING state
-	private static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the END_POST_SUCCESS state
+	private static final int POST_SUCCESS_TIME = 15; //Ticks to spend in the POST_SUCCESS state
 
 	//All of these values need to be written to / read from nbt
 	private ItemStackHandler inventory = new DimGenInventory(this);
@@ -56,7 +56,7 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private int ticksInState = 0; //Number of ticks spent in the current crafting state. Not set if not crafting.
 	private List<ItemStack> currentRecipe = new ArrayList<>(); //The item inputs to the currently active recipe. Does not contain center input. Values are removed as they're consumed
 	private ItemStack recipeOutput = ItemStack.EMPTY; //The cached value of the output of the current recipe
-	private boolean[] activePedestals = new boolean[PEDESTAL_COUNT]; //The pedestals being used to craft the current recipe
+	private boolean[] activePedestals = new boolean[PEDESTAL_COUNT]; //The pedestals being used to craft the current recipe, starting at north (12 o' clock) and going clockwise
 
 	//These are caches that don't need to be saved
 	private BlockPos[] pedLocs = new BlockPos[PEDESTAL_COUNT]; //Cache of pedestal locations, starting at north (12 o' clock) and going clockwise
@@ -425,37 +425,37 @@ public class TileDimGen extends TileEntity implements ITickable {
 	private void setTimeForState() {
 		if (craftingState == CraftingStates.NOT_CRAFTING || craftingState == CraftingStates.POST_SUCCESS) {
 			scale = MIN_SCALE;
-			rotations[0].setAngle(0.0f, true); //Not sure why this sometimes isn't set right
-			rotations[1].setAngle((world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f, true);
-			rotations[2].setAngle(rotations[1].getAngle() % 30.0f / 30.0f * 360.0f, true);
-			rotations[3].setAngle(rotations[2].getAngle() % 30.0f / 30.0f * 360.0f, true);
+			rotations[0].setAngle(0.0f, ClockDirection.DONT_CARE); //Not sure why this sometimes isn't set right
+			rotations[1].setAngle((world.getWorldTime() + 6000) % 12000 / 12000.0f * 360.0f, ClockDirection.MOVE_CLOCKWISE);
+			rotations[2].setAngle(rotations[1].getAngle() % 30.0f / 30.0f * 360.0f, ClockDirection.MOVE_CLOCKWISE);
+			rotations[3].setAngle(rotations[2].getAngle() % 30.0f / 30.0f * 360.0f, ClockDirection.MOVE_CLOCKWISE);
 		}
 		else if (craftingState == CraftingStates.STARTUP) {
 			float percentComplete = (float)ticksInState / START_AND_END_TIME;
 
 			scale = (MAX_SCALE - MIN_SCALE) * percentComplete + MIN_SCALE;
-			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS * percentComplete, true);
+			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS * percentComplete, ClockDirection.MOVE_CLOCKWISE);
 
 			for (int i = 1; i < rotations.length; i++)
-				rotations[i].setAngle(360.0f * (i + 3) * percentComplete, true);
+				rotations[i].setAngle(360.0f * (i + 3) * percentComplete, ClockDirection.MOVE_CLOCKWISE);
 		}
 		else if (craftingState == CraftingStates.CRAFTING) {
 			float percentComplete = (float)ticksInState / CRAFTING_TIME;
 
 			scale = MAX_SCALE;
 
-			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS, true);
-			rotations[1].setAngle(360.0f * percentComplete, true);
-			rotations[2].setAngle(360.0f * NUM_ROTATIONS_CRAFTING * percentComplete, true);
-			rotations[3].setAngle(rotations[1].getAngle(), true);
+			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS, ClockDirection.MOVE_CLOCKWISE);
+			rotations[1].setAngle(360.0f * percentComplete, ClockDirection.MOVE_CLOCKWISE);
+			rotations[2].setAngle(360.0f * NUM_ROTATIONS_CRAFTING * percentComplete, ClockDirection.MOVE_CLOCKWISE);
+			rotations[3].setAngle(rotations[1].getAngle(), ClockDirection.MOVE_CLOCKWISE);
 		}
 		else if (craftingState.isEnd()) {
 			float inversePercentComplete = 1.0f - (float)ticksInState / START_AND_END_TIME;
 			scale = (MAX_SCALE - MIN_SCALE) * inversePercentComplete + MIN_SCALE;
-			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS * inversePercentComplete, false);
+			rotations[0].setAngle(360.0f * CLOCK_FACE_ROTATIONS * inversePercentComplete, ClockDirection.MOVE_COUNTER_CLOCKWISE);
 
 			for (int i = 1; i < rotations.length; i++)
-				rotations[i].setAngle(360.0f * (i + 3) * inversePercentComplete, false);
+				rotations[i].setAngle(360.0f * (i + 3) * inversePercentComplete, ClockDirection.MOVE_COUNTER_CLOCKWISE);
 		}
 	}
 
@@ -470,10 +470,13 @@ public class TileDimGen extends TileEntity implements ITickable {
 	}
 
 	private void spawnParticlesAt(BlockPos toPos) {
-		int number = (int) (10 * MathHelper.sin(180.0f * ((float)ticksInState / CRAFTING_TIME) * (float)Math.PI / 180.0f));
+		int number = 0;
 
 		if (ticksInState <= TICKS_BETWEEN_PEDESTALS * PEDESTAL_COUNT) {
 			number = Math.random() >= 0.7 ? 1 : 0;
+		}
+		else {
+			number = (int) (10 * MathHelper.sin(180.0f * ((float)ticksInState / CRAFTING_TIME) * (float)Math.PI / 180.0f));
 		}
 
 		for (int i = 0; i < number; i++) {
@@ -491,6 +494,12 @@ public class TileDimGen extends TileEntity implements ITickable {
 		SECOND_HAND;
 	}
 
+	private enum ClockDirection {
+		MOVE_CLOCKWISE,
+		MOVE_COUNTER_CLOCKWISE,
+		DONT_CARE;
+	}
+
 	private class Angle {
 		private float prevAngle = 0;
 		private float angle = 0;
@@ -503,19 +512,13 @@ public class TileDimGen extends TileEntity implements ITickable {
 			return angle;
 		}
 
-		public void setAngle(float newAngle, boolean clockwise) {
-			while (newAngle > 360.0f) {
-				newAngle -= 360.0f;
-			}
-
-			while (newAngle < 0.0f) {
-				newAngle += 360.0f;
-			}
+		public void setAngle(float newAngle, ClockDirection direction) {
+			newAngle = Math.abs(newAngle) % 360.0f; //Make sure newAngle is in the range [0, 360)
 
 			prevAngle = angle;
 			angle = newAngle;
 
-			if (clockwise) {
+			if (direction == ClockDirection.MOVE_CLOCKWISE) {
 				if (angle < prevAngle) {
 					prevAngle -= 360.0f;
 				}
@@ -650,13 +653,15 @@ public class TileDimGen extends TileEntity implements ITickable {
 
 	@Override
 	public boolean shouldRenderInPass(int pass) {
-		return pass == 1;
+		return pass == 1; //Translucent
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		if (craftingState.isCrafting())
+		if (craftingState.isCrafting()) {
 			return fullClockBB;
+		}
+
 		return smallClockBB;
 	}
 
