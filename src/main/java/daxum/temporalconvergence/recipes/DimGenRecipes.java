@@ -59,9 +59,12 @@ public final class DimGenRecipes {
 	}
 
 	public static ItemStack getOutput(ItemStack centerInput, List<ItemStack> inputs) {
-		for (DimGenRecipe i : recipes)
-			if (i.areInputsEqual(centerInput, inputs))
+		for (DimGenRecipe i : recipes) {
+			if (i.areInputsEqual(centerInput, inputs)) {
 				return i.output.copy();
+			}
+		}
+
 		return ItemStack.EMPTY;
 
 	}
@@ -78,22 +81,27 @@ public final class DimGenRecipes {
 		}
 
 		public boolean areInputsEqual(ItemStack main, List<ItemStack> in) {
-			if (in.size() != inputs.size() || !ItemStack.areItemStacksEqual(main, mainInput))
+			if (in.size() != inputs.size() || !ItemStack.areItemStacksEqual(main, mainInput)) {
 				return false;
+			}
 
 			List<ItemStack> testStacks = new ArrayList<>();
 			testStacks.addAll(in);
 
 			boolean found = false;
 			for (int i = 0; i < inputs.size(); i++) {
-				for (int j = 0; j < testStacks.size(); j++)
+				for (int j = 0; j < testStacks.size(); j++) {
 					if (ItemStack.areItemStacksEqual(inputs.get(i), testStacks.get(j))) {
 						testStacks.remove(j);
 						found = true;
 						break;
 					}
-				if (!found)
+				}
+
+				if (!found) {
 					return false;
+				}
+
 				found = false;
 			}
 
