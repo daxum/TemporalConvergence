@@ -42,11 +42,8 @@ public final class RecipeHandler {
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_HALF_SLAB, 6), "fff", 'f', new ItemStack(ModBlocks.EARLY_FUTURE_BLOCK, 1, 0));
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_BLOCK), "f", "f", 'f', new ItemStack(ModBlocks.EARLY_FUTURE_HALF_SLAB, 1, 0));
 
-		//If I can make timeplants shearable, this'll go away
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TIME_PEARL), ModBlocks.TIME_PLANT);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.TIME_WOOD_PLANKS, 4),  ModBlocks.TIME_WOOD);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TIME_STEEL_INGOT, 9), ModBlocks.TIME_STEEL);
-		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.DIM_LINKER), ModItems.TIME_PEARL, Items.GLOWSTONE_DUST);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_BUTTON, 4), ModBlocks.EARLY_FUTURE_BLOCK);
 
 		GameRegistry.addSmelting(ModBlocks.TIME_SAND, new ItemStack(ModBlocks.TIME_STONE), 0.1f);

@@ -94,19 +94,24 @@ public class BlockRewoundTime extends BlockBase {
 
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-		List<ItemStack> ret = new ArrayList();
+		List<ItemStack> stacks = new ArrayList();
 
 		if (state.getValue(AGE) == 0)
-			ret.add(new ItemStack(ModItems.REWOUND_TIME_SEEDS));
+			stacks.add(new ItemStack(ModItems.REWOUND_TIME_SEEDS));
 		else if (state.getValue(AGE) == 7)
-			ret.add(new ItemStack(ModItems.TIME_PEARL, Math.max(RANDOM.nextInt(fortune + 2), MathHelper.ceil(fortune / 2.0))));
+			stacks.add(new ItemStack(ModItems.TIME_BULB, Math.max(RANDOM.nextInt(fortune + 2), MathHelper.ceil(fortune / 2.0)), 1));
 
-		return ret;
+		return stacks;
 	}
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return state.getValue(AGE) == 0 ? ModItems.REWOUND_TIME_SEEDS : state.getValue(AGE) == 7 ? ModItems.TIME_PEARL : Items.AIR;
+		return state.getValue(AGE) == 0 ? ModItems.REWOUND_TIME_SEEDS : state.getValue(AGE) == 7 ? ModItems.TIME_BULB : Items.AIR;
+	}
+
+	@Override
+	public int damageDropped(IBlockState state) {
+		return state.getValue(AGE) == 7 ? 1 : 0;
 	}
 
 	@Override

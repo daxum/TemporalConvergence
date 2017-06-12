@@ -42,7 +42,7 @@ public final class ModItems {
 
 	public static final ToolMaterial TIMEWOOD = EnumHelper.addToolMaterial("TIMEWOOD", 1, 28800, 6.0f, 0.0f, 5);
 
-	public static final Item TIME_PEARL;
+	public static final Item TIME_BULB;
 	public static final Item TIME_DUST;
 	public static final Item TIME_STEEL_INGOT;
 	public static final Item TIME_WOOD_PICK;
@@ -54,9 +54,9 @@ public final class ModItems {
 	public static final Item REWOUND_TIME_SEEDS;
 
 	static {
-		TIME_PEARL = new ItemBase("time_pearl");
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
 
+		TIME_BULB = new ItemTimeBulb();
 		TIME_DUST = new ItemTimeDust();
 		TIME_WOOD_PICK = new ItemTimeWoodPick();
 		TIME_WOOD_SHOVEL = new ItemTimeWoodShovel();
@@ -71,7 +71,7 @@ public final class ModItems {
 		itemRegistry.register(DIM_LINKER);
 		itemRegistry.register(TIME_DUST);
 		itemRegistry.register(TIME_FREEZER);
-		itemRegistry.register(TIME_PEARL);
+		itemRegistry.register(TIME_BULB);
 		itemRegistry.register(TIME_STEEL_INGOT);
 		itemRegistry.register(TIME_WOOD_AXE);
 		itemRegistry.register(TIME_WOOD_PICK);

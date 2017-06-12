@@ -36,7 +36,8 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void registerItemRenderer() {
 		//Items
-		registerRender(ModItems.TIME_PEARL);
+		registerRender(ModItems.TIME_BULB, 0, "_empty");
+		registerRender(ModItems.TIME_BULB, 1);
 		registerRender(ModItems.TIME_STEEL_INGOT);
 		registerRender(ModItems.TIME_DUST);
 		registerRender(ModItems.TIME_WOOD_PICK);
@@ -62,7 +63,7 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.TEST_TELEPORTER)); //Why?
 		registerRender(Item.getItemFromBlock(ModBlocks.DIM_CONTR));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BLOCK));
-		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BLOCK), 1, ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName().toString() + "_floor");
+		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BLOCK), 1, "_floor");
 		registerRender(Item.getItemFromBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_STAIRS));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_FENCE));
@@ -85,8 +86,12 @@ public class ClientProxy implements IProxy {
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 
-	public void registerRender(Item item, int meta, String name) {
-		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(name, "inventory"));
+	public void registerRender(Item item, int meta) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+	}
+
+	public void registerRender(Item item, int meta, String suffix) {
+		ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName().toString() + suffix, "inventory"));
 	}
 
 	@Override
