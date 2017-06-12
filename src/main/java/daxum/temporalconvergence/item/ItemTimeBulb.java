@@ -21,11 +21,14 @@ package daxum.temporalconvergence.item;
 
 import java.util.List;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,6 +38,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class ItemTimeBulb extends ItemBase {
 	public ItemTimeBulb() {
 		super("time_bulb");
+		setHasSubtypes(true);
 	}
 
 	@Override
@@ -42,7 +46,10 @@ public class ItemTimeBulb extends ItemBase {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (stack.getItem() == this && canDropItem(stack)) {
-			player.setHeldItem(hand, ItemStack.EMPTY);
+			if (!player.isCreative()) {
+				stack.shrink(1);
+			}
+
 			ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.TIME_DUST, getAmountToDrop(stack)));
 
 			return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
@@ -79,5 +86,13 @@ public class ItemTimeBulb extends ItemBase {
 		if (canDropItem(stack)) {
 			tooltip.add("Strength: " + getAmountToDrop(stack));
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems)
+	{
+		subItems.add(new ItemStack(this, 1, 0));
+		subItems.add(new ItemStack(this, 1, 1));
 	}
 }
