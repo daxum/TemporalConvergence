@@ -58,11 +58,11 @@ public class ItemTimeBulb extends ItemBase {
 		return ActionResult.newResult(EnumActionResult.PASS, stack);
 	}
 
-	private boolean canDropItem(ItemStack stack) {
+	private static boolean canDropItem(ItemStack stack) {
 		return stack.getMetadata() == 1;
 	}
 
-	private int getAmountToDrop(ItemStack stack) {
+	private static int getAmountToDrop(ItemStack stack) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("amount", Constants.NBT.TAG_INT)) {
 			return Math.max(stack.getTagCompound().getInteger("amount"), 1);
 		}
@@ -90,9 +90,17 @@ public class ItemTimeBulb extends ItemBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems)
-	{
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		subItems.add(new ItemStack(this, 1, 0));
 		subItems.add(new ItemStack(this, 1, 1));
+	}
+
+	public static int getBurnTime(ItemStack fuel) {
+		if (canDropItem(fuel)) {
+			return 100 + 50 * getAmountToDrop(fuel);
+		}
+		else {
+			return 100; //Same as stick
+		}
 	}
 }

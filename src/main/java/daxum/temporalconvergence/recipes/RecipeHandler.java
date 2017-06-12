@@ -19,6 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.recipes;
 
+import daxum.temporalconvergence.FuelHandler;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
 import net.minecraft.init.Blocks;
@@ -47,6 +48,8 @@ public final class RecipeHandler {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_BUTTON, 4), ModBlocks.EARLY_FUTURE_BLOCK);
 
 		GameRegistry.addSmelting(ModBlocks.TIME_SAND, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
+
+		GameRegistry.registerFuelHandler(new FuelHandler());
 
 		initDimGen();
 	}
