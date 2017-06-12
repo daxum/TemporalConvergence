@@ -27,9 +27,6 @@ import daxum.temporalconvergence.recipes.DimGenRecipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -42,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileDimGen extends TileEntity implements ITickable {
+public class TileDimGen extends TileEntityBase implements ITickable {
 	public static final int PEDESTAL_COUNT = 12;
 	private static final int START_AND_END_TIME = 75; //The time in ticks for the clock to reach full size when crafting (craftingState == STARTUP) and shrink back when done
 	private static final int TICKS_BETWEEN_PEDESTALS = 8; //The rate at which pedestals will be checked and items consumed when crafting starts, in ticks. Cannot be 0
@@ -666,24 +663,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound comp = new NBTTagCompound();
-		comp = writeToNBT(comp);
-
-		return new SPacketUpdateTileEntity(pos, -42, comp);
-	}
-
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.getNbtCompound());
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> cap, EnumFacing face) {
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(cap, face);
 	}
@@ -691,13 +670,6 @@ public class TileDimGen extends TileEntity implements ITickable {
 	@Override
 	public <T> T getCapability (Capability<T> cap, EnumFacing face) {
 		return cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)inventory : super.getCapability(cap, face);
-	}
-
-	private void sendBlockUpdate() {
-		if (!world.isRemote) {
-			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
-			markDirty();
-		}
 	}
 
 	@Override

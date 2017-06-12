@@ -22,12 +22,9 @@ package daxum.temporalconvergence.tileentity;
 import daxum.temporalconvergence.block.BlockDimContr.EnumPowerLevel;
 import daxum.temporalconvergence.power.PowerDimension;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 
-public class TileDimContr extends TileEntity implements ITickable {
+public class TileDimContr extends TileEntityBase implements ITickable {
 	protected int linkId = -1;
 	protected boolean didThisFreeze = false;
 	protected boolean isFrozen = false;
@@ -162,31 +159,5 @@ public class TileDimContr extends TileEntity implements ITickable {
 			isFrozen = comp.getBoolean("isdimf");
 
 		super.readFromNBT(comp);
-	}
-
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(pos, -42, writeToNBT(new NBTTagCompound()));
-	}
-
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		EnumPowerLevel prevPL = state;
-		readFromNBT(pkt.getNbtCompound());
-
-		if (state != prevPL)
-			world.markBlockRangeForRenderUpdate(pos, pos);
-	}
-
-	public void sendBlockUpdate() {
-		if (!world.isRemote) {
-			world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 8);
-			markDirty();
-		}
 	}
 }
