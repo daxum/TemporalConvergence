@@ -17,18 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.entity;
+package daxum.temporalconvergence.tileentity;
 
-import daxum.temporalconvergence.TemporalConvergence;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public final class ModEntities {
+public final class ModTileEntities {
 	public static void init() {
-		int id = 0;
-
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "time_pixie"), EntityTimePixie.class, "time_pixie", id++, TemporalConvergence.instance, 16, 2, false, 0x2fd1dbff, 0xfffffffe);
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "ai_boss"), EntityBossAI.class, "ai_boss", id++, TemporalConvergence.instance, 64, 2, false, 4671303, 8751526);
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "ai_boss_screen"),  EntityBossAIScreen.class, "ai_boss_screen", id++, TemporalConvergence.instance, 64, 5, false);
+		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
+		GameRegistry.registerTileEntity(TileDimGen.class, "dimensional_generator");
+		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
+		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
+		GameRegistry.registerTileEntity(TileEarlyFutureDoor.class, "early_future_door");
+		GameRegistry.registerTileEntity(TileTimePlant.class, "time_plant");
 	}
 }

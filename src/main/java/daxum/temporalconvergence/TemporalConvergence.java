@@ -26,6 +26,7 @@ import daxum.temporalconvergence.entity.ModEntities;
 import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.proxy.IProxy;
 import daxum.temporalconvergence.recipes.RecipeHandler;
+import daxum.temporalconvergence.tileentity.ModTileEntities;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.ModWorldGenerator;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -61,6 +62,7 @@ public class TemporalConvergence {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ModEntities.init();
+		ModTileEntities.init();
 
 		RecipeHandler.initOreDict();
 		DimensionHandler.init();
