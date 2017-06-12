@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "temporalconvergence:time_pearl"
+		"layer0": "temporalconvergence:time_bulb_empty"
 	}
 }
