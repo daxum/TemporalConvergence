@@ -219,7 +219,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 			instability = comp.getInteger("instability");
 		}
 
-		if (comp.hasKey("charge", Constants.NBT.TAG_INT)) {
+		if (comp.hasKey("regrowthTimer", Constants.NBT.TAG_INT)) {
 			witherTimer = comp.getInteger("regrowthTimer");
 		}
 
