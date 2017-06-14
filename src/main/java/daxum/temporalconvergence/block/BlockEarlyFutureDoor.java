@@ -126,7 +126,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos changedPos) {
-		setOpening(world, state, pos, world.isBlockPowered(pos));
+		setOpening(world, state, pos, isDoorPowered(world, state, pos));
 	}
 
 	public void setOpening(World world, IBlockState state, BlockPos pos, boolean open) {
@@ -137,6 +137,18 @@ public class BlockEarlyFutureDoor extends BlockBase {
 				world.setBlockState(pos2, state.withProperty(OPEN, open), 10);
 			}
 		}
+	}
+
+	private boolean isDoorPowered(World world, IBlockState state, BlockPos pos) {
+		BlockPos[] doorPos = getParts(state, pos, true);
+
+		for (BlockPos currentPos : doorPos) {
+			if (world.isBlockPowered(currentPos)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public BlockPos[] getParts(IBlockState state, BlockPos pos, boolean includeGiven) {
