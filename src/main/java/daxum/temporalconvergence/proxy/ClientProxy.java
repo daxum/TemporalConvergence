@@ -24,11 +24,17 @@ import daxum.temporalconvergence.fluid.FluidRenderRegister;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.particle.ParticleDimGenCraft;
 import daxum.temporalconvergence.render.entity.EntityRenderRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ColorizerGrass;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 
 public class ClientProxy implements IProxy {
@@ -70,6 +76,16 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_HALF_SLAB));
 		registerRender(Item.getItemFromBlock(ModBlocks.REWOUND_SOIL));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BUTTON));
+	}
+
+	@Override
+	public void registerColors() {
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
+				return world != null && pos != null ? BiomeColorHelper.getGrassColorAtPos(world, pos) :  ColorizerGrass.getGrassColor(0.5, 1.0);
+			}
+		}, ModBlocks.TIME_PLANT);
 	}
 
 	@Override

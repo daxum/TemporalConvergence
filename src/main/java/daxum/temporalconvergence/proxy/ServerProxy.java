@@ -37,4 +37,7 @@ public class ServerProxy implements IProxy{
 
 	@Override
 	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz) {}
+
+	@Override
+	public void registerColors() {}
 }

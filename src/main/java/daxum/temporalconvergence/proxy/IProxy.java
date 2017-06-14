@@ -27,4 +27,5 @@ public interface IProxy {
 	public void registerEntityRenderer();
 	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ);
 	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz);
+	public void registerColors();
 }
