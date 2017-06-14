@@ -1,5 +1,7 @@
 {
     "variants": {
-        "normal": { "model": "temporalconvergence:time_plant" }
+        "plantstate=withered": { "model": "temporalconvergence:time_plant" },
+        "plantstate=daytime": { "model": "temporalconvergence:time_plant" },
+        "plantstate=nighttime": { "model": "temporalconvergence:time_plant" }
     }
 }
