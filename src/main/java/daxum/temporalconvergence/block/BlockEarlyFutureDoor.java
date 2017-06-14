@@ -24,9 +24,7 @@ import java.util.List;
 import java.util.Random;
 
 import daxum.temporalconvergence.item.ModItems;
-import daxum.temporalconvergence.tileentity.TileEarlyFutureDoor;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -36,9 +34,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -49,7 +45,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvider {
+public class BlockEarlyFutureDoor extends BlockBase {
 	public static final PropertyBool OPEN = PropertyBool.create("open");
 	public static final PropertyBool NORTH_SOUTH = PropertyBool.create("ns");
 	public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
@@ -129,27 +125,16 @@ public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvid
 	}
 
 	@Override
-	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
-		if (!state.getValue(OPEN)) {
-			setOpening(world, state, pos);
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos changedPos) {
-		if (world.isBlockPowered(pos) && !state.getValue(OPEN))
-			setOpening(world, state, pos);
+		setOpening(world, state, pos, world.isBlockPowered(pos));
 	}
 
-	public void setOpening(World world, IBlockState state, BlockPos pos) {
+	public void setOpening(World world, IBlockState state, BlockPos pos, boolean open) {
 		for (BlockPos pos2 : getParts(state, pos, true)) {
 			state = world.getBlockState(pos2);
 
-			if (state.getBlock() == this) {
-				world.setBlockState(pos2, state.withProperty(OPEN, true));
+			if (state.getBlock() == this && state.getValue(OPEN) != open) {
+				world.setBlockState(pos2, state.withProperty(OPEN, open), 10);
 			}
 		}
 	}
@@ -259,11 +244,6 @@ public class BlockEarlyFutureDoor extends BlockBase implements ITileEntityProvid
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
 		return new ItemStack(ModItems.EARLY_FUTURE_DOOR);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEarlyFutureDoor();
 	}
 
 	//To simplify things, "right" is either north or east, and "left" is south or west, depending on orientation

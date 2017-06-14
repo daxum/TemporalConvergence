@@ -27,7 +27,6 @@ public final class ModTileEntities {
 		GameRegistry.registerTileEntity(TileDimGen.class, "dimensional_generator");
 		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
 		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
-		GameRegistry.registerTileEntity(TileEarlyFutureDoor.class, "early_future_door");
 		GameRegistry.registerTileEntity(TileTimePlant.class, "time_plant");
 	}
 }
