@@ -2,7 +2,8 @@
 	"parent": "minecraft:block/block",
 
 	"textures": {
-		"plant": "temporalconvergence:time_plant"
+		"plant": "temporalconvergence:time_plant",
+		"particle": "temporalconvergence:time_plant"
 	},
 
 	"elements": [
