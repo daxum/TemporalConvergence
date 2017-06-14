@@ -1,0 +1,23 @@
+{
+	"parent": "minecraft:block/block",
+
+	"textures": {
+		"plant": "temporalconvergence:time_plant"
+	},
+
+	"elements": [
+	    {
+	        "name": "bulb_withered",
+	        "from": [11.5, 8.5, 7.5],
+	        "to": [12.5, 9.5, 8.5],
+	        "faces": {
+	            "north": { "texture": "#plant", "uv": [10, 0, 16, 6] },
+	            "east": { "texture": "#plant", "uv": [10, 0, 16, 6] },
+	            "south": { "texture": "#plant", "uv": [10, 0, 16, 6] },
+	            "west": { "texture": "#plant", "uv": [10, 0, 16, 6] },
+	            "up": { "texture": "#plant", "uv": [10, 0, 16, 6] },
+	            "down": { "texture": "#plant", "uv": [10, 0, 16, 6] }
+	        }
+	    }
+	]
+}
