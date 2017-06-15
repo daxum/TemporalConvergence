@@ -48,7 +48,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 	private final Random rand = new Random();
 	private int charge = 0;
 	private int instability = 0;
-	private int witherTimer = 0;//TODO: uncomment MAX_WITHER_TIME;
+	private int witherTimer = MAX_WITHER_TIME;
 
 	@Override
 	public void update() {

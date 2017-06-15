@@ -98,7 +98,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return getDefaultState()/*.withProperty(PLANT_STATE, PlantState.WITHERED)*/;//TODO: uncomment
+		return getDefaultState().withProperty(PLANT_STATE, PlantState.WITHERED);
 	}
 
 	@Override
