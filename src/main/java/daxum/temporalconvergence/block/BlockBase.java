@@ -25,10 +25,10 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 
 public class BlockBase extends Block {
-	public BlockBase (Material material, String unlocalizedName, float hardness, float resistance, String tool, int level, SoundType sound) {
+	public BlockBase (Material material, String registryName, float hardness, float resistance, String tool, int level, SoundType sound) {
 		super(material);
-		setUnlocalizedName(unlocalizedName);
-		setRegistryName(unlocalizedName);
+		setUnlocalizedName(registryName);
+		setRegistryName(registryName);
 		setCreativeTab(ModItems.TEMPCONVTAB);
 		setHardness(hardness);
 		setResistance(resistance);

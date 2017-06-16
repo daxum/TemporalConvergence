@@ -51,6 +51,7 @@ public final class ModBlocks {
 	public static final Block REWOUND_SOIL;
 	public static final Block REWOUND_TIME;
 	public static final Block EARLY_FUTURE_BUTTON;
+	public static final Block BRAZIER;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -89,6 +90,7 @@ public final class ModBlocks {
 		REWOUND_SOIL = new BlockRewoundTimeSoil();
 		REWOUND_TIME = new BlockRewoundTime();
 		EARLY_FUTURE_BUTTON = new BlockButtonFuture();
+		BRAZIER = new BlockBrazier();
 	}
 
 	public static void registerBlocks(IForgeRegistry blockRegistry) {
@@ -116,5 +118,6 @@ public final class ModBlocks {
 		blockRegistry.register(REWOUND_SOIL);
 		blockRegistry.register(REWOUND_TIME);
 		blockRegistry.register(EARLY_FUTURE_BUTTON);
+		blockRegistry.register(BRAZIER);
 	}
 }
