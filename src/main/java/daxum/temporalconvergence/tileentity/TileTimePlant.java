@@ -124,7 +124,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 
 	private void distributeInstability(int amount) {
 		for (int x = pos.getX() - INSTABILITY_SPREAD_DISTANCE; x <= pos.getX() + INSTABILITY_SPREAD_DISTANCE; x++) {
-			for (int y = pos.getY() - INSTABILITY_SPREAD_DISTANCE; y <= pos.getY() + INSTABILITY_SPREAD_DISTANCE; y++) {
+			for (int y = pos.getY() - INSTABILITY_SPREAD_DISTANCE * 2; y <= pos.getY() + INSTABILITY_SPREAD_DISTANCE * 2; y++) {
 				for (int z = pos.getZ() - INSTABILITY_SPREAD_DISTANCE; z <= pos.getZ() + INSTABILITY_SPREAD_DISTANCE; z++) {
 					BlockPos checkPos = new BlockPos(x, y, z);
 
