@@ -25,13 +25,16 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 public class TileBrazier extends TileEntityBase implements ITickable {
 	private static final int MAX_BURN_TIME = 2400;
+
 	private int burnTime = 0;
 	private int flameRed = 255;
 	private int flameGreen = 255;
@@ -41,23 +44,35 @@ public class TileBrazier extends TileEntityBase implements ITickable {
 	public void update() {
 		IBlockState state = world.getBlockState(pos);
 
-		if (state.getValue(BlockBrazier.BURNING)) {
-			if (BlockBrazier.isBurningDust(state)) {
+		if (!world.isRemote && state.getValue(BlockBrazier.BURNING)) {
+			if (BlockBrazier.hasDust(state)) {
 				if (burnTime > 0) {
 					burnTime--;
+					markDirty();
 				}
 				else {
-					if (BlockBrazier.isEmpty(state)) {
-						BlockBrazier.putOutBrazier(world, pos, state);
-						burnTime = 0;
+					world.setBlockState(pos, BlockBrazier.getLowerDustState(state));
+
+					if (BlockBrazier.isEmpty(world.getBlockState(pos))) {
+						BlockBrazier.putOutBrazier(world, pos, world.getBlockState(pos));
 					}
 					else {
-						world.setBlockState(pos, BlockBrazier.getLowerDustState(state));
 						burnTime = MAX_BURN_TIME;
+						markDirty();
 					}
 				}
 			}
 		}
+	}
+
+	public void startBurning() {
+		burnTime = MAX_BURN_TIME;
+		markDirty();
+	}
+
+	public void resetBurnTime() {
+		burnTime = 0;
+		markDirty();
 	}
 
 	public void addColor(ItemStack dye) {
@@ -81,6 +96,7 @@ public class TileBrazier extends TileEntityBase implements ITickable {
 			flameRed = (int) (averageRed * lightnessPercent);
 			flameGreen = (int) (averageGreen * lightnessPercent);
 			flameBlue = (int) (averageBlue * lightnessPercent);
+			markDirty();
 		}
 	}
 
@@ -92,5 +108,30 @@ public class TileBrazier extends TileEntityBase implements ITickable {
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound comp) {
+		if (comp.hasKey("burnTime", Constants.NBT.TAG_INT)) {
+			burnTime = comp.getInteger("burnTime");
+		}
+
+		if (comp.hasKey("color", Constants.NBT.TAG_INT)) {
+			int color = comp.getInteger("color");
+
+			flameRed = color >> 16 & 255;
+			flameGreen = color >> 8 & 255;
+			flameBlue = color & 255;
+		}
+
+		super.readFromNBT(comp);
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
+		comp.setInteger("burnTime", burnTime);
+		comp.setInteger("color", flameRed & 255 << 16 | flameGreen & 255 << 8 | flameBlue & 255);
+
+		return super.writeToNBT(comp);
 	}
 }

@@ -1,0 +1,151 @@
+{
+    "parent": "minecraft:block/block",
+
+    "textures": {
+        "brazier": "temporalconvergence:brazier",
+        "particle": "temporalconvergence:brazier"
+    },
+
+    "elements": [
+        {
+            "name": "base",
+            "from": [4, 0, 4],
+            "to": [12, 2, 12],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [2, 2.5, 5, 4.5] },
+                "east": { "texture": "#brazier", "uv": [2, 2.5, 5, 4.5] },
+                "south": { "texture": "#brazier", "uv": [2, 2.5, 5, 4.5] },
+                "west": { "texture": "#brazier", "uv": [2, 2.5, 5, 4.5] },
+                "up": { "texture": "#brazier", "uv": [1, 1, 7, 15] },
+                "down": { "texture": "#brazier", "cullface": "down", "uv": [1, 1, 7, 15] }
+            }
+        },
+
+        {
+            "name": "north_foot",
+            "from": [7, -0.5, 3],
+            "to": [9, 2.5, 7],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "east": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "west": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "down": { "texture": "#brazier", "cullface": "down", "uv": [2, 3, 6, 13] }
+            }
+        },
+
+        {
+            "name": "east_foot",
+            "from": [9, -0.5, 7],
+            "to": [13, 2.5, 9],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "east": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "south": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "down": { "texture": "#brazier", "cullface": "down", "uv": [2, 3, 6, 13], "rotation": 90 }
+            }
+        },
+
+        {
+            "name": "south_foot",
+            "from": [7, -0.5, 9],
+            "to": [9, 2.5, 13],
+            "faces": {
+                "east": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "south": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "west": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "down": { "texture": "#brazier", "cullface": "down", "uv": [2, 3, 6, 13] }
+            }
+        },
+
+        {
+            "name": "west_foot",
+            "from": [3, -0.5, 7],
+            "to": [7, 2.5, 9],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "south": { "texture": "#brazier", "uv": [0, 0, 8, 16], "rotation": 90 },
+                "west": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "up": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "down": { "texture": "#brazier", "cullface": "down", "uv": [2, 3, 6, 13], "rotation": 90 }
+            }
+        },
+
+        {
+            "name": "bottom",
+            "from": [7, -0.5, 7],
+            "to": [9, -0.5, 9],
+            "faces": {
+                "down": { "texture": "#brazier", "cullface": "down", "uv": [3.5, 7, 4.5, 9] }
+            }
+        },
+
+        {
+            "name": "middle",
+            "from": [7, 2, 7],
+            "to": [9, 15, 9],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "east": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "south": { "texture": "#brazier", "uv": [2, 3, 6, 13] },
+                "west": { "texture": "#brazier", "uv": [2, 3, 6, 13] }
+            }
+        },
+
+        {
+            "name": "top_floor",
+            "from": [4, 15, 4],
+            "to": [12, 16, 12],
+            "faces": {
+                "up": { "texture": "#brazier", "cullface": "up", "uv": [2, 4, 6, 12] },
+                "down": { "texture": "#brazier", "uv": [2, 4, 6, 12] }
+            }
+        },
+
+        {
+            "name": "top_wall_north",
+            "from": [4, 15, 4],
+            "to": [12, 18.5, 5],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 270 },
+                "south": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [1, 1, 2, 15], "rotation": 90 }
+            }
+        },
+
+        {
+            "name": "top_wall_east",
+            "from": [11, 15, 4],
+            "to": [12, 18.5, 12],
+            "faces": {
+                "east": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "west": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [1, 1, 2, 15] }
+            }
+        },
+
+        {
+            "name": "top_wall_south",
+            "from": [4, 15, 11],
+            "to": [12, 18.5, 12],
+            "faces": {
+                "north": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "south": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [1, 1, 2, 15], "rotation": 90 }
+            }
+        },
+
+        {
+            "name": "top_wall_west",
+            "from": [4, 15, 4],
+            "to": [5, 18.5, 12],
+            "faces": {
+                "east": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "west": { "texture": "#brazier", "uv": [2, 3, 6, 13], "rotation": 90 },
+                "up": { "texture": "#brazier", "uv": [1, 1, 2, 15] }
+            }
+        }
+    ]
+}

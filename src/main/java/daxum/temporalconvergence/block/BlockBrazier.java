@@ -40,13 +40,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	public static final PropertyEnum<FilledState> FILL_STATE = PropertyEnum.create("filled", FilledState.class);
 	public static final PropertyBool BURNING = PropertyBool.create("burning");
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.25, -0.03125, 0.25, 0.75, 1.15625, 0.75);
 
 	public BlockBrazier() {
 		super("brazier", 2.0f, 10.0f, "pickaxe", 1);
@@ -75,7 +78,7 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 
 				return true;
 			}
-			else if (stack.getItem() == Items.DYE && filledState.canDye() && world.getTileEntity(pos) instanceof TileBrazier) {
+			else if (stack.getItem() == Items.DYE && world.getTileEntity(pos) instanceof TileBrazier) {
 				((TileBrazier)world.getTileEntity(pos)).addColor(stack);
 
 				if (!world.isRemote) {
@@ -85,7 +88,10 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 				return true;
 			}
 			else if (stack.getItem() instanceof ItemFlintAndSteel) {
-				lightBrazier(world, pos, state);
+				if (filledState != FilledState.EMPTY) {
+					lightBrazier(world, pos, state);
+				}
+
 				world.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f, Block.RANDOM.nextFloat() * 0.4f + 0.8f);
 				return true;
 			}
@@ -114,10 +120,23 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 
 	private void lightBrazier(World world, BlockPos pos, IBlockState state) {
 		world.setBlockState(pos, state.withProperty(BURNING, true));
+
+		if (world.getTileEntity(pos) instanceof TileBrazier) {
+			((TileBrazier)world.getTileEntity(pos)).startBurning();
+		}
 	}
 
 	public static void putOutBrazier(World world, BlockPos pos, IBlockState state) {
-		world.setBlockState(pos, state.withProperty(BURNING, false));
+		if (state.getValue(FILL_STATE) != FilledState.NETHERRACK) {
+			world.setBlockState(pos, state.withProperty(BURNING, false).withProperty(FILL_STATE, state.getValue(FILL_STATE).getPreviousState()));
+		}
+		else {
+			world.setBlockState(pos, state.withProperty(BURNING, false));
+		}
+
+		if (world.getTileEntity(pos) instanceof TileBrazier) {
+			((TileBrazier)world.getTileEntity(pos)).resetBurnTime();
+		}
 	}
 
 	private boolean canFillWithDust(IBlockState state) {
@@ -127,10 +146,10 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	}
 
 	private boolean canFillWithNetherrack(IBlockState state) {
-		return state.getValue(FILL_STATE) == FilledState.NETHERRACK && !state.getValue(BURNING);
+		return state.getValue(FILL_STATE) == FilledState.EMPTY && !state.getValue(BURNING);
 	}
 
-	public static boolean isBurningDust(IBlockState state) {
+	public static boolean hasDust(IBlockState state) {
 		return state.getValue(FILL_STATE).isDust();
 	}
 
@@ -218,10 +237,6 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 			}
 		}
 
-		public boolean canDye() {
-			return this == NETHERRACK;
-		}
-
 		public boolean isDust() {
 			return this != EMPTY && this != NETHERRACK;
 		}
@@ -240,12 +255,65 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		IBlockState other = world.getBlockState(pos);
+
+		if (other.getBlock() != this) {
+			return other.getLightValue(world, pos);
+		}
+
+		if (state.getValue(BURNING)) {
+			FilledState fillState = state.getValue(FILL_STATE);
+
+			if (fillState == FilledState.LEVEL_1) {
+				return 6;
+			}
+			else if (fillState == FilledState.LEVEL_2) {
+				return 9;
+			}
+			else if (fillState == FilledState.LEVEL_3) {
+				return 12;
+			}
+			else if (fillState == FilledState.LEVEL_4 || fillState == FilledState.NETHERRACK) {
+				return 15;
+			}
+		}
+
+		return 0;
+	}
+
+	@Override
 	public boolean isFullyOpaque(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileBrazier();
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return AABB;
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return AABB;
 	}
 }

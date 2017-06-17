@@ -28,5 +28,6 @@ public final class ModTileEntities {
 		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
 		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
 		GameRegistry.registerTileEntity(TileTimePlant.class, "time_plant");
+		GameRegistry.registerTileEntity(TileBrazier.class, "brazier");
 	}
 }
