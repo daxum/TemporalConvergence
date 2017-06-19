@@ -26,11 +26,11 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 
-public class BlockTimeWood extends BlockLog {
-	public BlockTimeWood() {
+public class BlockLunarWood extends BlockLog {
+	public BlockLunarWood() {
 		setCreativeTab(ModItems.TEMPCONVTAB);
-		setUnlocalizedName("time_wood");
-		setRegistryName("time_wood");
+		setUnlocalizedName("lunar_wood");
+		setRegistryName("lunar_wood");
 		setHarvestLevel("axe", 0);
 
 		setDefaultState(blockState.getBaseState().withProperty(LOG_AXIS, EnumAxis.Y));

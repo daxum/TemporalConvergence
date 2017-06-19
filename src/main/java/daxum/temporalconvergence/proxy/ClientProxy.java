@@ -59,8 +59,8 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_STONE));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_STEEL));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_PLANT));
-		registerRender(Item.getItemFromBlock(ModBlocks.TIME_WOOD));
-		registerRender(Item.getItemFromBlock(ModBlocks.TIME_WOOD_PLANKS));
+		registerRender(Item.getItemFromBlock(ModBlocks.LUNAR_WOOD));
+		registerRender(Item.getItemFromBlock(ModBlocks.LUNAR_PLANKS));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_SAND));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_CHEST));
 		registerRender(Item.getItemFromBlock(ModBlocks.PEDESTAL));
@@ -77,6 +77,8 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.REWOUND_SOIL));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BUTTON));
 		registerRender(Item.getItemFromBlock(ModBlocks.BRAZIER));
+		registerRender(Item.getItemFromBlock(ModBlocks.SOLAR_WOOD));
+		registerRender(Item.getItemFromBlock(ModBlocks.SOLAR_PLANKS));
 	}
 
 	@Override

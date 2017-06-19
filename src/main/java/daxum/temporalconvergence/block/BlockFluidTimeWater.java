@@ -25,15 +25,14 @@ import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+//TODO: different way to convert, particles
 public class BlockFluidTimeWater extends BlockFluidClassic {
 	public BlockFluidTimeWater() {
 		super(ModFluids.TIME_WATER, Material.WATER);
@@ -82,27 +81,27 @@ public class BlockFluidTimeWater extends BlockFluidClassic {
 		checkAndReplace(world, pos.west());
 	}
 
-	public void checkAndReplace(World world, BlockPos pos) {
+	private void checkAndReplace(World world, BlockPos pos) {
 		Block toConvert = world.getBlockState(pos).getBlock();
 
-		if (toConvert == ModBlocks.TIME_WOOD || toConvert == ModBlocks.TIME_STEEL)
+		if (toConvert == ModBlocks.LUNAR_WOOD || toConvert == ModBlocks.SOLAR_WOOD) {
 			return;
-
-		if (OreDictionary.containsMatch(false, OreDictionary.getOres("blockIron"), new ItemStack(toConvert, 1, OreDictionary.WILDCARD_VALUE))) {
-			world.setBlockState(pos, ModBlocks.TIME_STEEL.getDefaultState());
-			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 3.4f);
 		}
-		else if (OreDictionary.containsMatch(false, OreDictionary.getOres("logWood"), new ItemStack(toConvert, 1, OreDictionary.WILDCARD_VALUE))) {
+
+		if (OreDictionary.containsMatch(false, OreDictionary.getOres("logWood"), new ItemStack(toConvert, 1, OreDictionary.WILDCARD_VALUE))) {
 			IBlockState state = world.getBlockState(pos);
+			Block newBlock = isDay(world.getWorldTime()) ? ModBlocks.SOLAR_WOOD : ModBlocks.LUNAR_WOOD;
 
 			if (state.getProperties().containsKey(BlockLog.LOG_AXIS)) {
-				world.setBlockState(pos, ModBlocks.TIME_WOOD.getDefaultState().withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS)));
+				world.setBlockState(pos, newBlock.getDefaultState().withProperty(BlockLog.LOG_AXIS, state.getValue(BlockLog.LOG_AXIS)));
 			}
 			else {
-				world.setBlockState(pos, ModBlocks.TIME_WOOD.getDefaultState());
+				world.setBlockState(pos, newBlock.getDefaultState());
 			}
-
-			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5f, 3.4f);
 		}
+	}
+
+	private boolean isDay(long time) {
+		return time >= 0 && time < 13000;
 	}
 }

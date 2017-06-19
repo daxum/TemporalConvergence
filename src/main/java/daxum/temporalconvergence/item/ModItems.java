@@ -92,8 +92,8 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STONE).setRegistryName(ModBlocks.TIME_STONE.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STONE_PILLAR).setRegistryName(ModBlocks.TIME_STONE_PILLAR.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WATER).setRegistryName(ModBlocks.TIME_WATER.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WOOD).setRegistryName(ModBlocks.TIME_WOOD.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WOOD_PLANKS).setRegistryName(ModBlocks.TIME_WOOD_PLANKS.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_WOOD).setRegistryName(ModBlocks.LUNAR_WOOD.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_PLANKS).setRegistryName(ModBlocks.LUNAR_PLANKS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BLOCK) {@Override public int getMetadata(int damage) { return damage; }}.setRegistryName(ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName()).setHasSubtypes(true));
 		itemRegistry.register(new ItemBlock(ModBlocks.FANCY_EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.FANCY_EARLY_FUTURE_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_STAIRS).setRegistryName(ModBlocks.EARLY_FUTURE_STAIRS.getRegistryName()));
@@ -102,5 +102,7 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.REWOUND_SOIL).setRegistryName(ModBlocks.REWOUND_SOIL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BUTTON).setRegistryName(ModBlocks.EARLY_FUTURE_BUTTON.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.BRAZIER).setRegistryName(ModBlocks.BRAZIER.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_WOOD).setRegistryName(ModBlocks.SOLAR_WOOD.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_PLANKS).setRegistryName(ModBlocks.SOLAR_PLANKS.getRegistryName()));
 	}
 }

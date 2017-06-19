@@ -32,7 +32,7 @@ public final class FuelHandler implements IFuelHandler {
 		if (fuel.getItem() == ModItems.TIME_BULB) {
 			return ItemTimeBulb.getBurnTime(fuel);
 		}
-		else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.TIME_WOOD) || fuel.getItem() == Item.getItemFromBlock(ModBlocks.TIME_WOOD_PLANKS)) {
+		else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.SOLAR_WOOD) || fuel.getItem() == Item.getItemFromBlock(ModBlocks.SOLAR_PLANKS)) {
 			return 600;
 		}
 
