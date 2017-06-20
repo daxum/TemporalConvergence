@@ -32,9 +32,9 @@ public final class RecipeHandler {
 	public static void init() {
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.TIME_STEEL), "sss", "sss", "sss", 's', ModItems.TIME_STEEL_INGOT);
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.TIME_SAND, 8), "sss", "sds", "sss", 's', Blocks.SAND, 'd', ModItems.TIME_DUST);
-		GameRegistry.addShapedRecipe(new ItemStack(ModItems.TIME_WOOD_PICK), "www", " s ", " s ", 'w', ModBlocks.LUNAR_PLANKS, 's', ModBlocks.TIME_STONE);
-		GameRegistry.addShapedRecipe(new ItemStack(ModItems.TIME_WOOD_SHOVEL), "w", "s", "s", 'w', ModBlocks.LUNAR_PLANKS, 's', ModBlocks.TIME_STONE);
-		GameRegistry.addShapedRecipe(new ItemStack(ModItems.TIME_WOOD_AXE), "ww ", "ws ", " s ", 'w', ModBlocks.LUNAR_PLANKS, 's', ModBlocks.TIME_STONE);
+		GameRegistry.addShapedRecipe(new ItemStack(ModItems.SOLAR_WOOD_PICK), "www", " s ", " s ", 'w', ModBlocks.SOLAR_PLANKS, 's', ModBlocks.TIME_STONE);
+		GameRegistry.addShapedRecipe(new ItemStack(ModItems.SOLAR_WOOD_SHOVEL), "w", "s", "s", 'w', ModBlocks.SOLAR_PLANKS, 's', ModBlocks.TIME_STONE);
+		GameRegistry.addShapedRecipe(new ItemStack(ModItems.SOLAR_WOOD_AXE), "ww ", "ws ", " s ", 'w', ModBlocks.SOLAR_PLANKS, 's', ModBlocks.TIME_STONE);
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.TIME_CHEST), "wsw", "s s", "wsw", 'w', ModBlocks.LUNAR_PLANKS, 's', ModBlocks.TIME_STONE);
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.PEDESTAL), "sss", " s ", "sss", 's', ModBlocks.TIME_STONE);
 		GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.DIM_GEN), " c ", "dsd", "sss", 'c', Items.CLOCK, 'd', Items.DIAMOND, 's', ModBlocks.TIME_STONE);

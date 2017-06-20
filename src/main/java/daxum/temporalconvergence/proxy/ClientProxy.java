@@ -46,9 +46,9 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.TIME_BULB, 1);
 		registerRender(ModItems.TIME_STEEL_INGOT);
 		registerRender(ModItems.TIME_DUST);
-		registerRender(ModItems.TIME_WOOD_PICK);
-		registerRender(ModItems.TIME_WOOD_SHOVEL);
-		registerRender(ModItems.TIME_WOOD_AXE);
+		registerRender(ModItems.SOLAR_WOOD_PICK);
+		registerRender(ModItems.SOLAR_WOOD_SHOVEL);
+		registerRender(ModItems.SOLAR_WOOD_AXE);
 		registerRender(ModItems.TIME_FREEZER);
 		registerRender(ModItems.DIM_LINKER);
 		registerRender(ModItems.EARLY_FUTURE_DOOR);

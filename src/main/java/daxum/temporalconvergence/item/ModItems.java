@@ -40,14 +40,14 @@ public final class ModItems {
 		}
 	};
 
-	public static final ToolMaterial TIMEWOOD = EnumHelper.addToolMaterial("TIMEWOOD", 1, 28800, 6.0f, 0.0f, 5);
+	public static final ToolMaterial SOLAR_WOOD = EnumHelper.addToolMaterial("SOLAR_WOOD", 1, 28800, 6.0f, 0.0f, 0);
 
 	public static final Item TIME_BULB;
 	public static final Item TIME_DUST;
 	public static final Item TIME_STEEL_INGOT;
-	public static final Item TIME_WOOD_PICK;
-	public static final Item TIME_WOOD_SHOVEL;
-	public static final Item TIME_WOOD_AXE;
+	public static final Item SOLAR_WOOD_PICK;
+	public static final Item SOLAR_WOOD_SHOVEL;
+	public static final Item SOLAR_WOOD_AXE;
 	public static final Item TIME_FREEZER;
 	public static final Item DIM_LINKER;
 	public static final Item EARLY_FUTURE_DOOR;
@@ -58,9 +58,9 @@ public final class ModItems {
 
 		TIME_BULB = new ItemTimeBulb();
 		TIME_DUST = new ItemTimeDust();
-		TIME_WOOD_PICK = new ItemTimeWoodPick();
-		TIME_WOOD_SHOVEL = new ItemTimeWoodShovel();
-		TIME_WOOD_AXE = new ItemTimeWoodAxe();
+		SOLAR_WOOD_PICK = new ItemSolarWoodPick();
+		SOLAR_WOOD_SHOVEL = new ItemSolarWoodShovel();
+		SOLAR_WOOD_AXE = new ItemSolarWoodAxe();
 		TIME_FREEZER = new ItemTimeFreezer();
 		DIM_LINKER = new ItemDimensionalLinker();
 		EARLY_FUTURE_DOOR = new ItemEarlyFutureDoor();
@@ -73,9 +73,9 @@ public final class ModItems {
 		itemRegistry.register(TIME_FREEZER);
 		itemRegistry.register(TIME_BULB);
 		itemRegistry.register(TIME_STEEL_INGOT);
-		itemRegistry.register(TIME_WOOD_AXE);
-		itemRegistry.register(TIME_WOOD_PICK);
-		itemRegistry.register(TIME_WOOD_SHOVEL);
+		itemRegistry.register(SOLAR_WOOD_AXE);
+		itemRegistry.register(SOLAR_WOOD_PICK);
+		itemRegistry.register(SOLAR_WOOD_SHOVEL);
 		itemRegistry.register(EARLY_FUTURE_DOOR);
 		itemRegistry.register(REWOUND_TIME_SEEDS);
 

@@ -1,6 +1,6 @@
 {
 	"parent": "item/handheld",
 	"textures": {
-		"layer0": "temporalconvergence:time_wood_axe"
+		"layer0": "temporalconvergence:solar_wood_shovel"
 	}
 }

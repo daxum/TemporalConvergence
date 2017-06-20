@@ -27,18 +27,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class ItemTimeWoodPick extends ItemPickaxe {
-	public ItemTimeWoodPick() {
-		super(ModItems.TIMEWOOD);
+public class ItemSolarWoodPick extends ItemPickaxe {
+	public ItemSolarWoodPick() {
+		super(ModItems.SOLAR_WOOD);
 		setCreativeTab(ModItems.TEMPCONVTAB);
-		setUnlocalizedName("time_wood_pickaxe");
-		setRegistryName("time_wood_pickaxe");
+		setUnlocalizedName("solar_wood_pickaxe");
+		setRegistryName("solar_wood_pickaxe");
 	}
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected) {
-		if (!world.isRemote && stack.getItem() == this && world.getTotalWorldTime() % 5 == 0)
+		if (!world.isRemote && stack.getItem() == this && world.getTotalWorldTime() % 5 == 0) {
 			stack.damageItem(1, (EntityLivingBase) entity);
+		}
 	}
 
 	@Override
