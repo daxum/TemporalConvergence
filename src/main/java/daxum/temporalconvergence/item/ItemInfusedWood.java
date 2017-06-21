@@ -21,6 +21,7 @@ package daxum.temporalconvergence.item;
 
 import java.util.List;
 
+import daxum.temporalconvergence.block.BlockFluidTimeWater;
 import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -46,7 +47,7 @@ public class ItemInfusedWood extends ItemBase {
 	public boolean onEntityItemUpdate(EntityItem item) {
 		World world = item.world;
 
-		if (!world.isRemote && isInValidLocation(item) && world.getTotalWorldTime() % 12 == 0) {
+		if (!world.isRemote && BlockFluidTimeWater.isInValidLocation(item.world, item.getPosition()) && world.getTotalWorldTime() % 12 == 0) {
 			ItemStack stack = item.getEntityItem();
 
 			incrementCompletePercent(stack);
@@ -62,10 +63,6 @@ public class ItemInfusedWood extends ItemBase {
 		}
 
 		return false;
-	}
-
-	private boolean isInValidLocation(EntityItem item) {
-		return item.world.getBlockState(item.getPosition()).getBlock() == ModBlocks.TIME_WATER && item.world.provider.isSurfaceWorld() && item.world.canBlockSeeSky(item.getPosition());
 	}
 
 	private void incrementCompletePercent(ItemStack stack) {

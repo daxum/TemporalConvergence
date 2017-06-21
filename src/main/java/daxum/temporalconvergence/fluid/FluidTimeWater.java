@@ -20,12 +20,18 @@
 package daxum.temporalconvergence.fluid;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.block.BlockFluidTimeWater;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidTimeWater extends Fluid {
+	private static final int FULL_DAY_COLOR = MathHelper.rgb(188, 128, 0);
+	private static final int FULL_NIGHT_COLOR = MathHelper.rgb(163, 177, 204);
 
 	public FluidTimeWater() {
 		super("time_water", new ResourceLocation(TemporalConvergence.MODID + ":time_water_still"), new ResourceLocation(TemporalConvergence.MODID + ":time_water_flow"));
@@ -36,5 +42,37 @@ public class FluidTimeWater extends Fluid {
 	@Override
 	public boolean doesVaporize(FluidStack fluid) {
 		return fluid.getFluid() == this;
+	}
+
+	@Override
+	public int getColor(World world, BlockPos pos) {
+		if (BlockFluidTimeWater.isInValidLocation(world, pos)) {
+			return getColorForTime(world.getWorldTime());
+		}
+
+		return getColor();
+	}
+
+	private static int getColorForTime(long time) {
+		float percentDay = 0.5f + 0.5f * MathHelper.sin((float) (2.0f * Math.PI * time / 24000.0f));
+		float percentNight = 1.0f - percentDay;
+
+		int red = (int) (getRed(FULL_DAY_COLOR) * percentDay + getRed(FULL_NIGHT_COLOR) * percentNight);
+		int green = (int) (getGreen(FULL_DAY_COLOR) * percentDay + getGreen(FULL_NIGHT_COLOR) * percentNight);
+		int blue = (int) (getBlue(FULL_DAY_COLOR) * percentDay + getBlue(FULL_NIGHT_COLOR) * percentNight);
+
+		return MathHelper.rgb(red, green, blue);
+	}
+
+	private static final int getRed(int color) {
+		return color >> 16 & 255;
+	}
+
+	private static final int getGreen(int color) {
+		return color >> 8 & 255;
+	}
+
+	private static final int getBlue(int color) {
+		return color & 255;
 	}
 }

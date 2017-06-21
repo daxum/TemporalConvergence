@@ -21,12 +21,19 @@ package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.fluid.ModFluids;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 
 public class BlockFluidTimeWater extends BlockFluidClassic {
+
 	public BlockFluidTimeWater() {
 		super(ModFluids.TIME_WATER, Material.WATER);
 		setUnlocalizedName("time_water");
 		setRegistryName("time_water");
+	}
+
+	public static boolean isInValidLocation(World world, BlockPos pos) {
+		return world.getBlockState(pos).getBlock() == ModBlocks.TIME_WATER && world.provider.isSurfaceWorld() && world.canBlockSeeSky(pos);
 	}
 }
