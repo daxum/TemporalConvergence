@@ -19,7 +19,6 @@
  **************************************************************************/
 package daxum.temporalconvergence.item;
 
-import daxum.temporalconvergence.block.BlockFluidTimeWater;
 import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
@@ -33,8 +32,6 @@ public class ItemTimeDust extends ItemBase {
 	public boolean onEntityItemUpdate(EntityItem item) {
 		if (!item.getEntityWorld().isRemote && item.getEntityWorld().getBlockState(item.getPosition()) == Blocks.WATER.getDefaultState()) {
 			item.getEntityWorld().setBlockState(item.getPosition(), ModBlocks.TIME_WATER.getDefaultState());
-			((BlockFluidTimeWater)ModBlocks.TIME_WATER).checkAllButUp(item.getEntityWorld(), item.getPosition());
-
 			item.getEntityItem().shrink(1);
 		}
 

@@ -52,6 +52,7 @@ public final class ModItems {
 	public static final Item DIM_LINKER;
 	public static final Item EARLY_FUTURE_DOOR;
 	public static final Item REWOUND_TIME_SEEDS;
+	public static final Item INFUSED_WOOD;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
@@ -65,6 +66,7 @@ public final class ModItems {
 		DIM_LINKER = new ItemDimensionalLinker();
 		EARLY_FUTURE_DOOR = new ItemEarlyFutureDoor();
 		REWOUND_TIME_SEEDS = new ItemRewoundTimeSeeds();
+		INFUSED_WOOD = new ItemInfusedWood();
 	}
 
 	public static void registerItems(IForgeRegistry itemRegistry) {
@@ -78,6 +80,7 @@ public final class ModItems {
 		itemRegistry.register(SOLAR_WOOD_SHOVEL);
 		itemRegistry.register(EARLY_FUTURE_DOOR);
 		itemRegistry.register(REWOUND_TIME_SEEDS);
+		itemRegistry.register(INFUSED_WOOD);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));

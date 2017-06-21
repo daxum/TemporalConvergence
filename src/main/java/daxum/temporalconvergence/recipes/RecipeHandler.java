@@ -27,6 +27,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public final class RecipeHandler {
 	public static void init() {
@@ -46,6 +47,7 @@ public final class RecipeHandler {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.LUNAR_PLANKS, 4),  ModBlocks.LUNAR_WOOD);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.TIME_STEEL_INGOT, 9), ModBlocks.TIME_STEEL);
 		GameRegistry.addShapelessRecipe(new ItemStack(ModBlocks.EARLY_FUTURE_BUTTON, 4), ModBlocks.EARLY_FUTURE_BLOCK);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.INFUSED_WOOD, ModItems.TIME_DUST, "logWood"));
 
 		GameRegistry.addSmelting(ModBlocks.TIME_SAND, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
 
