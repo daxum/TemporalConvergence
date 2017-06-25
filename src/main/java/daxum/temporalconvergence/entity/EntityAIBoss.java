@@ -21,55 +21,142 @@ package daxum.temporalconvergence.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import daxum.temporalconvergence.TemporalConvergence;
-import net.minecraft.block.state.IBlockState;
+import daxum.temporalconvergence.block.BlockAIBossScreen;
+import daxum.temporalconvergence.block.BlockAIBossScreen.ScreenState;
+import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIFindEntityNearestPlayer;
-import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
-public class EntityBossAI extends EntityLiving implements IMob {
-	public static final DataParameter<Byte> STATE = EntityDataManager.createKey(EntityBossAI.class, DataSerializers.BYTE); //0 - spawning, 1 - spark, 2 - in screen, 3 - ball, 4 - dying
-	public static final DataParameter<Integer> SPAWN_TICKS = EntityDataManager.createKey(EntityBossAI.class, DataSerializers.VARINT);
-	private List<EntityBossAIScreen> screens = new ArrayList();
-	private EntityBossAIScreen activeScreen = null;
+public class EntityAIBoss extends EntityLiving implements IMob {
+	private static final int SCREEN_SEARCH_RADIUS = 9;
+
+	private static final DataParameter<Byte> BOSS_STATE = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.BYTE);
+	private static final DataParameter<Integer> SPAWN_TICKS = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.VARINT);
 	private BlockPos initialPos = BlockPos.ORIGIN;
-	private AxisAlignedBB searchAABB = null; //set with initialPos
-	private boolean needsLoadRebind = false;
-	private UUID loadedScreenID;
+	private List<BlockPos> screenList = new ArrayList();
 	private int shieldAmount = 50;
 
-	public EntityBossAI(World world) {
+	public EntityAIBoss(World world) {
 		super(world);
 		setSize(0.5f, 0.5f);
 		experienceValue = 75;
 		isImmuneToFire = true;
-		moveHelper = new MoveHelper(this);
+		//moveHelper = new MoveHelper(this);
 	}
 
 	@Override
 	public void entityInit() {
 		super.entityInit();
-		dataManager.register(STATE, (byte)0);
+		dataManager.register(BOSS_STATE, (byte)0);
 		dataManager.register(SPAWN_TICKS, 0);
+	}
+
+	private BossState getState() {
+		return BossState.getStateFromByte(dataManager.get(BOSS_STATE));
+	}
+
+	private void setState(BossState state) {
+		dataManager.set(BOSS_STATE, state.getIndex());
+	}
+
+	@Override
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData) {
+		initialPos = new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ));
+		dataManager.set(SPAWN_TICKS, 300);
+		spawnScreens();
+		resetScreenCache();
+
+		return livingData;
+	}
+
+	private void spawnScreens() {
+		BlockPos posList[] = getPosList();
+
+		for (int i = 0; i < posList.length; i++) {
+			setScreenState(posList[i], ScreenState.STATIC, getFacingForScreen(i));
+		}
+	}
+
+	private EnumFacing getFacingForScreen(int index) {
+		if (index >= 0 && index < 4) {
+			return EnumFacing.SOUTH;
+		}
+		else if (index >= 4 && index < 8) {
+			return EnumFacing.WEST;
+		}
+		else if (index >= 8 && index < 12) {
+			return EnumFacing.NORTH;
+		}
+		else if (index >= 12 && index < 16) {
+			return EnumFacing.EAST;
+		}
+
+		TemporalConvergence.LOGGER.error("getFacingForScreen() called for invalid index {}", index);
+		return EnumFacing.NORTH;
+	}
+
+	private BlockPos[] getPosList() {
+		BlockPos screenPos[] = new BlockPos[16];
+
+		screenPos[0] = initialPos.north(8).east(4);
+		screenPos[1] = initialPos.north(8).west(3);
+		screenPos[2] = screenPos[0].up(4);
+		screenPos[3] = screenPos[1].up(4);
+		screenPos[4] = initialPos.east(8).north(3);
+		screenPos[5] = initialPos.east(8).south(4);
+		screenPos[6] = screenPos[4].up(4);
+		screenPos[7] = screenPos[5].up(4);
+		screenPos[8] = initialPos.south(8).east(3);
+		screenPos[9] = initialPos.south(8).west(4);
+		screenPos[10] = screenPos[8].up(4);
+		screenPos[11] = screenPos[9].up(4);
+		screenPos[12] = initialPos.west(8).south(3);
+		screenPos[13] = initialPos.west(8).north(4);
+		screenPos[14] = screenPos[12].up(4);
+		screenPos[15] = screenPos[13].up(4);
+
+		return screenPos;
+	}
+
+	private void resetScreenCache() {
+		screenList.clear();
+
+		for (int x = initialPos.getX() - SCREEN_SEARCH_RADIUS; x < initialPos.getX() + SCREEN_SEARCH_RADIUS; x++) {
+			for (int y = initialPos.getY() - SCREEN_SEARCH_RADIUS; y < initialPos.getY() + SCREEN_SEARCH_RADIUS; y++) {
+				for (int z = initialPos.getZ() - SCREEN_SEARCH_RADIUS; z < initialPos.getZ() + SCREEN_SEARCH_RADIUS; z++) {
+					if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.BOSS_SCREEN) {
+						screenList.add(new BlockPos(x, y, z));
+					}
+				}
+			}
+		}
+	}
+
+	private void setScreenState(BlockPos pos, ScreenState state) {
+		if (world.getBlockState(pos).getBlock() == ModBlocks.BOSS_SCREEN) {
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockAIBossScreen.STATE, state));
+		}
+		else {
+			world.setBlockState(pos, ModBlocks.BOSS_SCREEN.getDefaultState().withProperty(BlockAIBossScreen.STATE, state));
+		}
+	}
+
+	private void setScreenState(BlockPos pos, ScreenState state, EnumFacing facing) {
+		world.setBlockState(pos, ModBlocks.BOSS_SCREEN.getDefaultState().withProperty(BlockAIBossScreen.STATE, state).withProperty(BlockAIBossScreen.FACING, facing));
 	}
 
 	@Override
@@ -79,6 +166,99 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(12.0);
 		getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(20.0);
 	}
+
+	@Override
+	public boolean isNonBoss() {
+		return false;
+	}
+
+	public enum BossState {
+		SPAWNING(0),
+		FLYING(1),
+		IN_SCREEN(2),
+		VULNERABLE(3),
+		DYING(4);
+
+		public static final BossState[] STATES = {SPAWNING, FLYING, IN_SCREEN, VULNERABLE, DYING};
+		private final byte index;
+
+		private BossState(int b) {
+			index = (byte)b;
+		}
+
+		public byte getIndex() {
+			return index;
+		}
+
+		public static BossState getStateFromByte(byte i) {
+			if (i > 0 && i < STATES.length) {
+				return STATES[i];
+			}
+
+			return FLYING;
+		}
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound comp) {
+		super.writeEntityToNBT(comp);
+
+		comp.setByte("state", dataManager.get(BOSS_STATE));
+		comp.setInteger("shield", shieldAmount);
+		comp.setLong("initPos", initialPos.toLong());
+
+		if (dataManager.get(SPAWN_TICKS) > 0) {
+			comp.setInteger("spawn", dataManager.get(SPAWN_TICKS));
+		}
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound comp) {
+		super.readEntityFromNBT(comp);
+
+		if (comp.hasKey("state", Constants.NBT.TAG_BYTE)) {
+			dataManager.set(BOSS_STATE, comp.getByte("state"));
+		}
+
+		if (comp.hasKey("spawn", Constants.NBT.TAG_INT)) {
+			dataManager.set(SPAWN_TICKS, comp.getInteger("spawn"));
+		}
+
+		if (comp.hasKey("sheild", Constants.NBT.TAG_INT)) {
+			shieldAmount = comp.getInteger("shield");
+		}
+
+		if (comp.hasKey("initPos", Constants.NBT.TAG_LONG)) {
+			initialPos = BlockPos.fromLong(comp.getLong("initPos"));
+		}
+	}
+
+	@Override
+	public void onKillCommand() {
+		setDead();
+	}
+
+	@Override
+	protected void kill() {
+		setDead();
+	}
+
+	@Override
+	public boolean canBreatheUnderwater() {
+		return true;
+	}
+
+	@Override
+	public boolean isPushedByWater() {
+		return false;
+	}
+
+	@Override
+	public boolean isOnLadder() {
+		return false;
+	}
+	/*
+
 
 	@Override
 	protected void initEntityAI() {
@@ -93,71 +273,6 @@ public class EntityBossAI extends EntityLiving implements IMob {
 
 		//Other
 		targetTasks.addTask(0, new EntityAIFindEntityNearestPlayer(this));
-	}
-
-	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData) {
-		setInitialPos(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)));
-		dataManager.set(SPAWN_TICKS, 300);
-		initScreens();
-
-		return livingData;
-	}
-
-	private void initScreens() {
-		for (int i = 0; i < 16; i++)
-			screens.add(new EntityBossAIScreen(world));
-
-		BlockPos posList[] = getPosList();
-
-		for (int i = 0; i < screens.size(); i++) {
-			screens.get(i).setPositionAndRotation(posList[i].getX(), posList[i].getY(), posList[i].getZ(), getScreenRotation(i), 0.0f);
-			world.spawnEntity(screens.get(i));
-		}
-	}
-
-	private float getScreenRotation(int index) {
-		if (index < 4) return 0;
-		if (index < 8) return 90;
-		if (index < 12) return 180;
-		return 270;
-	}
-
-	private BlockPos[] getPosList() {
-		BlockPos screenPos[] = new BlockPos[16];
-
-		screenPos[0] = initialPos.north(7).east(3);
-		screenPos[1] = initialPos.north(7).west(2);
-		screenPos[2] = screenPos[0].up(4);
-		screenPos[3] = screenPos[1].up(4);
-		screenPos[4] = initialPos.east(8).north(2);
-		screenPos[5] = initialPos.east(8).south(3);
-		screenPos[6] = screenPos[4].up(4);
-		screenPos[7] = screenPos[5].up(4);
-		screenPos[8] = initialPos.south(8).east(3);
-		screenPos[9] = initialPos.south(8).west(2);
-		screenPos[10] = screenPos[8].up(4);
-		screenPos[11] = screenPos[9].up(4);
-		screenPos[12] = initialPos.west(7).south(3);
-		screenPos[13] = initialPos.west(7).north(2);
-		screenPos[14] = screenPos[12].up(4);
-		screenPos[15] = screenPos[13].up(4);
-
-		return screenPos;
-	}
-
-	private void setInitialPos(BlockPos pos) {
-		initialPos = pos;
-		searchAABB = new AxisAlignedBB(pos.getX() - 9, pos.getY() - 1, pos.getZ() - 9, pos.getX() + 9, pos.getY() + 5, pos.getZ() + 9);
-	}
-
-	public void refreshScreens() {
-		screens = world.getEntitiesWithinAABB(EntityBossAIScreen.class, searchAABB);
-	}
-
-	@Override
-	public boolean isNonBoss() {
-		return false;
 	}
 
 	@Override
@@ -179,17 +294,8 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		super.onUpdate();
 	}
 
-	public void damageScreen(EntityBossAIScreen screen) {
-		screen.damage(1);
-		//TODO: eject from screen
-	}
-
 	public boolean areWeFriends(EntityBossAI other) {
 		return other.getInitialPos().equals(initialPos);
-	}
-
-	public BlockPos getInitialPos() {
-		return initialPos;
 	}
 
 	@Override
@@ -227,22 +333,6 @@ public class EntityBossAI extends EntityLiving implements IMob {
 		return getHealth() % 50 == 0;
 	}
 
-	//Probably going to be doing weird things with damage later, putting this here in case I forget
-	@Override
-	public void onKillCommand() {
-		setDead();
-	}
-
-	@Override
-	public boolean canBreatheUnderwater() {
-		return true;
-	}
-
-	@Override
-	public boolean isPushedByWater() {
-		return false;
-	}
-
 	@Override
 	public boolean getIsInvulnerable() {
 		return super.getIsInvulnerable() || getState() != 3;
@@ -260,14 +350,6 @@ public class EntityBossAI extends EntityLiving implements IMob {
 	}
 
 	@Override
-	protected void kill() {
-		setDead(); //See onKillCommand()
-	}
-
-	@Override
-	public boolean isOnLadder() { return false; }
-
-	@Override
 	public void addPotionEffect(PotionEffect potioneffectIn) {} //Immune to potion effects (They can probably still be added via map if really necessary)
 
 	@Override
@@ -275,58 +357,6 @@ public class EntityBossAI extends EntityLiving implements IMob {
 
 	@Override
 	protected void despawnEntity() {}
-
-	@Override
-	public void writeEntityToNBT(NBTTagCompound comp) {
-		super.writeEntityToNBT(comp);
-
-		comp.setByte("state", dataManager.get(STATE));
-		comp.setBoolean("inscreen", activeScreen != null);
-		comp.setInteger("shield", shieldAmount);
-		if (activeScreen != null)
-			comp.setUniqueId("screenid", activeScreen.getPersistentID());
-		if (dataManager.get(SPAWN_TICKS) > 0)
-			comp.setInteger("spawn", dataManager.get(SPAWN_TICKS));
-		comp.setLong("initpos", initialPos.toLong());
-	}
-
-	@Override
-	public void readEntityFromNBT(NBTTagCompound comp) {
-		super.readEntityFromNBT(comp);
-
-		dataManager.set(STATE, comp.getByte("state"));
-		dataManager.set(SPAWN_TICKS, comp.getInteger("spawn"));
-		shieldAmount = comp.getInteger("shield");
-		needsLoadRebind = activeScreen == null && comp.getBoolean("inscreen");
-		if (needsLoadRebind)
-			loadedScreenID = comp.getUniqueId("screenid");
-		setInitialPos(BlockPos.fromLong(comp.getLong("initpos")));
-	}
-
-	private void rebindFromReload() {
-		refreshScreens();
-
-		for(int i = 0; i < screens.size(); i++) {
-			if (screens.get(i).getPersistentID().equals(loadedScreenID)) {
-				screens.get(i).setParent(this);
-				activeScreen = screens.get(i);
-				return;
-			}
-		}
-
-		//Well, this is awkward.
-		activeScreen = null;
-		setState(1);
-		//Never happened.
-	}
-
-	private void setState(int state) {
-		dataManager.set(STATE, (byte) state);
-	}
-
-	public int getState() {
-		return dataManager.get(STATE);
-	}
 
 	@Override
 	public void fall(float distance, float damageMultiplier) {
@@ -500,5 +530,5 @@ public class EntityBossAI extends EntityLiving implements IMob {
 				entity.rotationYaw = limitAngle(entity.rotationYaw, yaw, 90.0f);
 			}
 		}
-	}
+	}*/
 }
