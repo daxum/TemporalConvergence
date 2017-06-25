@@ -1,0 +1,15 @@
+{
+    "variants": {
+        "facing=north,top=true": { "model": "temporalconvergence:boss_screen_off" },
+        "facing=east,top=true": { "model": "temporalconvergence:boss_screen_off", "y": 90 },
+        "facing=south,top=true": { "model": "temporalconvergence:boss_screen_off", "y": 180 },
+        "facing=west,top=true": { "model": "temporalconvergence:boss_screen_off", "y": 270 },
+
+        "facing=north,top=false": { "model": "temporalconvergence:boss_screen_static" },
+        "facing=east,top=false": { "model": "temporalconvergence:boss_screen_static", "y": 90 },
+        "facing=south,top=false": { "model": "temporalconvergence:boss_screen_static", "y": 180 },
+        "facing=west,top=false": { "model": "temporalconvergence:boss_screen_static", "y": 270 }
+    },
+
+    "comment": "One bit short in blockState, so model handled in boss_screen. Fix in 1.13?"
+}

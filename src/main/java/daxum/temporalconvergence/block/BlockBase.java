@@ -36,15 +36,15 @@ public class BlockBase extends Block {
 		setSoundType(sound);
 	}
 
-	public BlockBase (String unlocalizedName, float hardness, float resistance, String tool, int level) {
-		this(Material.ROCK, unlocalizedName, hardness, resistance, tool, level, SoundType.STONE);
+	public BlockBase (String registryName, float hardness, float resistance, String tool, int level) {
+		this(Material.ROCK, registryName, hardness, resistance, tool, level, SoundType.STONE);
 	}
 
-	public BlockBase (String unlocalizedName) {
-		this(unlocalizedName, 2.0f, 10.0f, "pickaxe", 0);
+	public BlockBase (String registryName) {
+		this(registryName, 2.0f, 10.0f, "pickaxe", 0);
 	}
 
-	public BlockBase (Material material, String unlocalizedName, float hardness, float resistance) {
-		this(material, unlocalizedName, hardness, resistance, "", 0, SoundType.STONE);
+	public BlockBase (Material material, String registryName, float hardness, float resistance) {
+		this(material, registryName, hardness, resistance, "", 0, SoundType.STONE);
 	}
 }

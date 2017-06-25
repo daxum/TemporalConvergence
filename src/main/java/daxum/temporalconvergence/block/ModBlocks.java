@@ -54,6 +54,8 @@ public final class ModBlocks {
 	public static final Block BRAZIER;
 	public static final Block SOLAR_WOOD;
 	public static final Block SOLAR_PLANKS;
+	public static final Block BOSS_SCREEN;
+	public static final Block FAKE_BOSS_SCREEN;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -100,6 +102,8 @@ public final class ModBlocks {
 				return world.getBlockState(pos).getBlock() == this;
 			}
 		};
+		BOSS_SCREEN = new BlockAIBossScreen();
+		FAKE_BOSS_SCREEN = new BlockFakeScreen();
 	}
 
 	public static void registerBlocks(IForgeRegistry blockRegistry) {
@@ -130,5 +134,7 @@ public final class ModBlocks {
 		blockRegistry.register(BRAZIER);
 		blockRegistry.register(SOLAR_WOOD);
 		blockRegistry.register(SOLAR_PLANKS);
+		blockRegistry.register(BOSS_SCREEN);
+		blockRegistry.register(FAKE_BOSS_SCREEN);
 	}
 }
