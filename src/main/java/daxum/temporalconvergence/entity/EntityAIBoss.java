@@ -19,9 +19,6 @@
  **************************************************************************/
 package daxum.temporalconvergence.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.BlockAIBossScreen;
 import daxum.temporalconvergence.block.BlockAIBossScreen.ScreenState;
@@ -32,11 +29,13 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.entity.ai.EntityMoveHelper.Action;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -47,13 +46,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 public class EntityAIBoss extends EntityMob {
-	private static final int SCREEN_SEARCH_RADIUS = 9;
-	private static final int MAX_SHIELD_AMOUNT = 1; //TODO: put back to 60 when done testing
+	private static final int MAX_SHIELD_AMOUNT = 60;
 	private static final int SPAWN_TIME = 100;
 	private static final int MAX_HOME_DISTANCE = 8;
 	private static final int BOSS_ROOM_RADIUS = 8;
@@ -64,12 +64,13 @@ public class EntityAIBoss extends EntityMob {
 	private static final DataParameter<Byte> BOSS_STATE = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.BYTE);
 	private static final DataParameter<Integer> SPAWN_TICKS = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.VARINT);
 	private static final DataParameter<Integer> SHIELD_AMOUNT = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.VARINT);
-	private List<BlockPos> screenList = new ArrayList();
 	private float movementPitch = 0.0f; //Can't use rotationPitch because lookHelper constantly screws with it. This is in radians.
 	private EntityMoveHelper groundMoveHelper; //The movehelper used in the vulnerable state
 	private PathNavigate groundNavigator;
 	private EntityMoveHelper airMoveHelper; //The movehelper used when flying
 	private PathNavigate airNavigator;
+	private final BossInfoServer healthBossInfo = new BossInfoServer(getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
+	private final BossInfoServer shieldBossInfo = new BossInfoServer(getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS);
 
 	public EntityAIBoss(World world) {
 		super(world);
@@ -83,6 +84,7 @@ public class EntityAIBoss extends EntityMob {
 		groundNavigator = navigator;
 		airNavigator = new PathNavigateFlyer(this, world);
 		navigator = airNavigator;
+		shieldBossInfo.setPercent(0.0f);
 	}
 
 	@Override
@@ -90,20 +92,16 @@ public class EntityAIBoss extends EntityMob {
 		super.entityInit();
 		dataManager.register(BOSS_STATE, (byte)0);
 		dataManager.register(SPAWN_TICKS, SPAWN_TIME);
-		dataManager.register(SHIELD_AMOUNT, MAX_SHIELD_AMOUNT);
+		dataManager.register(SHIELD_AMOUNT, 0);
 	}
 
 	private BossState getState() {
 		return BossState.getStateFromByte(dataManager.get(BOSS_STATE));
 	}
 
-	private void setState(BossState state) {
-		dataManager.set(BOSS_STATE, state.getIndex());
-	}
-
 	private void transitionToState(BossState state) {
 		TemporalConvergence.LOGGER.info("Switching to state {}", state);
-		setState(state);
+		dataManager.set(BOSS_STATE, state.getIndex());
 		navigator.clearPathEntity();
 		moveHelper.action = Action.WAIT;
 
@@ -113,6 +111,7 @@ public class EntityAIBoss extends EntityMob {
 			movementPitch = 0.0f;
 			moveHelper = groundMoveHelper;
 			navigator = groundNavigator;
+			shieldBossInfo.setColor(BossInfo.Color.PURPLE);
 		}
 		else {
 			noClip = true;
@@ -120,9 +119,31 @@ public class EntityAIBoss extends EntityMob {
 			moveHelper = airMoveHelper;
 			navigator = airNavigator;
 			isJumping = false;
+			shieldBossInfo.setColor(BossInfo.Color.BLUE);
 		}
 
 		//TODO: Set up states
+	}
+
+	@Override
+	public void addTrackingPlayer(EntityPlayerMP player) {
+		super.addTrackingPlayer(player);
+		healthBossInfo.addPlayer(player);
+		shieldBossInfo.addPlayer(player);
+	}
+
+	@Override
+	public void removeTrackingPlayer(EntityPlayerMP player) {
+		super.removeTrackingPlayer(player);
+		healthBossInfo.removePlayer(player);
+		shieldBossInfo.removePlayer(player);
+	}
+
+	@Override
+	public void setCustomNameTag(String name) {
+		super.setCustomNameTag(name);
+		healthBossInfo.setName(getDisplayName());
+		shieldBossInfo.setName(getDisplayName());
 	}
 
 	private int getShield() {
@@ -149,9 +170,7 @@ public class EntityAIBoss extends EntityMob {
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingData) {
 		setHomePosAndDistance(new BlockPos(this), MAX_HOME_DISTANCE);
-		dataManager.set(SPAWN_TICKS, 300);
 		spawnScreens();
-		resetScreenCache();
 
 		return livingData;
 	}
@@ -205,20 +224,6 @@ public class EntityAIBoss extends EntityMob {
 		return screenPos;
 	}
 
-	private void resetScreenCache() {
-		screenList.clear();
-
-		for (int x = getHomePosition().getX() - SCREEN_SEARCH_RADIUS; x < getHomePosition().getX() + SCREEN_SEARCH_RADIUS; x++) {
-			for (int y = getHomePosition().getY() - SCREEN_SEARCH_RADIUS; y < getHomePosition().getY() + SCREEN_SEARCH_RADIUS; y++) {
-				for (int z = getHomePosition().getZ() - SCREEN_SEARCH_RADIUS; z < getHomePosition().getZ() + SCREEN_SEARCH_RADIUS; z++) {
-					if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == ModBlocks.BOSS_SCREEN) {
-						screenList.add(new BlockPos(x, y, z));
-					}
-				}
-			}
-		}
-	}
-
 	private void setScreenState(BlockPos pos, ScreenState state) {
 		if (world.getBlockState(pos).getBlock() == ModBlocks.BOSS_SCREEN) {
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockAIBossScreen.STATE, state));
@@ -250,11 +255,10 @@ public class EntityAIBoss extends EntityMob {
 	public enum BossState {
 		SPAWNING(0),
 		FLYING(1),
-		IN_SCREEN(2),
-		VULNERABLE(3),
-		DYING(4);
+		VULNERABLE(2),
+		DYING(3);
 
-		public static final BossState[] STATES = {SPAWNING, FLYING, IN_SCREEN, VULNERABLE, DYING};
+		public static final BossState[] STATES = {SPAWNING, FLYING, VULNERABLE, DYING};
 		private final byte index;
 
 		private BossState(int b) {
@@ -278,15 +282,15 @@ public class EntityAIBoss extends EntityMob {
 		}
 
 		public boolean isUsingShield() {
-			return this == FLYING || this == IN_SCREEN;
+			return this == FLYING;
 		}
 
 		public boolean isInvulnerable() {
 			return this == SPAWNING || this == DYING;
 		}
 
-		public boolean isFlying() {
-			return this != IN_SCREEN && this != VULNERABLE;
+		public boolean hasNoGravity() {
+			return this != VULNERABLE;
 		}
 	}
 
@@ -309,14 +313,14 @@ public class EntityAIBoss extends EntityMob {
 		super.readEntityFromNBT(comp);
 
 		if (comp.hasKey("state", Constants.NBT.TAG_BYTE)) {
-			dataManager.set(BOSS_STATE, comp.getByte("state"));
+			transitionToState(BossState.getStateFromByte(comp.getByte("state")));
 		}
 
 		if (comp.hasKey("spawn", Constants.NBT.TAG_INT)) {
 			dataManager.set(SPAWN_TICKS, comp.getInteger("spawn"));
 		}
 
-		if (comp.hasKey("sheild", Constants.NBT.TAG_INT)) {
+		if (comp.hasKey("shield", Constants.NBT.TAG_INT)) {
 			dataManager.set(SHIELD_AMOUNT, comp.getInteger("shield"));
 		}
 
@@ -327,6 +331,11 @@ public class EntityAIBoss extends EntityMob {
 		if (comp.hasKey("movePitch", Constants.NBT.TAG_FLOAT)) {
 			movementPitch = comp.getFloat("movePitch");
 		}
+
+		if (hasCustomName()) {
+			healthBossInfo.setName(getDisplayName());
+			shieldBossInfo.setName(getDisplayName());
+		}
 	}
 
 	@Override
@@ -336,6 +345,7 @@ public class EntityAIBoss extends EntityMob {
 
 	@Override
 	protected void kill() {
+		TemporalConvergence.LOGGER.info("Urp! AIBoss fell out of the world! State: {}, noClip: {}, pos: ({}, {}, {})", getState(), noClip, posX, posY, posZ);
 		setDead();
 	}
 
@@ -368,7 +378,7 @@ public class EntityAIBoss extends EntityMob {
 			return false;
 		}
 
-		if (!isBossInvulnerableTo(source) && getState() == BossState.FLYING || getState() == BossState.IN_SCREEN) {
+		if (!isEntityInvulnerable(source) && getState().isUsingShield()) {
 			damageShield(MathHelper.floor(amount));
 
 			if (getShield() <= 0) {
@@ -419,11 +429,6 @@ public class EntityAIBoss extends EntityMob {
 	}
 
 	@Override
-	protected boolean isMovementBlocked() {
-		return super.isMovementBlocked() || getState() == BossState.IN_SCREEN;
-	}
-
-	@Override
 	protected void initEntityAI() {
 		//Spawning
 		tasks.addTask(0, new AISpawn());
@@ -432,11 +437,25 @@ public class EntityAIBoss extends EntityMob {
 		tasks.addTask(2, new AIFlyAround());
 
 		//Vulnerable
-		//tasks.addTask(2, new AIRunAroundHelplessly(this));
-		//tasks.addTask(1, new AIDodge(this));
+		tasks.addTask(2, new AIRunAroundHelplessly());
 
-		//other
-		targetTasks.addTask(0, new EntityAINearestAttackableTarget(this, EntityPlayer.class, false, true));
+		//Targeting
+		targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false, false, null));
+		targetTasks.addTask(0, new EntityAIHurtByTarget(this, false, new Class[0]));
+	}
+
+	@Override
+	protected void updateAITasks() {
+		if (!getState().isInvulnerable() && getShield() < MAX_SHIELD_AMOUNT && world.getTotalWorldTime() % (getState() == BossState.VULNERABLE ? 20 : 100) == 0) {
+			healShield(1);
+
+			if (getState() == BossState.VULNERABLE && getShield() >= MAX_SHIELD_AMOUNT) {
+				transitionToState(BossState.FLYING);
+			}
+		}
+
+		healthBossInfo.setPercent(getHealth() / getMaxHealth());
+		shieldBossInfo.setPercent((float)getShield() / MAX_SHIELD_AMOUNT);
 	}
 
 	@Override
@@ -463,16 +482,28 @@ public class EntityAIBoss extends EntityMob {
 
 	@Override
 	public void fall(float distance, float damageMultiplier) {
-		if (!getState().isFlying()) {
+		if (!getState().hasNoGravity()) {
 			super.fall(distance, damageMultiplier);
 		}
 	}
 
 	@Override
 	protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
-		if (!getState().isFlying()) {
+		if (!getState().hasNoGravity()) {
 			super.updateFallState(y, onGroundIn, state, pos);
 		}
+	}
+
+	private boolean canOccupyScreenAt(BlockPos pos) {
+		IBlockState screen = world.getBlockState(pos);
+
+		if (screen.getBlock() == ModBlocks.BOSS_SCREEN) {
+			ScreenState screenState = screen.getValue(BlockAIBossScreen.STATE);
+
+			return screenState == ScreenState.STATIC || screenState == ScreenState.OFF;
+		}
+
+		return false;
 	}
 
 	public class AISpawn extends EntityAIBase {
@@ -482,7 +513,6 @@ public class EntityAIBoss extends EntityMob {
 
 		@Override
 		public void startExecuting() {
-			TemporalConvergence.LOGGER.info("Starting spawn AI");
 			navigator.tryMoveToXYZ(getHomePosition().getX(), getHomePosition().getY() + 2.0, getHomePosition().getZ(), 0.25);
 		}
 
@@ -495,9 +525,12 @@ public class EntityAIBoss extends EntityMob {
 		public void updateTask() {
 			dataManager.set(SPAWN_TICKS, dataManager.get(SPAWN_TICKS) - 1);
 
+			double fillPercent = 1.0 - (double)dataManager.get(SPAWN_TICKS) / SPAWN_TIME;
+
+			setShield(MathHelper.ceil(MAX_SHIELD_AMOUNT * fillPercent));
+
 			if (dataManager.get(SPAWN_TICKS) <= 0) {
 				transitionToState(BossState.FLYING);
-				TemporalConvergence.LOGGER.info("Spawn AI complete");
 			}
 		}
 	}
@@ -509,38 +542,52 @@ public class EntityAIBoss extends EntityMob {
 
 		@Override
 		public boolean shouldExecute() {
-			return getState() == BossState.FLYING;
+			return getState() == BossState.FLYING && navigator.noPath();
 		}
 
 		@Override
 		public void startExecuting() {
-			TemporalConvergence.LOGGER.info("Starting flying AI");
+			int x = rand.nextInt(BOSS_ROOM_WIDTH) + getHomePosition().getX() - BOSS_ROOM_RADIUS;
+			int y = rand.nextInt(BOSS_ROOM_HEIGHT) + getHomePosition().getY() - 1;
+			int z = rand.nextInt(BOSS_ROOM_DEPTH) + getHomePosition().getZ() - BOSS_ROOM_RADIUS;
+
+			navigator.tryMoveToXYZ(x, y, z, 0.5);
 		}
 
 		@Override
-		public void resetTask() {
-			TemporalConvergence.LOGGER.info("Stopping flying AI");
-		}
-
-		@Override
-		public void updateTask() {
-			if (navigator.noPath()) {
-				int x = rand.nextInt(BOSS_ROOM_WIDTH) + getHomePosition().getX() - BOSS_ROOM_RADIUS;
-				int y = rand.nextInt(BOSS_ROOM_HEIGHT) + getHomePosition().getY() - 1;
-				int z = rand.nextInt(BOSS_ROOM_DEPTH) + getHomePosition().getZ() - BOSS_ROOM_RADIUS;
-
-				navigator.tryMoveToXYZ(x, y, z, 0.5);
-			}
+		public boolean continueExecuting() {
+			return getState() == BossState.FLYING && !navigator.noPath();
 		}
 	}
 
-	/*public class AIRunAroundHelplessly extends EntityAIBase {
+	public class AIRunAroundHelplessly extends EntityAIBase {
+		public AIRunAroundHelplessly() {
+			setMutexBits(1);
+		}
 
-	}*/
+		@Override
+		public boolean shouldExecute() {
+			return getState() == BossState.VULNERABLE && rand.nextBoolean() && navigator.noPath();
+		}
 
-	/*public class AIDodge extends EntityAIAvoidEntity {
+		@Override
+		public void startExecuting() {
+			int x = rand.nextInt(BOSS_ROOM_WIDTH) + getHomePosition().getX() - BOSS_ROOM_RADIUS;
+			int y = rand.nextInt(BOSS_ROOM_HEIGHT) + getHomePosition().getY() - 1;
+			int z = rand.nextInt(BOSS_ROOM_DEPTH) + getHomePosition().getZ() - BOSS_ROOM_RADIUS;
 
-	}*/
+			while (world.isAirBlock(new BlockPos(x, y - 1, z)) && y > getHomePosition().getY() - 1) {
+				y--;
+			}
+
+			navigator.tryMoveToXYZ(x, y, z, 0.7);
+		}
+
+		@Override
+		public boolean continueExecuting() {
+			return getState() == BossState.VULNERABLE && !navigator.noPath();
+		}
+	}
 
 	public static class AIBossMoveHelper extends EntityMoveHelper {
 		private final EntityAIBoss entity;
@@ -576,7 +623,7 @@ public class EntityAIBoss extends EntityMob {
 
 	@Override
 	public void moveEntityWithHeading(float strafe, float forward) {
-		if (getState().isFlying()) {
+		if (getState().hasNoGravity()) {
 			moveRelative(strafe, forward, 0.2f);
 			move(MoverType.SELF, motionX, motionY, motionZ);
 
@@ -591,39 +638,44 @@ public class EntityAIBoss extends EntityMob {
 
 	@Override
 	public void moveRelative(float strafe, float forward, float friction) {
-		float distanceSquared = strafe * strafe + forward * forward;
+		if (getState().hasNoGravity()) {
+			float distanceSquared = strafe * strafe + forward * forward;
 
-		if (distanceSquared >= 1.0e-4f) {
-			float distance = MathHelper.sqrt(distanceSquared);
+			if (distanceSquared >= 1.0e-4f) {
+				float distance = MathHelper.sqrt(distanceSquared);
 
-			if (distance < 1.0f) {
-				distance = 1.0f;
+				if (distance < 1.0f) {
+					distance = 1.0f;
+				}
+
+				float adjustedFriction = friction / distance;
+				strafe = strafe * adjustedFriction;
+				forward = forward * adjustedFriction;
+				float movement = MathHelper.sqrt(strafe * strafe + forward * forward);
+				float xzMovement = movement * MathHelper.cos(movementPitch);
+				float yawRadians = (float) (rotationYaw * (Math.PI / 180.0));
+
+				float yComponent = movement * MathHelper.sin(movementPitch);
+				float xComponent = xzMovement * MathHelper.cos(yawRadians);
+				float zComponent = xzMovement * MathHelper.sin(yawRadians);
+
+				if (Math.abs(xComponent) < 0.003f) {
+					xComponent = 0.0f;
+				}
+				if (Math.abs(yComponent) < 0.003f) {
+					yComponent = 0.0f;
+				}
+				if (Math.abs(zComponent) < 0.003f) {
+					zComponent = 0.0f;
+				}
+
+				motionX += xComponent;
+				motionY += yComponent;
+				motionZ += zComponent;
 			}
-
-			float adjustedFriction = friction / distance;
-			strafe = strafe * adjustedFriction;
-			forward = forward * adjustedFriction;
-			float movement = MathHelper.sqrt(strafe * strafe + forward * forward);
-			float xzMovement = movement * MathHelper.cos(movementPitch);
-			float yawRadians = (float) (rotationYaw * (Math.PI / 180.0));
-
-			float yComponent = movement * MathHelper.sin(movementPitch);
-			float xComponent = xzMovement * MathHelper.cos(yawRadians);
-			float zComponent = xzMovement * MathHelper.sin(yawRadians);
-
-			if (Math.abs(xComponent) < 0.003f) {
-				xComponent = 0.0f;
-			}
-			if (Math.abs(yComponent) < 0.003f) {
-				yComponent = 0.0f;
-			}
-			if (Math.abs(zComponent) < 0.003f) {
-				zComponent = 0.0f;
-			}
-
-			motionX += xComponent;
-			motionY += yComponent;
-			motionZ += zComponent;
+		}
+		else {
+			super.moveRelative(strafe, forward, friction);
 		}
 	}
 	/*
