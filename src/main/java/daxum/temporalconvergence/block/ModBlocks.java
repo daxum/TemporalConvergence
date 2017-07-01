@@ -19,11 +19,18 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import daxum.temporalconvergence.tileentity.TileBrazier;
+import daxum.temporalconvergence.tileentity.TileDimContr;
+import daxum.temporalconvergence.tileentity.TileDimGen;
+import daxum.temporalconvergence.tileentity.TilePedestal;
+import daxum.temporalconvergence.tileentity.TileTimeChest;
+import daxum.temporalconvergence.tileentity.TileTimePlant;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
 public final class ModBlocks {
@@ -136,5 +143,13 @@ public final class ModBlocks {
 		blockRegistry.register(SOLAR_PLANKS);
 		blockRegistry.register(BOSS_SCREEN);
 		blockRegistry.register(FAKE_BOSS_SCREEN);
+
+		//Tile entities
+		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
+		GameRegistry.registerTileEntity(TileDimGen.class, "dimensional_generator");
+		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
+		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
+		GameRegistry.registerTileEntity(TileTimePlant.class, "time_plant");
+		GameRegistry.registerTileEntity(TileBrazier.class, "brazier");
 	}
 }
