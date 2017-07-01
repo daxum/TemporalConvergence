@@ -19,7 +19,9 @@
  **************************************************************************/
 package daxum.temporalconvergence.proxy;
 
+import daxum.temporalconvergence.entity.EntityAIBoss;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.BossInfo;
 
 public class ServerProxy implements IProxy{
 
@@ -40,4 +42,10 @@ public class ServerProxy implements IProxy{
 
 	@Override
 	public void registerColors() {}
+
+	@Override
+	public void addAIBoss(EntityAIBoss toAdd) {}
+
+	@Override
+	public void renderBossBar(BossInfo info) {}
 }

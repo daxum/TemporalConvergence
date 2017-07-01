@@ -28,6 +28,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.RegistryEvent;
@@ -78,5 +79,10 @@ public final class EventHandler {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		TemporalConvergence.proxy.registerItemRenderer();
+	}
+
+	@SubscribeEvent
+	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
+		TemporalConvergence.proxy.renderBossBar(event);
 	}
 }

@@ -20,9 +20,11 @@
 package daxum.temporalconvergence.proxy;
 
 import daxum.temporalconvergence.block.ModBlocks;
+import daxum.temporalconvergence.entity.EntityAIBoss;
 import daxum.temporalconvergence.fluid.FluidRenderRegister;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.particle.ParticleDimGenCraft;
+import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.render.entity.EntityRenderRegister;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -35,6 +37,7 @@ import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
 
 public class ClientProxy implements IProxy {
@@ -122,5 +125,15 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz) {
 		world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x, y, z, vx, vy, vz, 0);
+	}
+
+	@Override
+	public void addAIBoss(EntityAIBoss toAdd) {
+		AIBossBarRenderer.addAIBoss(toAdd);
+	}
+
+	@Override
+	public void renderBossBar(RenderGameOverlayEvent.BossInfo info) {
+		AIBossBarRenderer.renderBossBar(info);
 	}
 }

@@ -19,6 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.entity;
 
+import java.util.UUID;
+
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.BlockAIBossScreen;
 import daxum.temporalconvergence.block.BlockAIBossScreen.ScreenState;
@@ -64,16 +66,18 @@ public class EntityAIBoss extends EntityMob {
 	private static final DataParameter<Byte> BOSS_STATE = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.BYTE);
 	private static final DataParameter<Integer> SPAWN_TICKS = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.VARINT);
 	private static final DataParameter<Integer> SHIELD_AMOUNT = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.VARINT);
+	private static final DataParameter<Boolean> SHIELD_DEPLETED = EntityDataManager.createKey(EntityAIBoss.class, DataSerializers.BOOLEAN);
 	private float movementPitch = 0.0f; //Can't use rotationPitch because lookHelper constantly screws with it. This is in radians.
 	private EntityMoveHelper groundMoveHelper; //The movehelper used in the vulnerable state
 	private PathNavigate groundNavigator;
 	private EntityMoveHelper airMoveHelper; //The movehelper used when flying
 	private PathNavigate airNavigator;
-	private final BossInfoServer healthBossInfo = new BossInfoServer(getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
-	private final BossInfoServer shieldBossInfo = new BossInfoServer(getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS);
+	private final BossInfoServer aiBossInfo = new BossInfoServer(getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
+	private int prevShieldPercent = 0;
 
 	public EntityAIBoss(World world) {
 		super(world);
+		TemporalConvergence.proxy.addAIBoss(this);
 		setSize(0.5f, 0.5f);
 		experienceValue = 75;
 		isImmuneToFire = true;
@@ -84,7 +88,18 @@ public class EntityAIBoss extends EntityMob {
 		groundNavigator = navigator;
 		airNavigator = new PathNavigateFlyer(this, world);
 		navigator = airNavigator;
-		shieldBossInfo.setPercent(0.0f);
+	}
+
+	public UUID getBossBarUUID() {
+		return aiBossInfo.getUniqueId();
+	}
+
+	public boolean isShieldDepleted() {
+		return dataManager.get(SHIELD_DEPLETED);
+	}
+
+	public float getShieldPercent(float partialTicks) {
+		return (Math.abs(getShield() - prevShieldPercent) * partialTicks + prevShieldPercent) / MAX_SHIELD_AMOUNT;
 	}
 
 	@Override
@@ -93,10 +108,17 @@ public class EntityAIBoss extends EntityMob {
 		dataManager.register(BOSS_STATE, (byte)0);
 		dataManager.register(SPAWN_TICKS, SPAWN_TIME);
 		dataManager.register(SHIELD_AMOUNT, 0);
+		dataManager.register(SHIELD_DEPLETED, false);
 	}
 
 	private BossState getState() {
 		return BossState.getStateFromByte(dataManager.get(BOSS_STATE));
+	}
+
+	@Override
+	public void onUpdate() {
+		prevShieldPercent = getShield();
+		super.onUpdate();
 	}
 
 	private void transitionToState(BossState state) {
@@ -111,7 +133,7 @@ public class EntityAIBoss extends EntityMob {
 			movementPitch = 0.0f;
 			moveHelper = groundMoveHelper;
 			navigator = groundNavigator;
-			shieldBossInfo.setColor(BossInfo.Color.PURPLE);
+			dataManager.set(SHIELD_DEPLETED, true);
 		}
 		else {
 			noClip = true;
@@ -119,7 +141,7 @@ public class EntityAIBoss extends EntityMob {
 			moveHelper = airMoveHelper;
 			navigator = airNavigator;
 			isJumping = false;
-			shieldBossInfo.setColor(BossInfo.Color.BLUE);
+			dataManager.set(SHIELD_DEPLETED, false);
 		}
 
 		//TODO: Set up states
@@ -128,22 +150,19 @@ public class EntityAIBoss extends EntityMob {
 	@Override
 	public void addTrackingPlayer(EntityPlayerMP player) {
 		super.addTrackingPlayer(player);
-		healthBossInfo.addPlayer(player);
-		shieldBossInfo.addPlayer(player);
+		aiBossInfo.addPlayer(player);
 	}
 
 	@Override
 	public void removeTrackingPlayer(EntityPlayerMP player) {
 		super.removeTrackingPlayer(player);
-		healthBossInfo.removePlayer(player);
-		shieldBossInfo.removePlayer(player);
+		aiBossInfo.removePlayer(player);
 	}
 
 	@Override
 	public void setCustomNameTag(String name) {
 		super.setCustomNameTag(name);
-		healthBossInfo.setName(getDisplayName());
-		shieldBossInfo.setName(getDisplayName());
+		aiBossInfo.setName(getDisplayName());
 	}
 
 	private int getShield() {
@@ -151,6 +170,7 @@ public class EntityAIBoss extends EntityMob {
 	}
 
 	private void setShield(int amount) {
+		prevShieldPercent = amount;
 		dataManager.set(SHIELD_AMOUNT, amount);
 	}
 
@@ -333,8 +353,7 @@ public class EntityAIBoss extends EntityMob {
 		}
 
 		if (hasCustomName()) {
-			healthBossInfo.setName(getDisplayName());
-			shieldBossInfo.setName(getDisplayName());
+			aiBossInfo.setName(getDisplayName());
 		}
 	}
 
@@ -454,8 +473,7 @@ public class EntityAIBoss extends EntityMob {
 			}
 		}
 
-		healthBossInfo.setPercent(getHealth() / getMaxHealth());
-		shieldBossInfo.setPercent((float)getShield() / MAX_SHIELD_AMOUNT);
+		aiBossInfo.setPercent(getHealth() / getMaxHealth());
 	}
 
 	@Override
