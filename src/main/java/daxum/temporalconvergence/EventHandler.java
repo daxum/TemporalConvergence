@@ -23,6 +23,7 @@ import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ItemTimeFreezer;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.PowerDimension;
+import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.world.DimensionHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -85,6 +86,6 @@ public final class EventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
-		TemporalConvergence.proxy.renderBossBar(event);
+		AIBossBarRenderer.renderBossBar(event);
 	}
 }

@@ -21,7 +21,6 @@ package daxum.temporalconvergence.proxy;
 
 import daxum.temporalconvergence.entity.EntityAIBoss;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public interface IProxy {
 	public void registerItemRenderer();
@@ -31,5 +30,4 @@ public interface IProxy {
 	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz);
 	public void registerColors();
 	public void addAIBoss(EntityAIBoss toAdd);
-	public void renderBossBar(RenderGameOverlayEvent.BossInfo info);
 }

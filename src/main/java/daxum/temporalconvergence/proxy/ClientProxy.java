@@ -37,7 +37,6 @@ import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
 
 public class ClientProxy implements IProxy {
@@ -130,10 +129,5 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void addAIBoss(EntityAIBoss toAdd) {
 		AIBossBarRenderer.addAIBoss(toAdd);
-	}
-
-	@Override
-	public void renderBossBar(RenderGameOverlayEvent.BossInfo info) {
-		AIBossBarRenderer.renderBossBar(info);
 	}
 }
