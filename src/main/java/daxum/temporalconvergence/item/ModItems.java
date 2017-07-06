@@ -53,9 +53,11 @@ public final class ModItems {
 	public static final Item EARLY_FUTURE_DOOR;
 	public static final Item REWOUND_TIME_SEEDS;
 	public static final Item INFUSED_WOOD;
+	public static final Item STABLE_CHARCOAL;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
+		STABLE_CHARCOAL = new ItemBase("stable_charcoal");
 
 		TIME_BULB = new ItemTimeBulb();
 		TIME_DUST = new ItemTimeDust();
@@ -81,6 +83,7 @@ public final class ModItems {
 		itemRegistry.register(EARLY_FUTURE_DOOR);
 		itemRegistry.register(REWOUND_TIME_SEEDS);
 		itemRegistry.register(INFUSED_WOOD);
+		itemRegistry.register(STABLE_CHARCOAL);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
