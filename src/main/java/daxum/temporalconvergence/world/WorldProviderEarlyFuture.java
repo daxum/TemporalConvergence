@@ -68,6 +68,7 @@ public class WorldProviderEarlyFuture extends WorldProvider {
 	}
 
 	public static final Vec3d SKY_COLOR = new Vec3d(0.6, 0.45, 0.45); //Might be a bit too red
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3d getSkyColor(Entity entity, float partialTicks) {
@@ -75,6 +76,7 @@ public class WorldProviderEarlyFuture extends WorldProvider {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public Vec3d getFogColor(float celestialAngle, float partialTicks) {
 		return SKY_COLOR.scale(super.getFogColor(celestialAngle, partialTicks).zCoord);
 	}
