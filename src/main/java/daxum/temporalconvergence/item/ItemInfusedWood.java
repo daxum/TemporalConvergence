@@ -50,46 +50,72 @@ public class ItemInfusedWood extends ItemBase {
 		if (!world.isRemote && BlockFluidTimeWater.isInValidLocation(item.world, item.getPosition()) && world.getTotalWorldTime() % 12 == 0) {
 			ItemStack stack = item.getEntityItem();
 
-			incrementCompletePercent(stack);
-
-			if (getCompletePercent(stack) >= 100) {
-				Block infusedBlock = isDay(world.getWorldTime()) ? ModBlocks.SOLAR_WOOD : ModBlocks.LUNAR_WOOD;
-
-				item.setEntityItemStack(new ItemStack(infusedBlock, stack.getCount()));
+			if (isDay(world.getWorldTime())) {
+				incrementSolarPercent(stack);
 			}
 			else {
-				item.setEntityItemStack(stack);
+				incrementLunarPercent(stack);
+			}
+
+			if (getTotalPercent(stack) >= 100) {
+				Block result = getSolarPercent(stack) > 50 ? ModBlocks.SOLAR_WOOD : ModBlocks.LUNAR_WOOD;
+				int strength = (result == ModBlocks.SOLAR_WOOD ? getSolarPercent(stack) : getLunarPercent(stack)) - 49;
+
+				ItemStack resultStack = new ItemStack(result, stack.getCount());
+				resultStack.setTagCompound(new NBTTagCompound());
+				resultStack.getTagCompound().setInteger("strength", strength);
+
+				item.setEntityItemStack(resultStack);
 			}
 		}
 
 		return false;
 	}
 
-	private void incrementCompletePercent(ItemStack stack) {
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("complete", Constants.NBT.TAG_INT)) {
-			stack.getTagCompound().setInteger("complete", getCompletePercent(stack) + 1);
+	private void incrementSolarPercent(ItemStack stack) {
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("solar", Constants.NBT.TAG_INT)) {
+			stack.getTagCompound().setInteger("solar", stack.getTagCompound().getInteger("solar") + 1);
+		}
+		else if (stack.hasTagCompound()) {
+			stack.getTagCompound().setInteger("solar", 1);
 		}
 		else {
-			NBTTagCompound stackTag;
-
-			if (stack.hasTagCompound()) {
-				stackTag = stack.getTagCompound();
-			}
-			else {
-				stackTag = new NBTTagCompound();
-			}
-
-			stackTag.setInteger("complete", 1);
-			stack.setTagCompound(stackTag);
+			stack.setTagCompound(new NBTTagCompound());
+			stack.getTagCompound().setInteger("solar", 1);
 		}
 	}
 
-	private int getCompletePercent(ItemStack stack) {
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("complete", Constants.NBT.TAG_INT)) {
-			return stack.getTagCompound().getInteger("complete");
+	private void incrementLunarPercent(ItemStack stack) {
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("lunar", Constants.NBT.TAG_INT)) {
+			stack.getTagCompound().setInteger("lunar", stack.getTagCompound().getInteger("lunar") + 1);
+		}
+		else if (stack.hasTagCompound()) {
+			stack.getTagCompound().setInteger("lunar", 1);
+		}
+		else {
+			stack.setTagCompound(new NBTTagCompound());
+			stack.getTagCompound().setInteger("lunar", 1);
+		}
+	}
+
+	private int getSolarPercent(ItemStack stack) {
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("solar", Constants.NBT.TAG_INT)) {
+			return stack.getTagCompound().getInteger("solar");
 		}
 
 		return 0;
+	}
+
+	private int getLunarPercent(ItemStack stack) {
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("lunar", Constants.NBT.TAG_INT)) {
+			return stack.getTagCompound().getInteger("lunar");
+		}
+
+		return 0;
+	}
+
+	private int getTotalPercent(ItemStack stack) {
+		return getSolarPercent(stack) + getLunarPercent(stack);
 	}
 
 	private boolean isDay(long time) {
@@ -99,11 +125,8 @@ public class ItemInfusedWood extends ItemBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("complete", Constants.NBT.TAG_INT)) {
-			tooltip.add("Infused: " + stack.getTagCompound().getInteger("complete") + "%");
-		}
-		else {
-			tooltip.add("Infused: 0%");
-		}
+		tooltip.add("Infusion Progress: " + getTotalPercent(stack) + "%");
+		tooltip.add(" - Solar: " + getSolarPercent(stack) + "%");
+		tooltip.add(" - Lunar: " + getLunarPercent(stack) + "%");
 	}
 }
