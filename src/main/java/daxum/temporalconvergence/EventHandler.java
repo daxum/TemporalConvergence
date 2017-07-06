@@ -39,6 +39,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
 public final class EventHandler {
@@ -82,6 +83,7 @@ public final class EventHandler {
 	}
 
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
 		TemporalConvergence.proxy.renderBossBar(event);
 	}

@@ -30,8 +30,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidTimeWater extends Fluid {
-	private static final int FULL_DAY_COLOR = MathHelper.rgb(188, 128, 0);
-	private static final int FULL_NIGHT_COLOR = MathHelper.rgb(163, 177, 204);
+	private static final int FULL_DAY_COLOR = rgb(188, 128, 0);
+	private static final int FULL_NIGHT_COLOR = rgb(163, 177, 204);
 
 	public FluidTimeWater() {
 		super("time_water", new ResourceLocation(TemporalConvergence.MODID + ":time_water_still"), new ResourceLocation(TemporalConvergence.MODID + ":time_water_flow"));
@@ -61,7 +61,7 @@ public class FluidTimeWater extends Fluid {
 		int green = (int) (getGreen(FULL_DAY_COLOR) * percentDay + getGreen(FULL_NIGHT_COLOR) * percentNight);
 		int blue = (int) (getBlue(FULL_DAY_COLOR) * percentDay + getBlue(FULL_NIGHT_COLOR) * percentNight);
 
-		return MathHelper.rgb(red, green, blue);
+		return rgb(red, green, blue);
 	}
 
 	private static final int getRed(int color) {
@@ -74,5 +74,11 @@ public class FluidTimeWater extends Fluid {
 
 	private static final int getBlue(int color) {
 		return color & 255;
+	}
+
+	private static int rgb(int red, int green, int blue) {
+		int lvt_3_1_ = (red << 8) + green;
+		lvt_3_1_ = (lvt_3_1_ << 8) + blue;
+		return lvt_3_1_;
 	}
 }
