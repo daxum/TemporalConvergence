@@ -19,12 +19,17 @@
  **************************************************************************/
 package daxum.temporalconvergence.recipes;
 
+import daxum.temporalconvergence.item.ModItems;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+
 public final class RecipeHandler {
 	/*
 	GameRegistry.addSmelting(ModBlocks.TIME_SAND, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
-
-	initDimGen();
-
+	 */
+	public static void init() { initDimGen(); }
+	/*
 	public static void initOreDict() {
 		OreDictionary.registerOre("logWood", ModBlocks.LUNAR_WOOD);
 		OreDictionary.registerOre("plankWood", ModBlocks.LUNAR_PLANKS);
@@ -32,12 +37,12 @@ public final class RecipeHandler {
 		OreDictionary.registerOre("plankWood", ModBlocks.SOLAR_PLANKS);
 		OreDictionary.registerOre("stone", ModBlocks.TIME_STONE);
 	}
-
+	 */
 	public static void initDimGen() {
 		DimGenRecipes.addRecipe(new ItemStack(ModItems.TIME_FREEZER), new ItemStack(Blocks.CHORUS_FLOWER), new ItemStack(ModItems.TIME_STEEL_INGOT, 4), new ItemStack(ModItems.TIME_DUST, 4), new ItemStack(Items.DIAMOND, 4));
 		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 4, 10)); //Test recipe
 	}
-
+	/*
 	TODO: OreDict the following recipes:
 	GameRegistry.addShapedRecipe(new ItemStack(ModBlocks.TIME_SAND, 8), "sss", "sds", "sss", 's', Blocks.SAND, 'd', ModItems.TIME_DUST);
 	GameRegistry.addRecipe(new ShapelessOreRecipe(ModItems.INFUSED_WOOD, ModItems.TIME_DUST, "logWood"));
