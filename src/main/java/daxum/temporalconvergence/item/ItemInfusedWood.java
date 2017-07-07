@@ -59,13 +59,8 @@ public class ItemInfusedWood extends ItemBase {
 
 			if (getTotalPercent(stack) >= 100) {
 				Block result = getSolarPercent(stack) > 50 ? ModBlocks.SOLAR_WOOD : ModBlocks.LUNAR_WOOD;
-				int strength = (result == ModBlocks.SOLAR_WOOD ? getSolarPercent(stack) : getLunarPercent(stack)) - 49;
 
-				ItemStack resultStack = new ItemStack(result, stack.getCount());
-				resultStack.setTagCompound(new NBTTagCompound());
-				resultStack.getTagCompound().setInteger("strength", strength);
-
-				item.setItem(resultStack);
+				item.setItem(new ItemStack(result, stack.getCount()));
 			}
 		}
 
