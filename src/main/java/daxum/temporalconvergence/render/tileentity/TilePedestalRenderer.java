@@ -27,7 +27,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 public class TilePedestalRenderer extends TileEntitySpecialRenderer<TilePedestal> {
 	@Override
 	//x, y, and z ARE NOT world coordinates. STOP TREATING THEM AS SUCH.
-	public void renderTileEntityAt(TilePedestal te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void render(TilePedestal te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x + 0.5, y + 1.0, z + 0.5);
 

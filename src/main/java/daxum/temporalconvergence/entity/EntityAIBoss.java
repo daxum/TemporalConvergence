@@ -363,12 +363,6 @@ public class EntityAIBoss extends EntityMob {
 	}
 
 	@Override
-	protected void kill() {
-		TemporalConvergence.LOGGER.info("Urp! AIBoss fell out of the world! State: {}, noClip: {}, pos: ({}, {}, {})", getState(), noClip, posX, posY, posZ);
-		setDead();
-	}
-
-	@Override
 	public boolean canBreatheUnderwater() {
 		return true;
 	}
@@ -573,7 +567,7 @@ public class EntityAIBoss extends EntityMob {
 		}
 
 		@Override
-		public boolean continueExecuting() {
+		public boolean shouldContinueExecuting() {
 			return getState() == BossState.FLYING && !navigator.noPath();
 		}
 	}
@@ -602,7 +596,7 @@ public class EntityAIBoss extends EntityMob {
 		}
 
 		@Override
-		public boolean continueExecuting() {
+		public boolean shouldContinueExecuting() {
 			return getState() == BossState.VULNERABLE && !navigator.noPath();
 		}
 	}
@@ -640,9 +634,9 @@ public class EntityAIBoss extends EntityMob {
 	}
 
 	@Override
-	public void moveEntityWithHeading(float strafe, float forward) {
+	public void travel(float strafe, float up, float forward) {
 		if (getState().hasNoGravity()) {
-			moveRelative(strafe, forward, 0.2f);
+			moveRelative(strafe, up, forward, 0.2f);
 			move(MoverType.SELF, motionX, motionY, motionZ);
 
 			motionX *= 0.75;
@@ -650,12 +644,12 @@ public class EntityAIBoss extends EntityMob {
 			motionZ *= 0.75;
 		}
 		else {
-			super.moveEntityWithHeading(strafe, forward);
+			super.travel(strafe, up, forward);
 		}
 	}
 
 	@Override
-	public void moveRelative(float strafe, float forward, float friction) {
+	public void moveRelative(float strafe, float up, float forward, float friction) {
 		if (getState().hasNoGravity()) {
 			float distanceSquared = strafe * strafe + forward * forward;
 
@@ -693,7 +687,7 @@ public class EntityAIBoss extends EntityMob {
 			}
 		}
 		else {
-			super.moveRelative(strafe, forward, friction);
+			super.moveRelative(strafe, up, forward, friction);
 		}
 	}
 	/*

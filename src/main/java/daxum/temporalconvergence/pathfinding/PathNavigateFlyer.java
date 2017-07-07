@@ -38,7 +38,7 @@ public class PathNavigateFlyer extends PathNavigate {
 
 	@Override
 	protected Vec3d getEntityPosition() {
-		return new Vec3d(theEntity.posX, theEntity.posY + theEntity.height * 0.5, theEntity.posZ);
+		return new Vec3d(entity.posX, entity.posY + entity.height * 0.5, entity.posZ);
 	}
 
 	@Override
@@ -59,16 +59,16 @@ public class PathNavigateFlyer extends PathNavigate {
 	@Override
 	protected void pathFollow() {
 		Vec3d entityPos = getEntityPosition();
-		float f = theEntity.width * theEntity.width;
+		float f = entity.width * entity.width;
 
-		if (entityPos.squareDistanceTo(currentPath.getVectorFromIndex(theEntity, currentPath.getCurrentPathIndex())) < f)
+		if (entityPos.squareDistanceTo(currentPath.getVectorFromIndex(entity, currentPath.getCurrentPathIndex())) < f)
 		{
 			currentPath.incrementPathIndex();
 		}
 
 		for (int j = Math.min(currentPath.getCurrentPathIndex() + 6, currentPath.getCurrentPathLength() - 1); j > currentPath.getCurrentPathIndex(); --j)
 		{
-			Vec3d pathVec = currentPath.getVectorFromIndex(theEntity, j);
+			Vec3d pathVec = currentPath.getVectorFromIndex(entity, j);
 
 			if (pathVec.squareDistanceTo(entityPos) <= 36.0 && isDirectPathBetweenPoints(entityPos, pathVec, 0, 0, 0))
 			{

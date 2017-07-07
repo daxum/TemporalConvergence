@@ -38,7 +38,6 @@ public class BiomeFutureWasteland extends Biome {
 		spawnableWaterCreatureList.clear();
 		spawnableCaveCreatureList.clear();
 		topBlock = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, DirtType.COARSE_DIRT); //This was much simpler with getStateFromMeta(1)
-		theBiomeDecorator = new BiomeWastelandDecorator();
 		setRegistryName("future_wasteland");
 	}
 

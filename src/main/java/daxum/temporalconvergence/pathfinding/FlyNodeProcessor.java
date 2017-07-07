@@ -44,7 +44,7 @@ public class FlyNodeProcessor extends NodeProcessor {
 
 		for (EnumFacing enumfacing : EnumFacing.values())
 		{
-			PathPoint pathpoint = openPoint(currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(), currentPoint.zCoord + enumfacing.getFrontOffsetZ());
+			PathPoint pathpoint = openPoint(currentPoint.x + enumfacing.getFrontOffsetX(), currentPoint.y + enumfacing.getFrontOffsetY(), currentPoint.z + enumfacing.getFrontOffsetZ());
 
 			if (!pathpoint.visited && pathpoint.distanceTo(targetPoint) < maxDistance)
 			{

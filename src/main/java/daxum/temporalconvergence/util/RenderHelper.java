@@ -26,10 +26,10 @@ import org.lwjgl.opengl.GL11;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
@@ -121,7 +121,7 @@ public final class RenderHelper {
 	//Do not call this unless absolutely necessary - It generates 2664 vertices for a sphere of step 5, which totals 52 kb and a lot of lag.
 	public static void renderSphereDirect(float radius, int step, float texStartX, float texWidthX, float texStartY, float texWidthY, boolean mesh) {
 		Tessellator tess = Tessellator.getInstance();
-		VertexBuffer vb = tess.getBuffer();
+		BufferBuilder vb = tess.getBuffer();
 
 		int glMode = mesh ? GL11.GL_LINE_STRIP : GL11.GL_TRIANGLE_STRIP;
 

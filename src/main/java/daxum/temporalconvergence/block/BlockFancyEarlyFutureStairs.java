@@ -65,11 +65,6 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	}
 
 	@Override
-	public boolean isFullyOpaque(IBlockState state){
-		return state.getValue(PART) == EnumOrientation.TOP;
-	}
-
-	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		IBlockState state = getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 

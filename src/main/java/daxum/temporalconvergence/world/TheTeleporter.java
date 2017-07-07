@@ -37,7 +37,7 @@ public class TheTeleporter extends Teleporter {
 	@Override
 	public void placeInPortal(Entity entity, float rotationYaw) {
 		BlockPos pos = entity.getPosition();
-		WorldServer world = entity.getServer().worldServerForDimension(entity.dimension); //I have a weird feeling that there's a better way to do this
+		WorldServer world = entity.getServer().getWorld(entity.dimension); //I have a weird feeling that there's a better way to do this
 
 		int i = 0;
 		while (!isValid(world, pos)) {

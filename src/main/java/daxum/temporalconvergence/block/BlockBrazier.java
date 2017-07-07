@@ -283,11 +283,6 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean isFullyOpaque(IBlockState state) {
-		return false;
-	}
-
-	@Override
 	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return false;
 	}

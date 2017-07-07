@@ -30,8 +30,10 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public final class ModBlocks {
 	public static final Block ORIGIN_STONE;
@@ -113,7 +115,10 @@ public final class ModBlocks {
 		FAKE_BOSS_SCREEN = new BlockFakeScreen();
 	}
 
-	public static void registerBlocks(IForgeRegistry blockRegistry) {
+	@SubscribeEvent
+	public static void registerBlocks(RegistryEvent.Register<Block> event) {
+		IForgeRegistry blockRegistry = event.getRegistry();
+
 		blockRegistry.register(DIM_CONTR);
 		blockRegistry.register(DIM_GEN);
 		blockRegistry.register(ORIGIN_STONE);

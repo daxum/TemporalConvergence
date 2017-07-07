@@ -21,9 +21,9 @@ package daxum.temporalconvergence.item;
 
 import java.util.List;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -82,7 +82,7 @@ public class ItemTimeBulb extends ItemBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		if (canDropItem(stack)) {
 			tooltip.add("Strength: " + getAmountToDrop(stack));
 		}
@@ -90,14 +90,15 @@ public class ItemTimeBulb extends ItemBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
 		if (tab == ModItems.TEMPCONVTAB) {
 			subItems.add(new ItemStack(this, 1, 0));
 			subItems.add(new ItemStack(this, 1, 1));
 		}
 	}
 
-	public static int getBurnTime(ItemStack fuel) {
+	@Override
+	public int getItemBurnTime(ItemStack fuel) {
 		if (canDropItem(fuel)) {
 			return 100 + 50 * getAmountToDrop(fuel);
 		}

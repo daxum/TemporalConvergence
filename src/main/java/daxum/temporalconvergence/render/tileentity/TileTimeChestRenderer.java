@@ -31,7 +31,7 @@ public class TileTimeChestRenderer extends TileEntitySpecialRenderer<TileTimeChe
 	private final ModelTimeChest timeChestModel = new ModelTimeChest();
 
 	@Override
-	public void renderTileEntityAt(TileTimeChest te, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void render(TileTimeChest te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		GlStateManager.enableDepth();
 		GlStateManager.depthFunc(515); //No idea what this is, but vanilla chest has it.
 		GlStateManager.depthMask(true);

@@ -23,10 +23,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
@@ -219,7 +219,7 @@ public class ModelTimePixie extends ModelBase {
 		protected void compileDisplayList(float scale) { //There's no real point to making this protected, but it makes me feel better...
 			displayList = GLAllocation.generateDisplayLists(1);
 			GlStateManager.glNewList(displayList, GL11.GL_COMPILE);
-			VertexBuffer vb = Tessellator.getInstance().getBuffer();
+			BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
 			double width = 19 * scale;
 			double height = 4.3 * scale;

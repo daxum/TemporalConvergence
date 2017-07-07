@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        "WSW",
+        "S S",
+        "WSW"
+    ],
+
+    "key": {
+        "W": {"item": "temporalconvergence:lunar_planks"},
+        "S": {"item": "temporalconvergence:time_stone"}
+    },
+
+    "result": {"item": "temporalconvergence:time_chest"}
+}

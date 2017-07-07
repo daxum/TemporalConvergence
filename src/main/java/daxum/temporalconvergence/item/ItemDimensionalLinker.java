@@ -22,6 +22,7 @@ package daxum.temporalconvergence.item;
 import java.util.List;
 
 import daxum.temporalconvergence.power.PowerDimension;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -116,7 +117,7 @@ public class ItemDimensionalLinker extends ItemBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
 			tooltip.add("Set to dimension #" + stack.getTagCompound().getInteger("dimid"));
 			if (stack.getTagCompound().hasKey("debug"))

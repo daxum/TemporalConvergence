@@ -29,12 +29,12 @@ import org.lwjgl.opengl.GL11;
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.entity.EntityAIBoss;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.BossInfoClient;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.BossInfoLerping;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -49,7 +49,7 @@ public final class AIBossBarRenderer {
 	}
 
 	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
-		BossInfoLerping info = event.getBossInfo();
+		BossInfoClient info = event.getBossInfo();
 		//get get get get get get get. Haha, now get doesn't sound like a word anymore
 		EntityAIBoss boss = AI_BOSS_LIST.get(info.getUniqueId()) == null ? null : AI_BOSS_LIST.get(info.getUniqueId()).get();
 
@@ -63,7 +63,7 @@ public final class AIBossBarRenderer {
 	}
 
 	//returns the offset for the next bar
-	private static int renderBossBar(BossInfoLerping healthInfo, float shieldPercent, boolean shieldDepleted, int scaledWidth, int x, int y) {
+	private static int renderBossBar(BossInfoClient healthInfo, float shieldPercent, boolean shieldDepleted, int scaledWidth, int x, int y) {
 		Minecraft mc = Minecraft.getMinecraft();
 
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -72,11 +72,11 @@ public final class AIBossBarRenderer {
 
 		//Render name
 		String name = healthInfo.getName().getFormattedText();
-		int stringX = scaledWidth / 2 - mc.fontRendererObj.getStringWidth(name) / 2;
+		int stringX = scaledWidth / 2 - mc.fontRenderer.getStringWidth(name) / 2;
 
-		mc.fontRendererObj.drawStringWithShadow(name, stringX, drawY, 16777215);
+		mc.fontRenderer.drawStringWithShadow(name, stringX, drawY, 16777215);
 
-		drawY += mc.fontRendererObj.FONT_HEIGHT + 3;
+		drawY += mc.fontRenderer.FONT_HEIGHT + 3;
 
 
 
@@ -113,7 +113,7 @@ public final class AIBossBarRenderer {
 
 	private static void drawBar(int x, int y, int width, int height, int texStartX, int texStartY, int texEndX, int texEndY, float texSize) {
 		Tessellator tess = Tessellator.getInstance();
-		VertexBuffer vb = tess.getBuffer();
+		BufferBuilder vb = tess.getBuffer();
 
 		final float texSX = texStartX / texSize;
 		final float texEX = texEndX / texSize;

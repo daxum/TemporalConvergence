@@ -26,9 +26,9 @@ import daxum.temporalconvergence.tileentity.TileDimGen;
 import daxum.temporalconvergence.tileentity.TileDimGen.ClockPart;
 import daxum.temporalconvergence.tileentity.TileDimGen.CraftingStates;
 import daxum.temporalconvergence.util.RenderHelper;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +43,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 	private static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID, "textures/sphere_textures.png");
 
 	@Override
-	public void renderTileEntityAt(TileDimGen te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage) {
+	public void render(TileDimGen te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage, float alpha) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(transformX + 0.5f, transformY + 0.95f, transformZ + 0.5f);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -82,7 +82,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 		GlStateManager.rotate(360.0f - clockRot, 0.0f, 1.0f, 0.f);
 
 		Tessellator tess = Tessellator.getInstance();
-		VertexBuffer vb = tess.getBuffer();
+		BufferBuilder vb = tess.getBuffer();
 
 		//These numbers are magic and special. Don't touch them!
 		double radius = scale * 0.4;
@@ -113,7 +113,7 @@ public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
 	}
 
 	//texStart and texEnd are the start and end of the x value
-	private void drawHand(Tessellator tess, VertexBuffer vb, float rot, double width, double height, double texStart, double texEnd) {
+	private void drawHand(Tessellator tess, BufferBuilder vb, float rot, double width, double height, double texStart, double texEnd) {
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(360 - rot, 0.0f, 1.0f, 0.0f);
 

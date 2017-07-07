@@ -20,21 +20,16 @@
 package daxum.temporalconvergence.item;
 
 import daxum.temporalconvergence.block.ModBlocks;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 
-public class ItemTimeDust extends ItemBase {
-	public ItemTimeDust() {
-		super("time_dust");
+public class ItemBlockSolarWood extends ItemBlock {
+	public ItemBlockSolarWood() {
+		super(ModBlocks.SOLAR_WOOD);
 	}
 
 	@Override
-	public boolean onEntityItemUpdate(EntityItem item) {
-		if (!item.getEntityWorld().isRemote && item.getEntityWorld().getBlockState(item.getPosition()) == Blocks.WATER.getDefaultState()) {
-			item.getEntityWorld().setBlockState(item.getPosition(), ModBlocks.TIME_WATER.getDefaultState());
-			item.getItem().shrink(1);
-		}
-
-		return false;
+	public int getItemBurnTime(ItemStack fuel) {
+		return 600;
 	}
 }

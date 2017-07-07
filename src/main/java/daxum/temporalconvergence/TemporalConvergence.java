@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import daxum.temporalconvergence.entity.ModEntities;
 import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.proxy.IProxy;
-import daxum.temporalconvergence.recipes.RecipeHandler;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.ModWorldGenerator;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -39,7 +38,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = TemporalConvergence.VERSION, acceptedMinecraftVersions="[1.11.2]")
+@Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = TemporalConvergence.VERSION, acceptedMinecraftVersions="[1.12]")
 public class TemporalConvergence {
 	public static final String MODID = "temporalconvergence"; //Remember to change creative tab name in ModItems and lang file if changed.
 	public static final String NAME = "Temporal Convergence";
@@ -62,8 +61,8 @@ public class TemporalConvergence {
 	public void preInit(FMLPreInitializationEvent event) {
 		ModEntities.init();
 
-		RecipeHandler.initOreDict();
 		DimensionHandler.init();
+		daxum.temporalconvergence.EventHandler.init();
 
 		proxy.registerFluidRenderer();
 		proxy.registerEntityRenderer();
@@ -75,7 +74,6 @@ public class TemporalConvergence {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 0);
-		RecipeHandler.init();
 		proxy.registerColors();
 
 		LOGGER.info(InitLogBuilder.get());

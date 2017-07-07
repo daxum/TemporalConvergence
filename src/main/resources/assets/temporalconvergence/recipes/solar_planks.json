@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients": [
+        {"item": "temporalconvergence:solar_wood"}
+    ],
+
+    "result": {"item": "temporalconvergence:solar_planks", "count": 4}
+}

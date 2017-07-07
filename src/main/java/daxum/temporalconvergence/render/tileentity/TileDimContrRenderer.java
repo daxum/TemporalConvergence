@@ -41,7 +41,7 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 	}
 
 	@Override
-	public void renderTileEntityAt(TileDimContr te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage) {
+	public void render(TileDimContr te, double transformX, double transformY, double transformZ, float partialTicks, int destroyStage, float alpha) { //TODO: Alpha?
 		if (te.renderScale <= 0 && te.getId() == -1) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(transformX + 0.5, transformY + 0.4, transformZ + 0.5);

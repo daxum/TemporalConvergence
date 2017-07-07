@@ -24,7 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,7 +37,6 @@ public class WorldProviderEarlyFuture extends WorldProvider {
 	@Override
 	public void init() {
 		biomeProvider = new BiomeProviderSingle(DimensionHandler.FUTURE_WASTELAND);
-		hasNoSky = false;
 		hasSkyLight = true;
 	}
 
@@ -72,12 +71,12 @@ public class WorldProviderEarlyFuture extends WorldProvider {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3d getSkyColor(Entity entity, float partialTicks) {
-		return SKY_COLOR.scale(Math.max(world.getSkyColorBody(entity, partialTicks).zCoord, 0.1));
+		return SKY_COLOR.scale(Math.max(world.getSkyColorBody(entity, partialTicks).z, 0.1));
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public Vec3d getFogColor(float celestialAngle, float partialTicks) {
-		return SKY_COLOR.scale(super.getFogColor(celestialAngle, partialTicks).zCoord);
+		return SKY_COLOR.scale(super.getFogColor(celestialAngle, partialTicks).z);
 	}
 }

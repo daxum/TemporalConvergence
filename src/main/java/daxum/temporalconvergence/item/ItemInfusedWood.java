@@ -24,8 +24,8 @@ import java.util.List;
 import daxum.temporalconvergence.block.BlockFluidTimeWater;
 import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -48,7 +48,7 @@ public class ItemInfusedWood extends ItemBase {
 		World world = item.world;
 
 		if (!world.isRemote && BlockFluidTimeWater.isInValidLocation(item.world, item.getPosition()) && world.getTotalWorldTime() % 12 == 0) {
-			ItemStack stack = item.getEntityItem();
+			ItemStack stack = item.getItem();
 
 			if (isDay(world.getWorldTime())) {
 				incrementSolarPercent(stack);
@@ -65,7 +65,7 @@ public class ItemInfusedWood extends ItemBase {
 				resultStack.setTagCompound(new NBTTagCompound());
 				resultStack.getTagCompound().setInteger("strength", strength);
 
-				item.setEntityItemStack(resultStack);
+				item.setItem(resultStack);
 			}
 		}
 
@@ -124,7 +124,7 @@ public class ItemInfusedWood extends ItemBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		tooltip.add("Infusion Progress: " + getTotalPercent(stack) + "%");
 		tooltip.add(" - Solar: " + getSolarPercent(stack) + "%");
 		tooltip.add(" - Lunar: " + getLunarPercent(stack) + "%");

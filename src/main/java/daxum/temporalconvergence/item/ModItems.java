@@ -30,7 +30,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public final class ModItems {
 	public static final CreativeTabs TEMPCONVTAB = new CreativeTabs(TemporalConvergence.MODID) {
@@ -71,7 +73,10 @@ public final class ModItems {
 		INFUSED_WOOD = new ItemInfusedWood();
 	}
 
-	public static void registerItems(IForgeRegistry itemRegistry) {
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry itemRegistry = event.getRegistry();
+
 		itemRegistry.register(DIM_LINKER);
 		itemRegistry.register(TIME_DUST);
 		itemRegistry.register(TIME_FREEZER);
@@ -97,7 +102,6 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STEEL).setRegistryName(ModBlocks.TIME_STEEL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STONE).setRegistryName(ModBlocks.TIME_STONE.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STONE_PILLAR).setRegistryName(ModBlocks.TIME_STONE_PILLAR.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.TIME_WATER).setRegistryName(ModBlocks.TIME_WATER.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_WOOD).setRegistryName(ModBlocks.LUNAR_WOOD.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_PLANKS).setRegistryName(ModBlocks.LUNAR_PLANKS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BLOCK) {@Override public int getMetadata(int damage) { return damage; }}.setRegistryName(ModBlocks.EARLY_FUTURE_BLOCK.getRegistryName()).setHasSubtypes(true));
@@ -108,7 +112,19 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.REWOUND_SOIL).setRegistryName(ModBlocks.REWOUND_SOIL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BUTTON).setRegistryName(ModBlocks.EARLY_FUTURE_BUTTON.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.BRAZIER).setRegistryName(ModBlocks.BRAZIER.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_WOOD).setRegistryName(ModBlocks.SOLAR_WOOD.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_PLANKS).setRegistryName(ModBlocks.SOLAR_PLANKS.getRegistryName()));
+
+		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_WOOD) {
+			@Override
+			public int getItemBurnTime(ItemStack fuel) {
+				return 600;
+			}
+		}.setRegistryName(ModBlocks.SOLAR_WOOD.getRegistryName()));
+
+		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_PLANKS) {
+			@Override
+			public int getItemBurnTime(ItemStack fuel) {
+				return 600;
+			}
+		}.setRegistryName(ModBlocks.SOLAR_PLANKS.getRegistryName()));
 	}
 }

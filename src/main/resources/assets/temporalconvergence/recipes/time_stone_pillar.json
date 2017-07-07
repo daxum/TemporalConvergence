@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        "S",
+        "S"
+    ],
+
+    "key": {
+        "S": {"item": "temporalconvergence:time_stone"}
+    },
+
+    "result": {"item": "temporalconvergence:time_stone_pillar", "count": 2}
+}

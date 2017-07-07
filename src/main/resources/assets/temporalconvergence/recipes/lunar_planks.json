@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:crafting_shapeless",
+
+    "ingredients": [
+        {"item": "temporalconvergence:lunar_wood"}
+    ],
+
+    "result": {"item": "temporalconvergence:lunar_planks", "count": 4}
+}

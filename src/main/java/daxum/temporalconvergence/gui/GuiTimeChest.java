@@ -24,12 +24,22 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiTimeChest extends GuiContainer {
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
 	public GuiTimeChest(IInventory playerInv, TileTimeChest tc) {
 		super(new ContainerTimeChest(playerInv, tc));
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
 	}
 
 	@Override
@@ -44,7 +54,7 @@ public class GuiTimeChest extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRendererObj.drawString("Asynchronous Chest", 8, 6, 4210752);
-		fontRendererObj.drawString("Inventory", 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString("Asynchronous Chest", 8, 6, 4210752);
+		fontRenderer.drawString("Inventory", 8, ySize - 96 + 2, 4210752);
 	}
 }

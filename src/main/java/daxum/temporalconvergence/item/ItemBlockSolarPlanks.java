@@ -17,26 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence;
+package daxum.temporalconvergence.item;
 
 import daxum.temporalconvergence.block.ModBlocks;
-import daxum.temporalconvergence.item.ItemTimeBulb;
-import daxum.temporalconvergence.item.ModItems;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.IFuelHandler;
 
-public final class FuelHandler implements IFuelHandler {
-	@Override
-	public int getBurnTime(ItemStack fuel) {
-		if (fuel.getItem() == ModItems.TIME_BULB) {
-			return ItemTimeBulb.getBurnTime(fuel);
-		}
-		else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.SOLAR_WOOD) || fuel.getItem() == Item.getItemFromBlock(ModBlocks.SOLAR_PLANKS)) {
-			return 600;
-		}
+public class ItemBlockSolarPlanks extends ItemBlock {
 
-		return 0;
+	public ItemBlockSolarPlanks() {
+		super(ModBlocks.SOLAR_PLANKS);
 	}
 
+	@Override
+	public int getItemBurnTime(ItemStack fuel) {
+		return 600;
+	}
 }

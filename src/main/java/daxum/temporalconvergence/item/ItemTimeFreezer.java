@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
@@ -75,7 +76,7 @@ public class ItemTimeFreezer extends ItemBase {
 		}
 
 		if (entity != null && entity.getEntityBoundingBox() != null) {
-			AxisAlignedBB entityBB = entity.getEntityBoundingBox().expandXyz(2.0);
+			AxisAlignedBB entityBB = entity.getEntityBoundingBox().expand(2.0, 2.0, 2.0);
 			List<Entity> entities = entity.getEntityWorld().getEntitiesInAABBexcluding(entity, entityBB, null);
 
 			if (entities.isEmpty()) {
@@ -127,7 +128,7 @@ public class ItemTimeFreezer extends ItemBase {
 
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entity) {
-		onUpdate(entity.getEntityItem(), entity.world, entity, 0, true);
+		onUpdate(entity.getItem(), entity.world, entity, 0, true);
 		return false;
 
 	}
@@ -183,7 +184,7 @@ public class ItemTimeFreezer extends ItemBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		if (isActive(stack))
 			tooltip.add("Activated");
 		else

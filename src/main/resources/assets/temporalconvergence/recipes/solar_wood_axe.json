@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        "WW ",
+        "WS ",
+        " S "
+    ],
+
+    "key": {
+        "W": {"item": "temporalconvergence:solar_planks"},
+        "S": {"item": "temporalconvergence:time_stone"}
+    },
+
+    "result": {"item": "temporalconvergence:solar_wood_axe"}
+}

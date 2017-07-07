@@ -25,6 +25,8 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 
 public class BlockSolarWood extends BlockLog {
 	public BlockSolarWood() {
@@ -37,7 +39,7 @@ public class BlockSolarWood extends BlockLog {
 	}
 
 	@Override
-	public MapColor getMapColor(IBlockState state) {
+	public MapColor getMapColor(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return MapColor.RED;
 	}
 

@@ -123,7 +123,7 @@ public class EntityTimePixie extends EntityFlying {
 		}
 
 		@Override
-		public boolean continueExecuting() {
+		public boolean shouldContinueExecuting() {
 			return parent.getMoveHelper().isUpdating();
 		}
 

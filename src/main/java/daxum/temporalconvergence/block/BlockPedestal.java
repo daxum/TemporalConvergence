@@ -39,7 +39,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockPedestal() {
-		super("time_pedestal", 2.0f, 10.0f, "pickaxe", 1);
+		super("pedestal", 2.0f, 10.0f, "pickaxe", 1);
 	}
 
 	@Override

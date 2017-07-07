@@ -26,7 +26,7 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.power.PowerDimension;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.WorldSavedData;
 
 public class SaveDataHandler extends WorldSavedData {
 	public static final String DATA_NAME = TemporalConvergence.MODID + "-SaveData";
