@@ -39,7 +39,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockPedestal() {
-		super("pedestal", 2.0f, 10.0f, "pickaxe", 1);
+		super("pedestal", BlockPresets.STONE);
 	}
 
 	@Override
@@ -78,17 +78,7 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	protected boolean isCube() {
 		return false;
 	}
 

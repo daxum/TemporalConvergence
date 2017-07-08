@@ -26,11 +26,7 @@ import java.util.Random;
 import daxum.temporalconvergence.item.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
@@ -57,11 +53,11 @@ public class BlockRewoundTime extends BlockBase {
 	};
 
 	public BlockRewoundTime() {
-		super(Material.PLANTS, "rewound_time", 0.0f, 0.0f, "", -1, SoundType.PLANT);
+		super("rewound_time", BlockPresets.PLANT);
 		setTickRandomly(true);
 		setCreativeTab(null);
 		disableStats();
-		setDefaultState(blockState.getBaseState().withProperty(AGE, 7));
+		setStateDefaults(new Default(AGE, 7));
 	}
 
 	@Override
@@ -130,17 +126,7 @@ public class BlockRewoundTime extends BlockBase {
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {AGE});
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
+	protected boolean isCube() {
 		return false;
 	}
 

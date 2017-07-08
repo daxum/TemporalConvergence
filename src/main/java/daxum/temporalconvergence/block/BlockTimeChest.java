@@ -26,9 +26,7 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,8 +49,8 @@ public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockTimeChest() {
-		super(Material.ROCK, "time_chest", 3.5f, 25.0f, "pickaxe", 0, SoundType.STONE);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		super(Material.ROCK, "time_chest", 3.5f, 25.0f, Tool.PICKAXE, MiningLevel.WOOD, SoundType.STONE);
+		setStateDefaults(new Default(FACING, EnumFacing.NORTH));
 	}
 
 
@@ -100,17 +98,7 @@ public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	protected boolean isCube() {
 		return false;
 	}
 
@@ -148,10 +136,5 @@ public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirror) {
 		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING});
 	}
 }

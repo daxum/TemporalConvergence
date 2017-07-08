@@ -25,10 +25,8 @@ import java.util.Random;
 
 import daxum.temporalconvergence.item.ModItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,7 +58,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	public BlockEarlyFutureDoor() {
 		super("early_future_door");
-		setDefaultState(blockState.getBaseState().withProperty(OPEN, false).withProperty(PART, EnumPart.BOTTOM_RIGHT).withProperty(NORTH_SOUTH, true));
+		setStateDefaults(new Default(OPEN, false), new Default(PART, EnumPart.BOTTOM_RIGHT), new Default(NORTH_SOUTH, true));
 	}
 
 	@Override
@@ -229,23 +227,13 @@ public class BlockEarlyFutureDoor extends BlockBase {
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
+	protected boolean isCube() {
 		return false;
 	}
 
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {OPEN, PART, NORTH_SOUTH});
 	}
 
 	@Override

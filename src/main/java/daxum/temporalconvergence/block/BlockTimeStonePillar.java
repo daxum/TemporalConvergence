@@ -22,9 +22,7 @@ package daxum.temporalconvergence.block;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,7 +43,7 @@ public class BlockTimeStonePillar extends BlockBase {
 
 	BlockTimeStonePillar() {
 		super("time_stone_pillar");
-		setDefaultState(blockState.getBaseState().withProperty(TOP, true).withProperty(BOTTOM, true));
+		setStateDefaults(new Default(TOP, true), new Default(BOTTOM, true));
 	}
 
 	@Override
@@ -102,22 +100,7 @@ public class BlockTimeStonePillar extends BlockBase {
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {TOP, BOTTOM});
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	protected boolean isCube() {
 		return false;
 	}
 }

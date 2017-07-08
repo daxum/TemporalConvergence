@@ -23,10 +23,8 @@ import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileBrazier;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -52,8 +50,9 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.25, -0.03125, 0.25, 0.75, 1.15625, 0.75);
 
 	public BlockBrazier() {
-		super("brazier", 2.0f, 10.0f, "pickaxe", 1);
-		setDefaultState(blockState.getBaseState().withProperty(FILL_STATE, FilledState.EMPTY).withProperty(BURNING, false));
+		super("brazier", BlockPresets.STONE);
+		setMiningLevel(MiningLevel.STONE);
+		setStateDefaults(new Default(FILL_STATE, FilledState.EMPTY), new Default(BURNING, false));
 	}
 
 	@Override
@@ -171,11 +170,6 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 		return state.getValue(FILL_STATE).getMeta() | (state.getValue(BURNING) ? 8 : 0);
 	}
 
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FILL_STATE, BURNING});
-	}
-
 	public enum FilledState implements IStringSerializable {
 		EMPTY("empty", 0),
 		LEVEL_1("level1", 1),
@@ -283,17 +277,7 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	protected boolean isCube() {
 		return false;
 	}
 

@@ -19,6 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import daxum.temporalconvergence.block.BlockBase.BlockPresets;
 import daxum.temporalconvergence.tileentity.TileBrazier;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import daxum.temporalconvergence.tileentity.TileDimGen;
@@ -26,8 +27,6 @@ import daxum.temporalconvergence.tileentity.TilePedestal;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import daxum.temporalconvergence.tileentity.TileTimePlant;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.event.RegistryEvent;
@@ -69,8 +68,8 @@ public final class ModBlocks {
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
 		TIME_STONE = new BlockBase("time_stone");
-		TIME_STEEL = new BlockBase(Material.IRON, "time_steel", 5.0f, 30.0f, "pickaxe", 1, SoundType.METAL);
-		LUNAR_PLANKS = new BlockBase(Material.WOOD, "lunar_planks", 2.0f, 15.0f, "axe", 0, SoundType.WOOD) {
+		TIME_STEEL = new BlockBase("time_steel", BlockPresets.IRON);
+		LUNAR_PLANKS = new BlockBase("lunar_planks", BlockPresets.WOOD) {
 			@Override
 			public boolean isWood(IBlockAccess world, BlockPos pos) {
 				return world.getBlockState(pos).getBlock() == this;
@@ -105,7 +104,7 @@ public final class ModBlocks {
 		EARLY_FUTURE_BUTTON = new BlockButtonFuture();
 		BRAZIER = new BlockBrazier();
 		SOLAR_WOOD = new BlockSolarWood();
-		SOLAR_PLANKS = new BlockBase(Material.WOOD, "solar_planks", 2.0f, 15.0f, "axe", 0, SoundType.WOOD) {
+		SOLAR_PLANKS = new BlockBase("solar_planks", BlockPresets.WOOD) {
 			@Override
 			public boolean isWood(IBlockAccess world, BlockPos pos) {
 				return world.getBlockState(pos).getBlock() == this;

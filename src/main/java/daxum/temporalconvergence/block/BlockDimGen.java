@@ -40,7 +40,7 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockDimGen() {
-		super("dimensional_generator", 5.0f, 30.0f, "pickaxe", 2);
+		super("dimensional_generator", BlockPresets.STONE_MACHINE);
 	}
 
 	@Override
@@ -94,17 +94,7 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	protected boolean isCube() {
 		return false;
 	}
 

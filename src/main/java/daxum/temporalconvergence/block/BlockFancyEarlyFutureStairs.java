@@ -20,12 +20,8 @@
 package daxum.temporalconvergence.block;
 
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockRenderLayer;
@@ -43,8 +39,8 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	public static final PropertyEnum PART = PropertyEnum.create("part", EnumOrientation.class);
 
 	public BlockFancyEarlyFutureStairs() {
-		super(Material.IRON, "early_future_stairs_fancy", 2.0f, 10.0f, "pickaxe", 0, SoundType.METAL);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(PART, EnumOrientation.BOTTOM));
+		super("early_future_stairs_fancy", BlockPresets.WEAK_IRON);
+		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(PART, EnumOrientation.BOTTOM));
 		setLightLevel(0.95f);
 	}
 
@@ -96,11 +92,6 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirror) {
 		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING, PART});
 	}
 
 	public static enum EnumOrientation implements IStringSerializable {

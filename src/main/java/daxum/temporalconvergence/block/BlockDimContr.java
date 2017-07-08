@@ -23,9 +23,7 @@ import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -42,8 +40,8 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	public static final PropertyEnum POWER_LEVEL = PropertyEnum.create("power_level", EnumPowerLevel.class);
 
 	public BlockDimContr() {
-		super("dim_controller", 5.0f, 30.0f, "pickaxe", 2);
-		setDefaultState(blockState.getBaseState().withProperty(POWER_LEVEL, EnumPowerLevel.EMPTY));
+		super("dim_controller", BlockPresets.STONE_MACHINE);
+		setStateDefaults(new Default(POWER_LEVEL, EnumPowerLevel.EMPTY));
 	}
 
 	@Override
@@ -130,11 +128,6 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 	@Override
 	public int getMetaFromState(IBlockState state) {
 		return ((EnumPowerLevel) state.getValue(POWER_LEVEL)).getIndex();
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {POWER_LEVEL});
 	}
 
 	public static enum EnumPowerLevel implements IStringSerializable {

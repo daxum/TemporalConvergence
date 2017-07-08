@@ -22,11 +22,8 @@ package daxum.temporalconvergence.block;
 import daxum.temporalconvergence.TemporalConvergence;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -50,8 +47,9 @@ public class BlockFakeScreen extends BlockBase {
 	public static final AxisAlignedBB TOP_WEST_AABB = new AxisAlignedBB(0.875, 0.0, 0.0, 1.0, 0.75, 1.0);
 
 	public BlockFakeScreen() {
-		super(Material.BARRIER, "fake_boss_screen", -1.0f, Float.MAX_VALUE, "", 0, SoundType.METAL);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(TOP, false));
+		super("fake_boss_screen", BlockPresets.UNBREAKABLE);
+		setSoundType(SoundType.METAL);
+		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(TOP, false));
 	}
 
 	@Override
@@ -81,17 +79,7 @@ public class BlockFakeScreen extends BlockBase {
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
+	protected boolean isCube() {
 		return false;
 	}
 
@@ -118,11 +106,6 @@ public class BlockFakeScreen extends BlockBase {
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirror) {
 		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {FACING, TOP});
 	}
 
 	@Override

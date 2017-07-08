@@ -26,10 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -55,8 +52,8 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.9375, 0.9375);
 
 	public BlockTimePlant() {
-		super(Material.PLANTS, "time_plant", 0.0f, 0.0f);
-		setDefaultState(blockState.getBaseState().withProperty(PLANT_STATE, PlantState.DAYTIME));
+		super("time_plant", BlockPresets.PLANT);
+		setStateDefaults(new Default(PLANT_STATE, PlantState.DAYTIME));
 		setLightLevel(0.4f);
 	}
 
@@ -112,11 +109,6 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {PLANT_STATE});
-	}
-
-	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return AABB;
 	}
@@ -127,17 +119,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	}
 
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	protected boolean isCube() {
 		return false;
 	}
 

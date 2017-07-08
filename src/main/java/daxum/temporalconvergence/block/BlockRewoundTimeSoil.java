@@ -25,9 +25,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,8 +47,8 @@ public class BlockRewoundTimeSoil extends BlockBase {
 	public static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0, 0.9375, 0.0, 0.0625, 1.0, 1.0);
 
 	public BlockRewoundTimeSoil() {
-		super(Material.GROUND, "rewound_soil", 0.6f, 3.0f, "shovel", 0, SoundType.SLIME);
-		setDefaultState(blockState.getBaseState().withProperty(NORTH, true).withProperty(EAST, true).withProperty(SOUTH, true).withProperty(WEST, true));
+		super(Material.GROUND, "rewound_soil", 0.6f, 3.0f, Tool.SHOVEL, MiningLevel.WOOD, SoundType.SLIME);
+		setStateDefaults(new Default(NORTH, true), new Default(EAST, true), new Default(SOUTH, true), new Default(WEST, true));
 		setTickRandomly(true);
 	}
 
@@ -70,12 +68,7 @@ public class BlockRewoundTimeSoil extends BlockBase {
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state) {
+	protected boolean isCube() {
 		return false;
 	}
 
@@ -122,10 +115,5 @@ public class BlockRewoundTimeSoil extends BlockBase {
 		state = state.withProperty(WEST, (meta & 8) == 8);
 
 		return state;
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {NORTH, EAST, SOUTH, WEST});
 	}
 }
