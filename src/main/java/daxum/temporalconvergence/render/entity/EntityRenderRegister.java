@@ -19,6 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.render.entity;
 
+import daxum.temporalconvergence.entity.EntityFrozen;
 import daxum.temporalconvergence.entity.EntityTimePixie;
 import daxum.temporalconvergence.render.tileentity.TileDimContrRenderer;
 import daxum.temporalconvergence.render.tileentity.TileDimGenRenderer;
@@ -34,6 +35,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public final class EntityRenderRegister {
 	public static void init() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityTimePixie.class, RenderTimePixie::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityFrozen.class, RenderFrozenEntity::new);
 
 		initTileEntity();
 	}

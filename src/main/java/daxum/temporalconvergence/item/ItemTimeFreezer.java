@@ -19,12 +19,9 @@
  **************************************************************************/
 package daxum.temporalconvergence.item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
+import daxum.temporalconvergence.entity.EntityFrozen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -48,9 +45,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemTimeFreezer extends ItemBase {
-	private static Map<UUID, FrozenEntityEntry> frozenList = new HashMap<>();
-	private static List<UUID> toRemove = new ArrayList<>();
-
 	public ItemTimeFreezer() {
 		super("time_freezer");
 		addPropertyOverride(new ResourceLocation("active"), new IItemPropertyGetter() {
@@ -64,9 +58,13 @@ public class ItemTimeFreezer extends ItemBase {
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		if (world.isRemote) return;
+
 		if (!isActive(stack)) {
-			if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 2 == 0)
+			if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 2 == 0) {
 				stack.setItemDamage(stack.getItemDamage() - 1);
+			}
+
 			return;
 		}
 
@@ -76,49 +74,49 @@ public class ItemTimeFreezer extends ItemBase {
 		}
 
 		if (entity != null && entity.getEntityBoundingBox() != null) {
-			AxisAlignedBB entityBB = entity.getEntityBoundingBox().expand(2.0, 2.0, 2.0);
+			AxisAlignedBB entityBB = entity.getEntityBoundingBox().grow(2.0);
 			List<Entity> entities = entity.getEntityWorld().getEntitiesInAABBexcluding(entity, entityBB, null);
-
 			if (entities.isEmpty()) {
-				if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 4 == 0)
+				if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 4 == 0) {
 					stack.setItemDamage(stack.getItemDamage() - 1);
+				}
+
 				return;
 			}
 
-			boolean used = false;
-			boolean usedBoss = false;
+			int damage = 0;
+			//All boss projectiles cause extra durability loss
+			final int bossDamageIncrease = 10;
 
 			for (int i = 0; i < entities.size(); i++) {
 				Entity current = entities.get(i);
 
-				if (frozenList.containsKey(current.getPersistentID())) {
-					FrozenEntityEntry frozen = frozenList.get(current.getPersistentID());
-					frozen.resetTimer();
+				if (current instanceof EntityFrozen) {
+					EntityFrozen frozen = (EntityFrozen) current;
+					frozen.reFreeze();
 
-					used = true;
+					if (isBossProjectile(frozen.getFrozenEntity())) {
+						damage += bossDamageIncrease;
+					}
+					else {
+						damage++;
+					}
+				}
+				//TODO: Add additional through config, optional boss projectile, blacklist
+				else if (current instanceof IProjectile || current instanceof EntityFireball || current instanceof EntityShulkerBullet) {
+					world.spawnEntity(new EntityFrozen(world, current));
 
-					if (isBossProjectile(frozen.frozen))
-						usedBoss = true;
-				} //TODO: Add additional through config, optional boss projectile, blacklist
-				else if (!current.updateBlocked && (current instanceof IProjectile || current instanceof EntityFireball || current instanceof EntityShulkerBullet)) {
-					current.updateBlocked = true;
-					frozenList.put(current.getPersistentID(), new FrozenEntityEntry(current, entity));
-					used = true;
-
-					if (isBossProjectile(current)) //All boss projectiles cause 10x durability loss
-						usedBoss = true;
+					if (isBossProjectile(current)) {
+						damage += bossDamageIncrease;
+					}
+					else {
+						damage++;
+					}
 				}
 			}
 
-			if (used) {
-				stack.setItemDamage(stack.getItemDamage() + 1);
-
-				if (usedBoss) {
-					if (stack.getItemDamage() >= stack.getMaxDamage() - 10)
-						stack.setItemDamage(stack.getMaxDamage() - 1);
-					else
-						stack.setItemDamage(stack.getItemDamage() + 9);
-				}
+			if (damage > 0) {
+				damageStack(stack, damage);
 			}
 			else if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 4 == 0) {
 				stack.setItemDamage(stack.getItemDamage() - 1);
@@ -148,7 +146,7 @@ public class ItemTimeFreezer extends ItemBase {
 
 	@Override
 	public int getMaxDamage() {
-		return 800;
+		return 1500;
 	}
 
 	@Override
@@ -161,11 +159,11 @@ public class ItemTimeFreezer extends ItemBase {
 		return changed || oldStack.getItem() != newStack.getItem() || isActive(oldStack) != isActive(newStack);
 	}
 
-	public boolean isActive(ItemStack stack) {
+	private boolean isActive(ItemStack stack) {
 		return !stack.isEmpty() && stack.hasTagCompound() && stack.getTagCompound().getBoolean("active");
 	}
 
-	public void setActive(ItemStack stack, boolean active) {
+	private void setActive(ItemStack stack, boolean active) {
 		if (!stack.isEmpty() && stack.getItem() == this) {
 			if (!stack.hasTagCompound())
 				stack.setTagCompound(new NBTTagCompound());
@@ -178,8 +176,17 @@ public class ItemTimeFreezer extends ItemBase {
 	}
 
 	//To be expanded once config made
-	public boolean isBossProjectile(Entity entity) {
+	private boolean isBossProjectile(Entity entity) {
 		return entity instanceof EntityDragonFireball || entity instanceof EntityWitherSkull;
+	}
+
+	private void damageStack(ItemStack stack, int amount) {
+		if (amount + stack.getItemDamage() >= stack.getMaxDamage() - 1) {
+			stack.setItemDamage(stack.getMaxDamage() - 1);
+		}
+		else {
+			stack.setItemDamage(stack.getItemDamage() + amount);
+		}
 	}
 
 	@Override
@@ -189,49 +196,5 @@ public class ItemTimeFreezer extends ItemBase {
 			tooltip.add("Activated");
 		else
 			tooltip.add("Deactivated");
-	}
-
-	public static void updateFrozenList() {
-		for (Map.Entry<UUID, FrozenEntityEntry> val : frozenList.entrySet()) {
-			if (val.getValue().shouldUnfreeze()) {
-				frozenList.get(val.getKey()).unfreeze();
-				toRemove.add(val.getKey());
-			}
-			else {
-				frozenList.get(val.getKey()).unfreezeTimer++;
-			}
-		}
-
-		for (UUID uuid : toRemove) {
-			frozenList.remove(uuid);
-		}
-
-		toRemove.clear();
-	}
-
-	public static void unfreezeAllInDim(int dimid) {
-		for (Map.Entry<UUID, FrozenEntityEntry> val : frozenList.entrySet()) {
-			if (val.getValue().frozen.world.provider.getDimension() == dimid) {
-				frozenList.get(val.getKey()).unfreeze();
-				toRemove.add(val.getKey());
-			}
-		}
-
-		for (UUID uuid : toRemove) {
-			frozenList.remove(uuid);
-		}
-
-		toRemove.clear();
-	}
-
-	public static class FrozenEntityEntry {
-		public final Entity frozen;
-		public final Entity friezer;
-		public int unfreezeTimer = 0;
-
-		public FrozenEntityEntry(Entity fn, Entity fr) { frozen = fn; friezer = fr; }
-		public void unfreeze() { frozen.updateBlocked = false; }
-		public void resetTimer() { unfreezeTimer = 0; }
-		public boolean shouldUnfreeze() { return !frozen.updateBlocked || frozen.isDead || friezer.isDead || unfreezeTimer > 2; }
 	}
 }

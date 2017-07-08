@@ -20,7 +20,6 @@
 package daxum.temporalconvergence;
 
 import daxum.temporalconvergence.block.ModBlocks;
-import daxum.temporalconvergence.item.ItemTimeFreezer;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.PowerDimension;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
@@ -32,7 +31,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
@@ -53,13 +51,7 @@ public final class EventHandler {
 	public static void worldTick(WorldTickEvent event) {
 		if (event.side == Side.SERVER && event.phase == Phase.END && event.world.provider.getDimension() == 0) {
 			PowerDimension.updateDimensions(event.world);
-			ItemTimeFreezer.updateFrozenList();
 		}
-	}
-
-	@SubscribeEvent
-	public static void worldUnload(WorldEvent.Unload event) {
-		ItemTimeFreezer.unfreezeAllInDim(event.getWorld().provider.getDimension());
 	}
 
 	@SubscribeEvent

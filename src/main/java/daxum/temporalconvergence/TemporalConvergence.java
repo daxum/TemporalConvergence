@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import daxum.temporalconvergence.entity.ModEntities;
 import daxum.temporalconvergence.gui.GuiHandler;
+import daxum.temporalconvergence.network.PacketHandler;
 import daxum.temporalconvergence.proxy.IProxy;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.ModWorldGenerator;
@@ -63,6 +64,7 @@ public class TemporalConvergence {
 
 		DimensionHandler.init();
 		daxum.temporalconvergence.EventHandler.init();
+		PacketHandler.init();
 
 		proxy.registerFluidRenderer();
 		proxy.registerEntityRenderer();
