@@ -105,6 +105,8 @@ public class BlockBase extends Block {
 		for (Default def : defaults) {
 			defaultState = defaultState.withProperty(def.property, def.value);
 		}
+
+		setDefaultState(defaultState);
 	}
 
 	protected class Default<T extends Comparable<T>> {
