@@ -31,12 +31,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockPedestal extends BlockBase implements ITileEntityProvider {
-	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
+	public static final AxisAlignedBB BASE_AABB = new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.1875, 0.8125);
+	public static final AxisAlignedBB MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.1875, 0.3125, 0.6875, 0.8125, 0.6875);
+	public static final AxisAlignedBB TOP_AABB = new AxisAlignedBB(0.0625, 0.8125, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockPedestal() {
 		super("pedestal", BlockPresets.STONE);
@@ -83,12 +84,12 @@ public class BlockPedestal extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+	public boolean hasMultipleBoundingBoxes() {
+		return true;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+	protected AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
+		return new AxisAlignedBB[] {BASE_AABB, MIDDLE_AABB, TOP_AABB};
 	}
 }

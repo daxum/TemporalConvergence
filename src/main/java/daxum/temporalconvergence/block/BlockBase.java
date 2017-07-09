@@ -163,10 +163,11 @@ public class BlockBase extends Block {
 	}
 
 	public AxisAlignedBB[] getSelectedBBList(World world, BlockPos pos, IBlockState state) {
-		AxisAlignedBB[] aabbList = getBoundingBoxList(world, pos, state).clone();
+		AxisAlignedBB[] oldList = getBoundingBoxList(world, pos, state);
+		AxisAlignedBB[] aabbList = new AxisAlignedBB[oldList.length];
 
 		for (int i = 0; i < aabbList.length; i++) {
-			aabbList[i] = aabbList[i].offset(pos);
+			aabbList[i] = oldList[i].offset(pos);
 		}
 
 		return aabbList;

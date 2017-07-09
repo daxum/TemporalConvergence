@@ -37,7 +37,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockDimGen extends BlockBase implements ITileEntityProvider {
-	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
+	public static final AxisAlignedBB BASE_AABB = new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.1875, 0.8125);
+	public static final AxisAlignedBB MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.1875, 0.3125, 0.6875, 0.6875, 0.6875);
+	public static final AxisAlignedBB TOP_AABB = new AxisAlignedBB(0.0625, 0.6875, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockDimGen() {
 		super("dimensional_generator", BlockPresets.STONE_MACHINE);
@@ -99,13 +101,13 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+	public boolean hasMultipleBoundingBoxes() {
+		return true;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+	protected AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
+		return new AxisAlignedBB[] {BASE_AABB, MIDDLE_AABB, TOP_AABB};
 	}
 
 	@Override
