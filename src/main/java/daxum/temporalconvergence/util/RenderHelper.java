@@ -25,16 +25,23 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.block.BlockBase;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -172,5 +179,32 @@ public final class RenderHelper {
 			alt = !alt;
 			tess.draw();
 		}
+	}
+
+	public static void drawSelectionBoxes(World world, EntityPlayer player, IBlockState state, BlockPos pos, float partialTicks) {
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.glLineWidth(2.0f);
+		GlStateManager.disableTexture2D();
+		GlStateManager.depthMask(false);
+
+		if (state.getMaterial() != Material.AIR && world.getWorldBorder().contains(pos)) {
+			double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+			double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+			double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+
+			if (state.getBlock() instanceof BlockBase) {
+				for (AxisAlignedBB aabb : ((BlockBase)state.getBlock()).getSelectedBBList(world, pos, state)) {
+					RenderGlobal.drawSelectionBoundingBox(aabb.grow(0.002).offset(-px, -py, -pz), 0.0f, 0.0f, 0.0f, 0.4f);
+				}
+			}
+			else {
+				RenderGlobal.drawSelectionBoundingBox(state.getSelectedBoundingBox(world, pos).grow(0.002).offset(-px, -py, -pz), 0.0f, 0.0f, 0.0f, 0.4f);
+			}
+		}
+
+		GlStateManager.depthMask(true);
+		GlStateManager.enableTexture2D();
+		GlStateManager.disableBlend();
 	}
 }

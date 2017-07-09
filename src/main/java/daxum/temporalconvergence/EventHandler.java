@@ -19,12 +19,19 @@
  **************************************************************************/
 package daxum.temporalconvergence;
 
+import daxum.temporalconvergence.block.BlockBase;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.PowerDimension;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
+import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.world.DimensionHandler;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.BiomeDictionary;
@@ -72,5 +79,18 @@ public final class EventHandler {
 	@SideOnly(Side.CLIENT)
 	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
 		AIBossBarRenderer.renderBossBar(event);
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void drawBlockHighlight(DrawBlockHighlightEvent event) {
+		World world = Minecraft.getMinecraft().world;
+		BlockPos pos = event.getTarget().getBlockPos();
+		IBlockState state = world.getBlockState(pos);
+
+		if (state.getBlock() instanceof BlockBase && ((BlockBase)state.getBlock()).hasMultipleBoundingBoxes()) {
+			RenderHelper.drawSelectionBoxes(world, event.getPlayer(), state, pos, event.getPartialTicks());
+			event.setCanceled(true);
+		}
 	}
 }
