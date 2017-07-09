@@ -126,9 +126,16 @@ public class ItemTimeFreezer extends ItemBase {
 
 	@Override
 	public boolean onEntityItemUpdate(EntityItem entity) {
-		onUpdate(entity.getItem(), entity.world, entity, 0, true);
-		return false;
+		boolean active = isActive(entity.getItem());
 
+		onUpdate(entity.getItem(), entity.world, entity, 0, true);
+
+		if (isActive(entity.getItem()) != active) {
+			//Refresh the item so the texture changes
+			entity.setItem(entity.getItem());
+		}
+
+		return false;
 	}
 
 	@Override
