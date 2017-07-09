@@ -19,18 +19,13 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -38,8 +33,11 @@ public class BlockTimeStonePillar extends BlockBase {
 	public static final PropertyBool TOP = PropertyBool.create("top");
 	public static final PropertyBool BOTTOM = PropertyBool.create("bottom");
 	public static final AxisAlignedBB MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.0, 0.3125, 0.6875, 1.0, 0.6875);
-	public static final AxisAlignedBB BOTTOM_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.0625, 1.0);
+	public static final AxisAlignedBB BOTTOM_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 0.125, 1.0);
 	public static final AxisAlignedBB TOP_AABB = new AxisAlignedBB( 0.1875, 0.75, 0.1875, 0.8125, 1.0, 0.8125);
+	public static final AxisAlignedBB TOP_MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.0, 0.3125, 0.6875, 0.75, 0.6875);
+	public static final AxisAlignedBB BOTTOM_MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.125, 0.3125, 0.6875, 1.0, 0.6875);
+	public static final AxisAlignedBB BOTH_MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.125, 0.3125, 0.6875, 0.75, 0.6875);
 
 	BlockTimeStonePillar() {
 		super("time_stone_pillar");
@@ -66,27 +64,26 @@ public class BlockTimeStonePillar extends BlockBase {
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB aabb, List<AxisAlignedBB> aabbList, Entity entity, boolean actualState) {
-		addCollisionBoxToList(pos, aabb, aabbList, MIDDLE_AABB);
-
-		if (state.getValue(BOTTOM))
-			addCollisionBoxToList(pos, aabb, aabbList, BOTTOM_AABB);
-		if (state.getValue(TOP))
-			addCollisionBoxToList(pos, aabb, aabbList, TOP_AABB);
+	public boolean hasMultipleBoundingBoxes() {
+		return true;
 	}
 
 	@Override
-	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-		RayTraceResult rtr = rayTrace(pos, start, end, MIDDLE_AABB);
+	public AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
+		AxisAlignedBB[] aabbList = new AxisAlignedBB[state.getValue(BOTTOM) ? state.getValue(TOP) ? 3 : 2 : state.getValue(TOP) ? 2 : 1];
+		int i = 0;
 
-		if (rtr == null) {
-			if (state.getValue(BOTTOM))
-				rtr = rayTrace(pos, start, end, BOTTOM_AABB);
-			if (rtr == null && state.getValue(TOP))
-				rtr = rayTrace(pos, start, end, TOP_AABB);
+		aabbList[i++] = state.getValue(BOTTOM) ? state.getValue(TOP) ? BOTH_MIDDLE_AABB : BOTTOM_MIDDLE_AABB : state.getValue(TOP) ? TOP_MIDDLE_AABB : MIDDLE_AABB;
+
+		if (state.getValue(TOP)) {
+			aabbList[i++] = TOP_AABB;
 		}
 
-		return rtr;
+		if (state.getValue(BOTTOM)) {
+			aabbList[i++] = BOTTOM_AABB;
+		}
+
+		return aabbList;
 	}
 
 	@Override

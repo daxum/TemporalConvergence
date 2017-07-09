@@ -22,7 +22,9 @@ package daxum.temporalconvergence.block;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.item.ModItems;
@@ -33,11 +35,18 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ReportedException;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockBase extends Block {
+	private final Map<IBlockState, AxisAlignedBB[]> stateBoxMap = new HashMap(8);
+
 	public BlockBase(Material material, String registryName, float hardness, float resistance, Tool tool, MiningLevel level, SoundType sound) {
 		super(material);
 		setUnlocalizedName(registryName);
@@ -136,6 +145,68 @@ public class BlockBase extends Block {
 	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return isCube();
+	}
+
+	protected AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
+		return new AxisAlignedBB[] {state.getBoundingBox(world, pos)};
+	}
+
+	public final AxisAlignedBB[] getBoundingBoxList(World world, BlockPos pos, IBlockState state) {
+		AxisAlignedBB[] aabbList = stateBoxMap.get(state);
+
+		if (aabbList == null) {
+			stateBoxMap.put(state, getNewBoundingBoxList(world, pos, state));
+			aabbList = stateBoxMap.get(state);
+		}
+
+		return aabbList;
+	}
+
+	public AxisAlignedBB[] getSelectedBBList(World world, BlockPos pos, IBlockState state) {
+		AxisAlignedBB[] aabbList = getBoundingBoxList(world, pos, state).clone();
+
+		for (int i = 0; i < aabbList.length; i++) {
+			aabbList[i] = aabbList[i].offset(pos);
+		}
+
+		return aabbList;
+	}
+
+	public boolean hasMultipleBoundingBoxes() {
+		return false;
+	}
+
+	@Override
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> aabbList, Entity entity, boolean actualState) {
+		if (hasMultipleBoundingBoxes()) {
+			for (AxisAlignedBB aabb : getBoundingBoxList(world, pos, state)) {
+				addCollisionBoxToList(pos, entityBox, aabbList, aabb);
+			}
+		}
+		else {
+			addCollisionBoxToList(pos, entityBox, aabbList, state.getCollisionBoundingBox(world, pos));
+		}
+	}
+
+	@Override
+	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+		if (hasMultipleBoundingBoxes()) {
+			RayTraceResult rtr = null;
+
+			for (AxisAlignedBB aabb : getBoundingBoxList(world, pos, state)) {
+				if (rtr == null) {
+					rtr = rayTrace(pos, start, end, aabb);
+				}
+				else {
+					break;
+				}
+			}
+
+			return rtr;
+		}
+		else {
+			return rayTrace(pos, start, end, state.getBoundingBox(world, pos));
+		}
 	}
 
 	public enum BlockPresets {
