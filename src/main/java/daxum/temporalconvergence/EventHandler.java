@@ -98,11 +98,14 @@ public final class EventHandler {
 	public static void drawBlockHighlight(DrawBlockHighlightEvent event) {
 		World world = Minecraft.getMinecraft().world;
 		BlockPos pos = event.getTarget().getBlockPos();
-		IBlockState state = world.getBlockState(pos);
 
-		if (state.getBlock() instanceof BlockBase && ((BlockBase)state.getBlock()).hasMultipleBoundingBoxes()) {
-			RenderHelper.drawSelectionBoxes(world, event.getPlayer(), state, pos, event.getPartialTicks());
-			event.setCanceled(true);
+		if (pos != null) {
+			IBlockState state = world.getBlockState(pos);
+
+			if (state.getBlock() instanceof BlockBase && ((BlockBase)state.getBlock()).hasMultipleBoundingBoxes()) {
+				RenderHelper.drawSelectionBoxes(world, event.getPlayer(), state, pos, event.getPartialTicks());
+				event.setCanceled(true);
+			}
 		}
 	}
 
