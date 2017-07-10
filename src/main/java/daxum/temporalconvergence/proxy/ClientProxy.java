@@ -30,6 +30,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -57,6 +58,10 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.REWOUND_TIME_SEEDS);
 		registerRender(ModItems.INFUSED_WOOD);
 		registerRender(ModItems.STABLE_CHARCOAL);
+		registerRender(ModItems.PHASE_CLOTH_CHEST);
+		registerRender(ModItems.PHASE_CLOTH_LEGS);
+		registerRender(ModItems.PHASE_CLOTH_BOOTS);
+		registerRender(ModItems.PHASE_CLOTH_HELMET);
 
 		//Blocks
 		registerRender(Item.getItemFromBlock(ModBlocks.ORIGIN_STONE));
@@ -130,5 +135,10 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void addAIBoss(EntityAIBoss toAdd) {
 		AIBossBarRenderer.addAIBoss(toAdd);
+	}
+
+	@Override
+	public EntityPlayer getClientPlayer() {
+		return Minecraft.getMinecraft().player;
 	}
 }

@@ -20,10 +20,10 @@
 package daxum.temporalconvergence.proxy;
 
 import daxum.temporalconvergence.entity.EntityAIBoss;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class ServerProxy implements IProxy{
-
 	@Override
 	public void registerItemRenderer() {}
 
@@ -44,4 +44,7 @@ public class ServerProxy implements IProxy{
 
 	@Override
 	public void addAIBoss(EntityAIBoss toAdd) {}
+
+	@Override
+	public EntityPlayer getClientPlayer() { return null; }
 }

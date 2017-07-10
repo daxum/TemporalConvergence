@@ -17,19 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.proxy;
+package daxum.temporalconvergence.item;
 
-import daxum.temporalconvergence.entity.EntityAIBoss;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
 
-public interface IProxy {
-	public void registerItemRenderer();
-	public void registerFluidRenderer();
-	public void registerEntityRenderer();
-	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ);
-	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz);
-	public void registerColors();
-	public void addAIBoss(EntityAIBoss toAdd);
-	public EntityPlayer getClientPlayer();
+public class ItemPhaseClothBoots extends ItemArmor {
+	public ItemPhaseClothBoots() {
+		super(ModItems.PHASE_CLOTH_ARMOR, 0, EntityEquipmentSlot.FEET);
+		setRegistryName("phase_cloth_boots");
+		setUnlocalizedName("phase_cloth_boots");
+		setCreativeTab(ModItems.TEMPCONVTAB);
+	}
 }

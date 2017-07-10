@@ -111,7 +111,7 @@ public class EntityFrozen extends Entity {
 		if (firstUpdate && !world.isRemote) {
 			NBTTagCompound comp = new NBTTagCompound();
 			frozen.writeToNBTAtomically(comp);
-			PacketHandler.HANDLER.sendToAll(new PacketFrozenEntity().setTag(getPersistentID(), comp));
+			PacketHandler.HANDLER.sendToDimension(new PacketFrozenEntity().setTag(getPersistentID(), comp), dimension);
 			firstUpdate = false;
 		}
 

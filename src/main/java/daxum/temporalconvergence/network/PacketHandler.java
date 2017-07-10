@@ -31,5 +31,7 @@ public final class PacketHandler {
 		int id = 0;
 
 		HANDLER.registerMessage(PacketFrozenEntity.Handler.class, PacketFrozenEntity.class, id++, Side.CLIENT);
+		HANDLER.registerMessage(PacketDodge.Handler.class, PacketDodge.class, id++, Side.SERVER);
+		HANDLER.registerMessage(PacketDodgeSuccess.Handler.class, PacketDodgeSuccess.class, id++, Side.CLIENT);
 	}
 }

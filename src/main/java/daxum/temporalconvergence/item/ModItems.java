@@ -24,8 +24,10 @@ import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
@@ -43,6 +45,7 @@ public final class ModItems {
 	};
 
 	public static final ToolMaterial SOLAR_WOOD = EnumHelper.addToolMaterial("SOLAR_WOOD", 1, 28800, 6.0f, 0.0f, 0);
+	public static final ArmorMaterial PHASE_CLOTH_ARMOR = EnumHelper.addArmorMaterial("TC_PHASE_CLOTH_ARMOR", "", 3, new int[] {1, 1, 1, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
 
 	public static final Item TIME_BULB;
 	public static final Item TIME_DUST;
@@ -56,6 +59,10 @@ public final class ModItems {
 	public static final Item REWOUND_TIME_SEEDS;
 	public static final Item INFUSED_WOOD;
 	public static final Item STABLE_CHARCOAL;
+	public static final Item PHASE_CLOTH_CHEST;
+	public static final Item PHASE_CLOTH_LEGS;
+	public static final Item PHASE_CLOTH_BOOTS;
+	public static final Item PHASE_CLOTH_HELMET;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
@@ -71,6 +78,10 @@ public final class ModItems {
 		EARLY_FUTURE_DOOR = new ItemEarlyFutureDoor();
 		REWOUND_TIME_SEEDS = new ItemRewoundTimeSeeds();
 		INFUSED_WOOD = new ItemInfusedWood();
+		PHASE_CLOTH_CHEST = new ItemPhaseClothChest();
+		PHASE_CLOTH_LEGS = new ItemPhaseClothLegs();
+		PHASE_CLOTH_BOOTS = new ItemPhaseClothBoots();
+		PHASE_CLOTH_HELMET = new ItemPhaseClothHelmet();
 	}
 
 	@SubscribeEvent
@@ -89,6 +100,10 @@ public final class ModItems {
 		itemRegistry.register(REWOUND_TIME_SEEDS);
 		itemRegistry.register(INFUSED_WOOD);
 		itemRegistry.register(STABLE_CHARCOAL);
+		itemRegistry.register(PHASE_CLOTH_CHEST);
+		itemRegistry.register(PHASE_CLOTH_LEGS);
+		itemRegistry.register(PHASE_CLOTH_BOOTS);
+		itemRegistry.register(PHASE_CLOTH_HELMET);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
