@@ -141,4 +141,9 @@ public class ClientProxy implements IProxy {
 	public EntityPlayer getClientPlayer() {
 		return Minecraft.getMinecraft().player;
 	}
+
+	@Override
+	public boolean isDedicatedServer() {
+		return false;
+	}
 }

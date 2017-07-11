@@ -23,6 +23,7 @@ import daxum.temporalconvergence.block.BlockBase;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ItemPhaseClothChest;
 import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.particle.ParticleHandler;
 import daxum.temporalconvergence.power.PowerDimension;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.util.RenderHelper;
@@ -55,6 +56,10 @@ public final class EventHandler {
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(ModBlocks.class);
 		MinecraftForge.EVENT_BUS.register(ModItems.class);
+
+		if (!TemporalConvergence.proxy.isDedicatedServer()) {
+			MinecraftForge.EVENT_BUS.register(ParticleHandler.class);
+		}
 	}
 
 	//This doesn't seem like a good way to handle updating...

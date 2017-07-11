@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.item.ItemPhaseClothChest;
+import daxum.temporalconvergence.particle.ParticleHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,9 +34,15 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketDodgeSuccess implements IMessage {
 	private UUID mainPlayerUUID;
+	private double ox;
+	private double oy;
+	private double oz;
 
-	public PacketDodgeSuccess setUUID(UUID uuid) {
+	public PacketDodgeSuccess setUuidAndPos(UUID uuid, double posX, double posY, double posZ) {
 		mainPlayerUUID = uuid;
+		ox = posX;
+		oy = posY;
+		oz = posZ;
 
 		return this;
 	}
@@ -46,12 +53,20 @@ public class PacketDodgeSuccess implements IMessage {
 		long uuidLeast = buf.readLong();
 
 		mainPlayerUUID = new UUID(uuidMost, uuidLeast);
+
+		ox = buf.readDouble();
+		oy = buf.readDouble();
+		oz = buf.readDouble();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		buf.writeLong(mainPlayerUUID.getMostSignificantBits());
 		buf.writeLong(mainPlayerUUID.getLeastSignificantBits());
+
+		buf.writeDouble(ox);
+		buf.writeDouble(oy);
+		buf.writeDouble(oz);
 	}
 
 	public static class Handler implements IMessageHandler<PacketDodgeSuccess, IMessage> {
@@ -70,12 +85,13 @@ public class PacketDodgeSuccess implements IMessage {
 
 		public void handle(PacketDodgeSuccess message) {
 			EntityPlayer player = TemporalConvergence.proxy.getClientPlayer();
+			EntityPlayer dodgePlayer = Minecraft.getMinecraft().world.getPlayerEntityByUUID(message.mainPlayerUUID);
 
 			if (player.getPersistentID().equals(message.mainPlayerUUID)) {
 				ItemPhaseClothChest.onSuccessfulDodge(player);
 			}
 
-			//TODO: Particles, etc.
+			ParticleHandler.spawnDodgeParticles(dodgePlayer, message.ox, message.oy, message.oz);
 		}
 	}
 }

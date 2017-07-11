@@ -24,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public interface IProxy {
+	public boolean isDedicatedServer();
 	public void registerItemRenderer();
 	public void registerFluidRenderer();
 	public void registerEntityRenderer();

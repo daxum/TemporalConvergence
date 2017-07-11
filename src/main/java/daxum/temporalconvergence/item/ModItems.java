@@ -45,7 +45,7 @@ public final class ModItems {
 	};
 
 	public static final ToolMaterial SOLAR_WOOD = EnumHelper.addToolMaterial("SOLAR_WOOD", 1, 28800, 6.0f, 0.0f, 0);
-	public static final ArmorMaterial PHASE_CLOTH_ARMOR = EnumHelper.addArmorMaterial("TC_PHASE_CLOTH_ARMOR", "", 3, new int[] {1, 1, 1, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
+	public static final ArmorMaterial PHASE_CLOTH_ARMOR = EnumHelper.addArmorMaterial("TC_PHASE_CLOTH_ARMOR", "temporalconvergence:phase_cloth_armor", 3, new int[] {1, 1, 1, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
 
 	public static final Item TIME_BULB;
 	public static final Item TIME_DUST;

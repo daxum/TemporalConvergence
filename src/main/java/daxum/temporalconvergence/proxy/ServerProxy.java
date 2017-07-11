@@ -47,4 +47,7 @@ public class ServerProxy implements IProxy{
 
 	@Override
 	public EntityPlayer getClientPlayer() { return null; }
+
+	@Override
+	public boolean isDedicatedServer() { return true; }
 }

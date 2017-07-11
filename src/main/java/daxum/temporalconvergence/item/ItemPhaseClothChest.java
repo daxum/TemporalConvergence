@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
-import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.network.PacketDodge;
 import daxum.temporalconvergence.network.PacketDodgeSuccess;
 import daxum.temporalconvergence.network.PacketHandler;
@@ -37,7 +36,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemPhaseClothChest extends ItemArmor {
-	private static final int MAX_DODGE_TIMER = 60;
+	private static final int MAX_DODGE_TIMER = 20;
 	private static final int MAX_DODGE_COOLDOWN = 40;
 	private static final Random rand = new Random();
 	//TODO: reset dodgeCooldown and map when exit world
@@ -79,7 +78,7 @@ public class ItemPhaseClothChest extends ItemArmor {
 				player.extinguish();
 			}
 
-			PacketHandler.HANDLER.sendToDimension(new PacketDodgeSuccess().setUUID(player.getPersistentID()), player.dimension);
+			PacketHandler.HANDLER.sendToDimension(new PacketDodgeSuccess().setUuidAndPos(player.getPersistentID(), player.posX, player.posY, player.posZ), player.dimension);
 
 			if (PLAYER_DODGE_MAP.get(player.getPersistentID()) != null) {
 				PLAYER_DODGE_MAP.get(player.getPersistentID()).deactivate();
@@ -98,7 +97,6 @@ public class ItemPhaseClothChest extends ItemArmor {
 				}
 
 				player.getItemStackFromSlot(armorSlot).damageItem(1, player);
-				TemporalConvergence.LOGGER.info("Damaged item in slot {}", armorSlot);
 			}
 
 			return true;
