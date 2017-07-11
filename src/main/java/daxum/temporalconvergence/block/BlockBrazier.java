@@ -47,7 +47,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	public static final PropertyEnum<FilledState> FILL_STATE = PropertyEnum.create("filled", FilledState.class);
 	public static final PropertyBool BURNING = PropertyBool.create("burning");
-	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.25, -0.03125, 0.25, 0.75, 1.15625, 0.75);
+	private static final AxisAlignedBB BASE_AABB = new AxisAlignedBB(0.25, 0.0, 0.25, 0.75, 0.125, 0.75);
+	private static final AxisAlignedBB MIDDLE_AABB = new AxisAlignedBB(0.4375, 0.125, 0.4375, 0.5625, 0.9375, 0.5625);
+	private static final AxisAlignedBB TOP_AABB = new AxisAlignedBB(0.25, 0.9375, 0.25, 0.75, 1.15625, 0.75);
 
 	public BlockBrazier() {
 		super("brazier", BlockPresets.STONE);
@@ -287,12 +289,12 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+	public boolean hasMultipleBoundingBoxes() {
+		return true;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+	protected AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
+		return new AxisAlignedBB[] {BASE_AABB, MIDDLE_AABB, TOP_AABB};
 	}
 }
