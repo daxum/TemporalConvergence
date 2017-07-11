@@ -1,7 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "temporalconvergence:dimensional_linker"
+		"layer0": "temporalconvergence:items/dimensional_linker"
 	},
     "overrides": [
         {

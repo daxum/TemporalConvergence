@@ -18,8 +18,8 @@
     "ambientocclusion": false,
 
     "textures": {
-        "texture": "temporalconvergence:early_future_fence",
-        "particle": "temporalconvergence:early_future_fence"
+        "texture": "temporalconvergence:blocks/early_future_fence",
+        "particle": "temporalconvergence:blocks/early_future_fence"
     },
 
     "elements": [

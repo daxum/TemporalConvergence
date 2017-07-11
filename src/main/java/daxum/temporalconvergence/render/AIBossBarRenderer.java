@@ -41,7 +41,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class AIBossBarRenderer {
-	private static final ResourceLocation AI_BOSS_BAR = new ResourceLocation(TemporalConvergence.MODID, "textures/boss_bars.png");
+	private static final ResourceLocation AI_BOSS_BAR = new ResourceLocation(TemporalConvergence.MODID, "textures/gui/boss_bars.png");
 	private static final Map<UUID, WeakReference<EntityAIBoss>> AI_BOSS_LIST = new WeakHashMap<>();
 
 	public static void addAIBoss(EntityAIBoss toAdd) {

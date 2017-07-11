@@ -2,8 +2,8 @@
     "parent": "minecraft:block/block",
 
     "textures": {
-        "tex": "temporalconvergence:future_button",
-        "particle": "temporalconvergence:early_future_block"
+        "tex": "temporalconvergence:blocks/future_button",
+        "particle": "temporalconvergence:blocks/early_future_block"
     },
 
     "elements": [

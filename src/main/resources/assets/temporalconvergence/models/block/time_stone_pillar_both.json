@@ -2,8 +2,8 @@
 	"parent": "minecraft:block/block",
 
 	"textures": {
-		"timeStone": "temporalconvergence:time_stone",
-		"particle": "temporalconvergence:time_stone"
+		"timeStone": "temporalconvergence:blocks/time_stone",
+		"particle": "temporalconvergence:blocks/time_stone"
 	},
 
 	"elements": [

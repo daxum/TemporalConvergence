@@ -2,8 +2,8 @@
     "parent": "minecraft:block/block",
 
     "textures": {
-        "top": "temporalconvergence:rewound_soil_top",
-        "side": "temporalconvergence:rewound_soil"
+        "top": "temporalconvergence:blocks/rewound_soil_top",
+        "side": "temporalconvergence:blocks/rewound_soil"
     },
 
     "elements": [

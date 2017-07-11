@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "temporalconvergence:time_steel"
+		"all": "temporalconvergence:blocks/time_steel"
 	}
 }

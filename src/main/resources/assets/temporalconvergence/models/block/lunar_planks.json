@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "temporalconvergence:lunar_planks"
+		"all": "temporalconvergence:blocks/lunar_planks"
 	}
 }

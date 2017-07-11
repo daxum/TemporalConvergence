@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "temporalconvergence:phase_cloth_chest"
+		"layer0": "temporalconvergence:items/phase_cloth_chest"
 	}
 }

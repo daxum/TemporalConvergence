@@ -1,8 +1,8 @@
 {
 	"parent": "minecraft:block/block",
 	"textures": {
-		"dim_contr": "temporalconvergence:dim_controller_high",
-		"particle": "temporalconvergence:dim_controller_high"
+		"dim_contr": "temporalconvergence:blocks/dim_controller_high",
+		"particle": "temporalconvergence:blocks/dim_controller_high"
 	},
 
     "elements": [

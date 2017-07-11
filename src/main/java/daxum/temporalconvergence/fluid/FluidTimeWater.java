@@ -34,7 +34,7 @@ public class FluidTimeWater extends Fluid {
 	private static final int FULL_NIGHT_COLOR = rgb(163, 177, 204);
 
 	public FluidTimeWater() {
-		super("time_water", new ResourceLocation(TemporalConvergence.MODID, "time_water_still"), new ResourceLocation(TemporalConvergence.MODID, "time_water_flow"));
+		super("time_water", new ResourceLocation(TemporalConvergence.MODID, "blocks/time_water_still"), new ResourceLocation(TemporalConvergence.MODID, "blocks/time_water_flow"));
 		FluidRegistry.registerFluid(this);
 		FluidRegistry.addBucketForFluid(this);
 	}

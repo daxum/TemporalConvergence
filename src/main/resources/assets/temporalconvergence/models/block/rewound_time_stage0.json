@@ -2,6 +2,6 @@
     "parent": "minecraft:block/crop",
 
     "textures": {
-        "crop": "temporalconvergence:rewound_time_stage0"
+        "crop": "temporalconvergence:blocks/rewound_time_stage0"
     }
 }

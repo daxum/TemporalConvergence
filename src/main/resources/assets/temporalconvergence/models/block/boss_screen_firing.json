@@ -2,8 +2,8 @@
     "parent": "minecraft:block/block",
 
     "textures": {
-        "screen": "temporalconvergence:boss_screen_firing",
-        "particle": "temporalconvergence:boss_screen_firing"
+        "screen": "temporalconvergence:blocks/boss_screen_firing",
+        "particle": "temporalconvergence:blocks/boss_screen_firing"
     },
 
     "elements": [

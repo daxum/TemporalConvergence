@@ -2,8 +2,8 @@
     "parent": "minecraft:block/block",
 
     "textures": {
-        "screen": "temporalconvergence:boss_screen_occupied",
-        "particle": "temporalconvergence:boss_screen_occupied"
+        "screen": "temporalconvergence:blocks/boss_screen_occupied",
+        "particle": "temporalconvergence:blocks/boss_screen_occupied"
     },
 
     "elements": [

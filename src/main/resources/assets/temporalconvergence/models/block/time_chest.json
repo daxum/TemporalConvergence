@@ -1,8 +1,8 @@
 {
 	"parent": "minecraft:block/orientable",
 	"textures": {
-		"top": "temporalconvergence:time_chest_inventory_top",
-		"front": "temporalconvergence:time_chest_inventory_front",
-		"side": "temporalconvergence:time_chest_inventory"
+		"top": "temporalconvergence:items/time_chest_inventory_top",
+		"front": "temporalconvergence:items/time_chest_inventory_front",
+		"side": "temporalconvergence:items/time_chest_inventory"
 	}
 }

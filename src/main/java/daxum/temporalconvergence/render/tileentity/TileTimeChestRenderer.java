@@ -27,7 +27,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 
 public class TileTimeChestRenderer extends TileEntitySpecialRenderer<TileTimeChest> {
-	private final ResourceLocation timeChestTexture = new ResourceLocation(TemporalConvergence.MODID + ":textures/time_chest.png");
+	private final ResourceLocation timeChestTexture = new ResourceLocation(TemporalConvergence.MODID, "textures/blocks/time_chest.png");
 	private final ModelTimeChest timeChestModel = new ModelTimeChest();
 
 	@Override

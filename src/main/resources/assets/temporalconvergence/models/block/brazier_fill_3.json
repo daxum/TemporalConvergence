@@ -2,8 +2,8 @@
     "parent": "minecraft:block/block",
 
     "textures": {
-        "brazier": "temporalconvergence:brazier_dust_fill",
-        "particle": "temporalconvergence:brazier"
+        "brazier": "temporalconvergence:blocks/brazier_dust_fill",
+        "particle": "temporalconvergence:blocks/brazier"
     },
 
     "elements": [

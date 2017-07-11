@@ -1,8 +1,8 @@
 {
 	"parent": "minecraft:block/block",
 	"textures": {
-		"door": "temporalconvergence:early_future_door",
-		"particle": "temporalconvergence:early_future_block"
+		"door": "temporalconvergence:blocks/early_future_door",
+		"particle": "temporalconvergence:blocks/early_future_block"
 	},
 
 	"elements": [

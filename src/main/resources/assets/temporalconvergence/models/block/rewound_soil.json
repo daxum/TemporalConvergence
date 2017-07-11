@@ -2,9 +2,9 @@
     "parent": "minecraft:block/block",
 
     "textures": {
-        "top": "temporalconvergence:rewound_soil_top",
-        "side": "temporalconvergence:rewound_soil",
-        "particle": "temporalconvergence:rewound_soil_top"
+        "top": "temporalconvergence:blocks/rewound_soil_top",
+        "side": "temporalconvergence:blocks/rewound_soil",
+        "particle": "temporalconvergence:blocks/rewound_soil_top"
     },
 
     "elements": [

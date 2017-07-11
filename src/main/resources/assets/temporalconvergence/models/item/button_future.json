@@ -1,8 +1,8 @@
 {
     "parent": "block/block",
     "textures": {
-        "texture": "temporalconvergence:future_button",
-        "particle": "temporalconvergence:early_future_block"
+        "texture": "temporalconvergence:blocks/future_button",
+        "particle": "temporalconvergence:blocks/early_future_block"
     },
 
     "elements": [

@@ -2,10 +2,10 @@
 	"parent": "minecraft:block/block",
 
 	"textures": {
-		"timeStone": "temporalconvergence:time_stone",
-		"dimGenTop": "temporalconvergence:dimensional_generator_top",
-		"dimGenSide": "temporalconvergence:dimensional_generator_side",
-		"particle": "temporalconvergence:time_stone"
+		"timeStone": "temporalconvergence:blocks/time_stone",
+		"dimGenTop": "temporalconvergence:blocks/dimensional_generator_top",
+		"dimGenSide": "temporalconvergence:blocks/dimensional_generator_side",
+		"particle": "temporalconvergence:blocks/time_stone"
 	},
 
 	"elements": [

@@ -1,7 +1,7 @@
 {
     "parent": "block/cube_column",
     "textures": {
-        "end": "temporalconvergence:solar_wood_log_top",
-        "side": "temporalconvergence:solar_wood_log"
+        "end": "temporalconvergence:blocks/solar_wood_log_top",
+        "side": "temporalconvergence:blocks/solar_wood_log"
     }
 }

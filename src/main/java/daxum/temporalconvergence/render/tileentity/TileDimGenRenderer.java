@@ -38,8 +38,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class TileDimGenRenderer extends TileEntitySpecialRenderer<TileDimGen> {
-	private static final ResourceLocation CLOCK_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/dimensional_generator_clock.png");
-	private static final ResourceLocation CLOCK_HANDS = new ResourceLocation(TemporalConvergence.MODID, "textures/dimensional_generator_clock_hands.png");
+	private static final ResourceLocation CLOCK_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/blocks/dimensional_generator_clock.png");
+	private static final ResourceLocation CLOCK_HANDS = new ResourceLocation(TemporalConvergence.MODID, "textures/blocks/dimensional_generator_clock_hands.png");
 	private static final ResourceLocation SPHERE = new ResourceLocation(TemporalConvergence.MODID, "textures/sphere_textures.png");
 
 	@Override

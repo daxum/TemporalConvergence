@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "temporalconvergence:solar_wood_log"
+        "all": "temporalconvergence:blocks/solar_wood_log"
     }
 }

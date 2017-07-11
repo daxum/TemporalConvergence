@@ -1,7 +1,7 @@
 {
 	"parent":"minecraft:block/block",
 	"textures": {
-	    "door": "temporalconvergence:early_future_door"
+	    "door": "temporalconvergence:blocks/early_future_door"
 	},
 
 	"elements": [

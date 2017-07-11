@@ -3,7 +3,7 @@
 
     "textures": {
         "brazier": "minecraft:blocks/netherrack",
-        "particle": "temporalconvergence:brazier"
+        "particle": "temporalconvergence:blocks/brazier"
     },
 
     "elements": [

@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "temporalconvergence:lunar_wood_log"
+        "all": "temporalconvergence:blocks/lunar_wood_log"
     }
 }

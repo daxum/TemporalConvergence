@@ -1,6 +1,6 @@
 {
     "parent": "block/fence_post",
     "textures": {
-        "texture": "temporalconvergence:early_future_block"
+        "texture": "temporalconvergence:blocks/early_future_block"
     }
 }

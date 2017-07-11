@@ -1,7 +1,7 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "temporalconvergence:time_freezer"
+		"layer0": "temporalconvergence:items/time_freezer"
 	},
     "overrides": [
         {

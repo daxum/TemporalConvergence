@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "temporalconvergence:origin_stone"
+		"all": "temporalconvergence:blocks/origin_stone"
 	}
 }

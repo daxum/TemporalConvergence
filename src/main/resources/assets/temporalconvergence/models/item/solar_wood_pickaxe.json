@@ -1,6 +1,6 @@
 {
 	"parent": "item/handheld",
 	"textures": {
-		"layer0": "temporalconvergence:solar_wood_pickaxe"
+		"layer0": "temporalconvergence:items/solar_wood_pickaxe"
 	}
 }
