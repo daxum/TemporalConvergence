@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ParticleDodge extends Particle {
-	public static final ResourceLocation PARTICLE_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "particle");
+	public static final ResourceLocation PARTICLE_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "dodge_particle");
 
 	private static final int MAX_AGE = 20;
 	private static final int MOVE_START_AGE = 5;
