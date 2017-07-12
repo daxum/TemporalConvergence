@@ -91,7 +91,7 @@ public class PacketDodgeSuccess implements IMessage {
 				ItemPhaseClothChest.onSuccessfulDodge(player);
 			}
 
-			ParticleHandler.spawnDodgeParticles(dodgePlayer, message.ox, message.oy, message.oz);
+			ParticleHandler.spawnDodgeParticles(dodgePlayer, 150, message.ox, message.oy, message.oz);
 		}
 	}
 }

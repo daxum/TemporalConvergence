@@ -50,7 +50,7 @@ public class ParticleDodge extends Particle {
 		particleBlue = 204.0f / 255.0f;
 		particleAlpha = 1.0f;
 		canCollide = false;
-		particleMaxAge = MAX_AGE + rand.nextInt(20) - 10;
+		particleMaxAge = MAX_AGE + rand.nextInt(MAX_AGE) - MAX_AGE / 2;
 		particleScale = 0.6f;
 		initialYMotion += rand.nextDouble() * 0.001 - 0.0005;
 		setSize(0.01f, 0.01f);

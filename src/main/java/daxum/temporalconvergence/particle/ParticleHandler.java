@@ -42,13 +42,13 @@ public final class ParticleHandler {
 		map.registerSprite(ParticleDodge.PARTICLE_TEXTURE);
 	}
 
-	public static void spawnDodgeParticles(EntityPlayer player, double posX, double posY, double posZ) {
+	public static void spawnDodgeParticles(EntityPlayer player, int amount, double posX, double posY, double posZ) {
 		AxisAlignedBB spawnBox = new AxisAlignedBB(posX, posY, posZ, player.width + posX, player.height + posY, player.width + posZ).grow(0.25, 0.0, 0.25);
 		double xDiff = spawnBox.maxX - spawnBox.minX;
 		double yDiff = spawnBox.maxY - spawnBox.minY;
 		double zDiff = spawnBox.maxZ - spawnBox.minZ;
 
-		for (int i = 0; i < 150; i++) {
+		for (int i = 0; i < amount; i++) {
 			spawnParticle(new ParticleDodge(rand.nextDouble() * xDiff + spawnBox.minX, rand.nextDouble() * yDiff + spawnBox.minY, rand.nextDouble() * zDiff + spawnBox.minZ));
 		}
 	}
