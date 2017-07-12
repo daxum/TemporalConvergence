@@ -26,6 +26,7 @@ import daxum.temporalconvergence.entity.ModEntities;
 import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.network.PacketHandler;
 import daxum.temporalconvergence.proxy.IProxy;
+import daxum.temporalconvergence.recipes.RecipeHandler;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.ModWorldGenerator;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -77,6 +78,7 @@ public class TemporalConvergence {
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 0);
 		proxy.registerColors();
+		RecipeHandler.init();
 
 		LOGGER.info(InitLogBuilder.get());
 	}
