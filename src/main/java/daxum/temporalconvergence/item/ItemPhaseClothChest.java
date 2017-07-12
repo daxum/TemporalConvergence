@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemPhaseClothChest extends ItemArmor {
-	private static final int MAX_DODGE_TIMER = 20;
+	private static final int MAX_DODGE_TIMER = 10;
 	private static final int MAX_DODGE_COOLDOWN = 40;
 	private static final Random rand = new Random();
 	//TODO: reset dodgeCooldown and map when exit world
@@ -72,10 +72,6 @@ public class ItemPhaseClothChest extends ItemArmor {
 		if (canPlayerDodge(player)) {
 			if (source.isDamageAbsolute() || source.canHarmInCreative() || source.isMagicDamage() || source.isUnblockable() || source == DamageSource.WITHER || player.isEntityInvulnerable(source)) {
 				return false;
-			}
-
-			if (source.isFireDamage() && player.isBurning()) {
-				player.extinguish();
 			}
 
 			PacketHandler.HANDLER.sendToDimension(new PacketDodgeSuccess().setUuidAndPos(player.getPersistentID(), player.posX, player.posY, player.posZ), player.dimension);
