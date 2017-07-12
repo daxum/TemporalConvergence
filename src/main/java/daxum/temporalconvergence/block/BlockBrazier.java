@@ -26,14 +26,16 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFlintAndSteel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
@@ -42,6 +44,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BlockBrazier extends BlockBase implements ITileEntityProvider {
@@ -74,15 +78,6 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 			else if (stack.getItem() == Item.getItemFromBlock(Blocks.NETHERRACK) && canFillWithNetherrack(state)) {
 				if (!world.isRemote) {
 					world.setBlockState(pos, state.withProperty(FILL_STATE, FilledState.NETHERRACK));
-					stack.shrink(1);
-				}
-
-				return true;
-			}
-			else if (stack.getItem() == Items.DYE && world.getTileEntity(pos) instanceof TileBrazier) {
-				((TileBrazier)world.getTileEntity(pos)).addColor(stack);
-
-				if (!world.isRemote) {
 					stack.shrink(1);
 				}
 
@@ -296,5 +291,35 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	@Override
 	protected AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
 		return new AxisAlignedBB[] {BASE_AABB, MIDDLE_AABB, TOP_AABB};
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
+
+	@Override
+	public void onEntityWalk(World world, BlockPos pos, Entity entity) {
+		if (!world.isRemote && !entity.isImmuneToFire()) {
+			entity.setFire(5);
+		}
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		ItemStack stackToDrop = ItemStack.EMPTY;
+
+		switch(state.getValue(FILL_STATE)) {
+		case EMPTY:
+		default: break;
+		case LEVEL_1: stackToDrop = new ItemStack(ModItems.TIME_DUST); break;
+		case LEVEL_2: stackToDrop = new ItemStack(ModItems.TIME_DUST, 2); break;
+		case LEVEL_3: stackToDrop = new ItemStack(ModItems.TIME_DUST, 3); break;
+		case LEVEL_4: stackToDrop = new ItemStack(ModItems.TIME_DUST, 4); break;
+		case NETHERRACK: stackToDrop = new ItemStack(Blocks.NETHERRACK); break;
+		}
+
+		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stackToDrop);
 	}
 }

@@ -27,6 +27,21 @@
         },
         {   "when": { "AND": [{"filled": "level4"}, {"burning": "true"}] },
             "apply": { "model": "temporalconvergence:brazier_fill_4_burning" }
+        },
+        {   "when": { "burning": "true" },
+            "apply": { "model": "temporalconvergence:brazier_fire" }
+        },
+        {   "when": { "burning": "true" },
+            "apply": { "model": "temporalconvergence:brazier_fire_side" }
+        },
+        {   "when": { "burning": "true" },
+            "apply": { "model": "temporalconvergence:brazier_fire_side", "y": 90 }
+        },
+        {   "when": { "burning": "true" },
+            "apply": { "model": "temporalconvergence:brazier_fire_side", "y": 180 }
+        },
+        {   "when": { "burning": "true" },
+            "apply": { "model": "temporalconvergence:brazier_fire_side", "y": 270 }
         }
     ]
 }
