@@ -23,6 +23,7 @@ import java.util.List;
 
 import daxum.temporalconvergence.block.BlockFluidTimeWater;
 import daxum.temporalconvergence.block.ModBlocks;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.item.EntityItem;
@@ -50,7 +51,7 @@ public class ItemInfusedWood extends ItemBase {
 		if (!world.isRemote && BlockFluidTimeWater.isInValidLocation(item.world, item.getPosition()) && world.getTotalWorldTime() % 12 == 0) {
 			ItemStack stack = item.getItem();
 
-			if (isDay(world.getWorldTime())) {
+			if (WorldHelper.isDay(world.getWorldTime())) {
 				incrementSolarPercent(stack);
 			}
 			else {
@@ -111,10 +112,6 @@ public class ItemInfusedWood extends ItemBase {
 
 	private int getTotalPercent(ItemStack stack) {
 		return getSolarPercent(stack) + getLunarPercent(stack);
-	}
-
-	private boolean isDay(long time) {
-		return time >= 0 && time < 13000;
 	}
 
 	@Override

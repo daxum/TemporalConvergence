@@ -23,6 +23,7 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileTimeFurnace;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceController;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
@@ -76,11 +77,11 @@ public class BlockTimeFurnace extends BlockBase {
 			return true;
 		}
 		else if (state.getValue(ACTIVE)) {
-			TileEntity te = world.getTileEntity(pos);
+			TileTimeFurnaceBase timeFurnace = WorldHelper.getTileEntity(world, pos, TileTimeFurnaceBase.class);
 
-			if (te instanceof TileTimeFurnaceBase) {
-				BlockPos controllerPos = ((TileTimeFurnaceBase) te).getControllerPos();
-				TileTimeFurnaceController controller = ((TileTimeFurnaceBase) te).getController();
+			if (timeFurnace != null) {
+				BlockPos controllerPos = timeFurnace.getControllerPos();
+				TileTimeFurnaceController controller = timeFurnace.getController();
 
 				if (controller != null && controllerPos != null) {
 					//player.openGui(TemporalConvergence.instance, GuiHandler.TIME_FURNACE_GUI, world, controllerPos.getX(), controllerPos.getY(), controllerPos.getZ());
@@ -98,10 +99,10 @@ public class BlockTimeFurnace extends BlockBase {
 		if (state.getValue(ACTIVE)) {
 			BlockPos bottomCorner = null;
 
-			TileEntity te = world.getTileEntity(pos);
+			TileTimeFurnaceBase timeFurnace = WorldHelper.getTileEntity(world, pos, TileTimeFurnaceBase.class);
 
-			if (te instanceof TileTimeFurnaceBase) {
-				bottomCorner = ((TileTimeFurnaceBase) te).getBottomCorner();
+			if (timeFurnace != null) {
+				bottomCorner = timeFurnace.getBottomCorner();
 			}
 
 			if (bottomCorner != null) {
@@ -116,10 +117,10 @@ public class BlockTimeFurnace extends BlockBase {
 
 			if (state.getBlock() == ModBlocks.TIME_FURNACE) {
 				if (state.getValue(CONTROLLER)) {
-					TileEntity te = world.getTileEntity(pos);
+					TileTimeFurnaceController furnaceController = WorldHelper.getTileEntity(world, pos, TileTimeFurnaceController.class);
 
-					if (te instanceof TileTimeFurnaceController) {
-						ItemStackHandler contrInv = ((TileTimeFurnaceController) te).getInventory();
+					if (furnaceController != null) {
+						ItemStackHandler contrInv = furnaceController.getInventory();
 
 						for (int i = 0; i < contrInv.getSlots(); i++) {
 							InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), contrInv.getStackInSlot(i));
@@ -166,17 +167,17 @@ public class BlockTimeFurnace extends BlockBase {
 					else {
 						world.setBlockState(currentPos, getDefaultState().withProperty(ACTIVE, true));
 
-						TileEntity te = world.getTileEntity(currentPos);
+						TileTimeFurnace furnace = WorldHelper.getTileEntity(world, currentPos, TileTimeFurnace.class);
 
-						if (te instanceof TileTimeFurnace) {
-							((TileTimeFurnace) te).setControllerPos(pos);
+						if (furnace != null) {
+							furnace.setControllerPos(pos);
 						}
 					}
 
-					TileEntity te = world.getTileEntity(currentPos);
+					TileTimeFurnaceBase furnaceBase = WorldHelper.getTileEntity(world, currentPos, TileTimeFurnaceBase.class);
 
-					if (te instanceof TileTimeFurnaceBase) {
-						((TileTimeFurnaceBase)te).setBottomCorner(bottomCorner);
+					if (furnaceBase != null) {
+						furnaceBase.setBottomCorner(bottomCorner);
 					}
 				}
 				else {

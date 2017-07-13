@@ -20,6 +20,7 @@
 package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.tileentity.TileDimGen;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -47,30 +48,34 @@ public class BlockDimGen extends BlockBase implements ITileEntityProvider {
 
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float notWorldx, float notWorldy, float notWorldz) {
-		if (!world.isRemote && player != null && world.getTileEntity(pos) instanceof TileDimGen) {
-			if (player.isSneaking()) {
-				//Sneak-right click to craft
-				((TileDimGen) world.getTileEntity(pos)).tryStartCrafting();
-			}
-			else {
-				ItemStackHandler inventory = ((TileDimGen) world.getTileEntity(pos)).getInventory();
-				ItemStack inventoryStack = inventory.extractItem(0, 1, true);
-				ItemStack playerStack = player.getHeldItem(hand);
+		if (!world.isRemote && player != null) {
+			TileDimGen dimGen = WorldHelper.getTileEntity(world, pos, TileDimGen.class);
 
-				//If an item can be inserted, insert it.
-				if (inventoryStack.isEmpty() && !playerStack.isEmpty()) {
-					ItemStack remainder = inventory.insertItem(0, playerStack, false);
-					player.setHeldItem(hand, remainder);
+			if (dimGen != null) {
+				if (player.isSneaking()) {
+					//Sneak-right click to craft
+					dimGen.tryStartCrafting();
 				}
-				//Otherwise, try to take an item out
 				else {
-					inventoryStack = inventory.extractItem(0, 1, false);
-					world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, inventoryStack));
+					ItemStackHandler inventory = dimGen.getInventory();
+					ItemStack inventoryStack = inventory.extractItem(0, 1, true);
+					ItemStack playerStack = player.getHeldItem(hand);
+
+					//If an item can be inserted, insert it.
+					if (inventoryStack.isEmpty() && !playerStack.isEmpty()) {
+						ItemStack remainder = inventory.insertItem(0, playerStack, false);
+						player.setHeldItem(hand, remainder);
+					}
+					//Otherwise, try to take an item out
+					else {
+						inventoryStack = inventory.extractItem(0, 1, false);
+						world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, inventoryStack));
+					}
 				}
 			}
 		}
 
-		return true; //What is this return value for?
+		return true;
 	}
 
 	@Override

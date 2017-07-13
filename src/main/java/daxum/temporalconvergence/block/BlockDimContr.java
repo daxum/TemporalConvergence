@@ -21,6 +21,7 @@ package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileDimContr;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyEnum;
@@ -54,27 +55,27 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (stack.isEmpty() && player.isSneaking()) {
-			TileEntity te = world.getTileEntity(pos);
+			TileDimContr te = WorldHelper.getTileEntity(world, pos, TileDimContr.class);
 
-			if (te != null && te instanceof TileDimContr) {
-				((TileDimContr) te).unbind();
+			if (te != null) {
+				te.unbind();
 				te.markDirty();
 			}
 		}
 		else if (stack.getItem() == ModItems.DIM_LINKER) {
-			TileEntity te = world.getTileEntity(pos);
+			TileDimContr te = WorldHelper.getTileEntity(world, pos, TileDimContr.class);
 
 			if (stack.hasTagCompound() && stack.getTagCompound().hasKey("dimid")) {
-				if (te != null && te instanceof TileDimContr) {
-					((TileDimContr) te).setId(stack.getTagCompound().getInteger("dimid"));
+				if (te != null) {
+					te.setId(stack.getTagCompound().getInteger("dimid"));
 					te.markDirty();
 				}
 			}
-			else if (te instanceof TileDimContr && ((TileDimContr) te).getId() >= 0){
+			else if (te != null && te.getId() >= 0){
 				if (!stack.hasTagCompound())
 					stack.setTagCompound(new NBTTagCompound());
 
-				stack.getTagCompound().setInteger("dimid", ((TileDimContr) te).getId());
+				stack.getTagCompound().setInteger("dimid", te.getId());
 			}
 		}
 
@@ -83,10 +84,10 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		TileEntity te = world.getTileEntity(pos);
+		TileDimContr te = WorldHelper.getTileEntity(world, pos, TileDimContr.class);
 
-		if (te != null && te instanceof TileDimContr)
-			((TileDimContr) te).unFreezeDim();
+		if (te != null)
+			te.unFreezeDim();
 	}
 
 	@Override
@@ -101,10 +102,10 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-		TileEntity te = world.getTileEntity(pos);
+		TileDimContr te = WorldHelper.getTileEntity(world, pos, TileDimContr.class);
 
-		if (te != null && te instanceof TileDimContr) {
-			return getDefaultState().withProperty(POWER_LEVEL, ((TileDimContr) te).state);
+		if (te != null) {
+			return getDefaultState().withProperty(POWER_LEVEL, te.state);
 		}
 
 		return state;
