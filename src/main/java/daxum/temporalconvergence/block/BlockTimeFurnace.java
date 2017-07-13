@@ -38,6 +38,7 @@ import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -201,6 +202,15 @@ public class BlockTimeFurnace extends BlockBase {
 		}
 
 		return posList;
+	}
+
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		if (state.getValue(CONTROLLER)) {
+			return 15;
+		}
+
+		return 0;
 	}
 
 	@Override
