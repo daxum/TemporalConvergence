@@ -28,7 +28,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemShears;
@@ -53,7 +52,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	public BlockTimePlant() {
 		super("time_plant", BlockPresets.PLANT);
-		setStateDefaults(new Default(PLANT_STATE, PlantState.DAYTIME));
+		setStateDefaults(new Default(PLANT_STATE, PlantState.WITHERED));
 		setLightLevel(0.4f);
 	}
 
@@ -91,11 +90,6 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 		}
 
 		return false;
-	}
-
-	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return getDefaultState().withProperty(PLANT_STATE, PlantState.WITHERED);
 	}
 
 	@Override

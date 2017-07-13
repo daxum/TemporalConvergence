@@ -22,13 +22,11 @@ package daxum.temporalconvergence.item;
 import java.util.List;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,7 +43,7 @@ public class ItemTimeBulb extends ItemBase {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 
-		if (stack.getItem() == this && canDropItem(stack)) {
+		if (stack.getItem() == this) {
 			if (!player.isCreative()) {
 				stack.shrink(1);
 			}
@@ -58,10 +56,6 @@ public class ItemTimeBulb extends ItemBase {
 		return ActionResult.newResult(EnumActionResult.PASS, stack);
 	}
 
-	private static boolean canDropItem(ItemStack stack) {
-		return stack.getMetadata() == 1;
-	}
-
 	private static int getAmountToDrop(ItemStack stack) {
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("amount", Constants.NBT.TAG_INT)) {
 			return Math.max(stack.getTagCompound().getInteger("amount"), 1);
@@ -71,39 +65,13 @@ public class ItemTimeBulb extends ItemBase {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-		if (canDropItem(stack)) {
-			return getUnlocalizedName();
-		}
-		else {
-			return getUnlocalizedName() + "_empty";
-		}
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
-		if (canDropItem(stack)) {
-			tooltip.add("Strength: " + getAmountToDrop(stack));
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-		if (tab == ModItems.TEMPCONVTAB) {
-			subItems.add(new ItemStack(this, 1, 0));
-			subItems.add(new ItemStack(this, 1, 1));
-		}
+		tooltip.add("Strength: " + getAmountToDrop(stack));
 	}
 
 	@Override
 	public int getItemBurnTime(ItemStack fuel) {
-		if (canDropItem(fuel)) {
-			return 100 + 50 * getAmountToDrop(fuel);
-		}
-		else {
-			return 100; //Same as stick
-		}
+		return 100 + 25 * getAmountToDrop(fuel);
 	}
 }

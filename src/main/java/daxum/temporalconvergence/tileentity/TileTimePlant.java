@@ -25,6 +25,7 @@ import daxum.temporalconvergence.block.BlockTimePlant;
 import daxum.temporalconvergence.block.BlockTimePlant.PlantState;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,7 +38,7 @@ import net.minecraftforge.common.util.Constants;
 public class TileTimePlant extends TileEntityBase implements ITickable {
 	private static final int MAX_SAFE_INSTABILITY = 5000; //If instability rises above this, bad things start to happen
 	private static final int INSTABILITY_INCREASE = 3000; //The amount the instability increases when a plant is bonemealed
-	private static final int MAX_WITHER_TIME = 30000; //The time the plant will stay withered when it looses its bulb (such as when it is sheared)
+	private static final int MAX_WITHER_TIME = 24000; //The time the plant will stay withered when it looses its bulb (such as when it is sheared)
 	private static final int TWILIGHT_CHARGE_INCREASE = 3; //The amount of charge the plant gains when bonemealed at dawn or dusk
 	private static final int NORMAL_CHARGE_INCREASE = 2; //The amount of charge the plant gains when bonemealed during the day, but not at a special time
 	private static final int NOON_CHARGE_INCREASE = 1; //The amount of charge the plant gains when bonemealed at noon
@@ -48,7 +49,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 	private final Random rand = new Random();
 	private int charge = 0;
 	private int instability = 0;
-	private int witherTimer = MAX_WITHER_TIME;
+	private int witherTimer = 0;
 
 	@Override
 	public void update() {
@@ -67,12 +68,16 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 		updateBlockState();
 	}
 
+	public void setWitherTimer() {
+		witherTimer = MAX_WITHER_TIME;
+	}
+
 	public void onGrowthAccelerated(long time) {
-		if (isDay(time)) {
-			if (isDawn(time) || isDusk(time)) {
+		if (WorldHelper.isDay(time)) {
+			if (WorldHelper.isDawn(time) || WorldHelper.isDusk(time)) {
 				charge += TWILIGHT_CHARGE_INCREASE;
 			}
-			else if (isNoon(time)) {
+			else if (WorldHelper.isNoon(time)) {
 				charge += NOON_CHARGE_INCREASE;
 			}
 			else {
@@ -87,26 +92,25 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 
 	public ItemStack getShearedItem(long worldTime) {
 		if (!isWithered()) {
-			witherTimer = MAX_WITHER_TIME;
+			setWitherTimer();
 			ItemStack output = ItemStack.EMPTY;
 
-			if (isNight(worldTime)) {
-				int bulbStrength = 1 + MathHelper.ceil(charge / 2.0);
+			int bulbStrength = 1 + MathHelper.ceil(charge / 2.0);
 
-				if (isMidnight(worldTime)) {
+			if (WorldHelper.isNight(worldTime)) {
+				bulbStrength *= 2;
+
+				if (WorldHelper.isMidnight(worldTime)) {
 					bulbStrength += MIDNIGHT_CHARGE_BONUS;
 				}
 
 				bulbStrength += MOON_CHARGE_BONUS * world.getCurrentMoonPhaseFactor();
+			}
 
-				output = new ItemStack(ModItems.TIME_BULB, 1, 1); //Highest charge you can get in one day-night cycle is currently around 12
-				NBTTagCompound comp = new NBTTagCompound();
-				comp.setInteger("amount", bulbStrength);
-				output.setTagCompound(comp);
-			}
-			else {
-				output = new ItemStack(ModItems.TIME_BULB, 1, 0);
-			}
+			output = new ItemStack(ModItems.TIME_BULB, 1);
+			NBTTagCompound comp = new NBTTagCompound();
+			comp.setInteger("amount", bulbStrength);
+			output.setTagCompound(comp);
 
 			charge = 0;
 			markDirty();
@@ -144,7 +148,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.PLANT_STATE, PlantState.WITHERED));
 			}
 		}
-		else if (isNight(world.getWorldTime())) {
+		else if (WorldHelper.isNight(world.getWorldTime())) {
 			if (currentState != PlantState.NIGHTTIME) {
 				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.PLANT_STATE, PlantState.NIGHTTIME));
 			}
@@ -162,7 +166,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 
 			if (instability - MAX_SAFE_INSTABILITY > 1000 && rand.nextInt(instability) > MAX_SAFE_INSTABILITY) {
 				charge = 0;
-				witherTimer = MAX_WITHER_TIME;
+				setWitherTimer();
 			}
 		}
 
@@ -170,30 +174,6 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 			instability--;
 			markDirty();
 		}
-	}
-
-	public static boolean isNight(long time) {
-		return time >= 13000 && time < 24000;
-	}
-
-	private boolean isDay(long time) {
-		return !isNight(time);
-	}
-
-	private boolean isDawn(long time) {
-		return time >= 0 && time < 2000;
-	}
-
-	private boolean isNoon(long time) {
-		return time >= 5000 && time < 7000;
-	}
-
-	private boolean isDusk(long time) {
-		return time >= 11000 && time < 13000;
-	}
-
-	private boolean isMidnight(long time) {
-		return time >= 17500 && time < 18500;
 	}
 
 	private boolean isWithered() {

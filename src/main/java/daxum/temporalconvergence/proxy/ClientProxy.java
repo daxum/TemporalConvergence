@@ -45,8 +45,7 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void registerItemRenderer() {
 		//Items
-		registerRender(ModItems.TIME_BULB, 0, "_empty");
-		registerRender(ModItems.TIME_BULB, 1);
+		registerRender(ModItems.TIME_BULB);
 		registerRender(ModItems.TIME_STEEL_INGOT);
 		registerRender(ModItems.TIME_DUST);
 		registerRender(ModItems.SOLAR_WOOD_PICK);

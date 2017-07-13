@@ -112,7 +112,7 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.PEDESTAL).setRegistryName(ModBlocks.PEDESTAL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TEST_TELEPORTER).setRegistryName(ModBlocks.TEST_TELEPORTER.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_CHEST).setRegistryName(ModBlocks.TIME_CHEST.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.TIME_PLANT).setRegistryName(ModBlocks.TIME_PLANT.getRegistryName()));
+		itemRegistry.register(new ItemBlockTimePlant());
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_SAND).setRegistryName(ModBlocks.TIME_SAND.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STEEL).setRegistryName(ModBlocks.TIME_STEEL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_STONE).setRegistryName(ModBlocks.TIME_STONE.getRegistryName()));
