@@ -45,6 +45,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -120,6 +121,14 @@ public final class EventHandler {
 	public static void keyPressEvent(KeyInputEvent event) {
 		if (ItemPhaseClothChest.isWearingArmor(Minecraft.getMinecraft().player) && Minecraft.getMinecraft().gameSettings.keyBindSprint.isPressed()) {
 			ItemPhaseClothChest.onDodgeKeyPress();
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void clientTick(ClientTickEvent event) {
+		if (event.phase == Phase.END) {
+			ItemPhaseClothChest.updateDodgeCooldown();
 		}
 	}
 }

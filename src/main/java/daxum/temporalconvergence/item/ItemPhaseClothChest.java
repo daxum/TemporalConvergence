@@ -150,8 +150,10 @@ public class ItemPhaseClothChest extends ItemArmor {
 
 	@SideOnly(Side.CLIENT)
 	public static void onDodgeKeyPress() {
-		PacketHandler.HANDLER.sendToServer(new PacketDodge());
-		dodgeCooldown = MAX_DODGE_COOLDOWN;
+		if (dodgeCooldown <= 0) {
+			PacketHandler.HANDLER.sendToServer(new PacketDodge());
+			dodgeCooldown = MAX_DODGE_COOLDOWN;
+		}
 	}
 
 	public static void updateDodgeCooldown() {
