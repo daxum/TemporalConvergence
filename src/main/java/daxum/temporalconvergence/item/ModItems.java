@@ -127,19 +127,18 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.REWOUND_SOIL).setRegistryName(ModBlocks.REWOUND_SOIL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BUTTON).setRegistryName(ModBlocks.EARLY_FUTURE_BUTTON.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.BRAZIER).setRegistryName(ModBlocks.BRAZIER.getRegistryName()));
-
 		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_WOOD) {
 			@Override
 			public int getItemBurnTime(ItemStack fuel) {
 				return 600;
 			}
 		}.setRegistryName(ModBlocks.SOLAR_WOOD.getRegistryName()));
-
 		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_PLANKS) {
 			@Override
 			public int getItemBurnTime(ItemStack fuel) {
 				return 600;
 			}
 		}.setRegistryName(ModBlocks.SOLAR_PLANKS.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.TIME_FURNACE).setRegistryName(ModBlocks.TIME_FURNACE.getRegistryName()));
 	}
 }

@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "active=false,controller=false": { "model": "temporalconvergence:time_furnace" },
+        "active=true,controller=false": { "model": "temporalconvergence:time_furnace" },
+        "active=false,controller=true": { "model": "temporalconvergence:time_furnace_controller" },
+        "active=true,controller=true": { "model": "temporalconvergence:time_furnace_controller" }
+    }
+}

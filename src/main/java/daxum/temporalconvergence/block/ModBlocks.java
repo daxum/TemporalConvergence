@@ -25,6 +25,8 @@ import daxum.temporalconvergence.tileentity.TileDimContr;
 import daxum.temporalconvergence.tileentity.TileDimGen;
 import daxum.temporalconvergence.tileentity.TilePedestal;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
+import daxum.temporalconvergence.tileentity.TileTimeFurnace;
+import daxum.temporalconvergence.tileentity.TileTimeFurnaceController;
 import daxum.temporalconvergence.tileentity.TileTimePlant;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
@@ -64,6 +66,7 @@ public final class ModBlocks {
 	public static final Block SOLAR_PLANKS;
 	public static final Block BOSS_SCREEN;
 	public static final Block FAKE_BOSS_SCREEN;
+	public static final Block TIME_FURNACE;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -112,6 +115,7 @@ public final class ModBlocks {
 		};
 		BOSS_SCREEN = new BlockAIBossScreen();
 		FAKE_BOSS_SCREEN = new BlockFakeScreen();
+		TIME_FURNACE = new BlockTimeFurnace();
 	}
 
 	@SubscribeEvent
@@ -147,6 +151,7 @@ public final class ModBlocks {
 		blockRegistry.register(SOLAR_PLANKS);
 		blockRegistry.register(BOSS_SCREEN);
 		blockRegistry.register(FAKE_BOSS_SCREEN);
+		blockRegistry.register(TIME_FURNACE);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
@@ -155,5 +160,7 @@ public final class ModBlocks {
 		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
 		GameRegistry.registerTileEntity(TileTimePlant.class, "time_plant");
 		GameRegistry.registerTileEntity(TileBrazier.class, "brazier");
+		GameRegistry.registerTileEntity(TileTimeFurnace.class, "time_furnace");
+		GameRegistry.registerTileEntity(TileTimeFurnaceController.class, "time_furnace_controller");
 	}
 }

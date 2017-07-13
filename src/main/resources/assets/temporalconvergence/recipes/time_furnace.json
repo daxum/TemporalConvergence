@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        "SBS",
+        "BSB",
+        "SBS"
+    ],
+
+    "key": {
+        "S": {"item": "temporalconvergence:time_stone"},
+        "B": {"item": "minecraft:brick"}
+    },
+
+    "result": {"item": "temporalconvergence:time_furnace", "count": 3}
+}
