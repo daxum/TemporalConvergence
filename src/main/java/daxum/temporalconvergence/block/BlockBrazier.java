@@ -302,7 +302,7 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	@Override
 	public void onEntityWalk(World world, BlockPos pos, Entity entity) {
 		if (!world.isRemote && !entity.isImmuneToFire()) {
-			entity.setFire(5);
+			entity.setFire(3);
 		}
 	}
 
