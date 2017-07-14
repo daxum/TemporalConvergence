@@ -26,7 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +36,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -47,12 +46,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
-	public static final PropertyEnum<PlantState> PLANT_STATE = PropertyEnum.create("plantstate", PlantState.class);
+	public static final PropertyBool WITHERED = PropertyBool.create("withered");
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.9375, 0.9375);
 
 	public BlockTimePlant() {
 		super("time_plant", BlockPresets.PLANT);
-		setStateDefaults(new Default(PLANT_STATE, PlantState.WITHERED));
+		setStateDefaults(new Default(WITHERED, true));
 		setLightLevel(0.4f);
 	}
 
@@ -94,12 +93,12 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(PLANT_STATE, PlantState.getFromMeta(meta));
+		return getDefaultState().withProperty(WITHERED, (meta & 1) == 1);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		return state.getValue(PLANT_STATE).getMeta();
+		return state.getValue(WITHERED) ? 1: 0;
 	}
 
 	@Override
@@ -145,12 +144,12 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient) {
-		return state.getValue(PLANT_STATE) == PlantState.DAYTIME;
+		return !state.getValue(WITHERED);
 	}
 
 	@Override
 	public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state) {
-		return state.getValue(PLANT_STATE) == PlantState.DAYTIME;
+		return !state.getValue(WITHERED);
 	}
 
 	@Override
@@ -168,37 +167,5 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileTimePlant();
-	}
-
-	public enum PlantState implements IStringSerializable {
-		DAYTIME("daytime", 0),
-		NIGHTTIME("nighttime", 1),
-		WITHERED("withered", 2);
-
-		private String name;
-		private int meta;
-
-		private PlantState(String n, int m) {
-			name = n;
-			meta = m;
-		}
-
-		@Override
-		public String getName() {
-			return name;
-		}
-
-		public int getMeta() {
-			return meta;
-		}
-
-		public static PlantState getFromMeta(int meta) {
-			switch(meta) {
-			default:
-			case 0: return DAYTIME;
-			case 1: return NIGHTTIME;
-			case 2: return WITHERED;
-			}
-		}
 	}
 }

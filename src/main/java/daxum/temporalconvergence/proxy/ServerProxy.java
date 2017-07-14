@@ -40,9 +40,6 @@ public class ServerProxy implements IProxy{
 	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz) {}
 
 	@Override
-	public void registerColors() {}
-
-	@Override
 	public void addAIBoss(EntityAIBoss toAdd) {}
 
 	@Override

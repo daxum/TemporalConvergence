@@ -1,11 +1,6 @@
 {
-    "multipart": [
-        {   "apply": { "model": "temporalconvergence:time_plant" }},
-        {   "when": { "OR": [{"plantstate": "daytime"}, {"plantstate": "nighttime"}] },
-            "apply": { "model": "temporalconvergence:time_plant_bulb" }
-        },
-        {   "when": { "plantstate": "withered" },
-            "apply": { "model": "temporalconvergence:time_plant_bulb_withered" }
-        }
-    ]
+    "variants": {
+        "withered=false": { "model": "temporalconvergence:time_plant" },
+        "withered=true": { "model": "temporalconvergence:time_plant_withered" }
+    }
 }

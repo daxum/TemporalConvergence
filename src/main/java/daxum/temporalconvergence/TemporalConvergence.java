@@ -77,7 +77,6 @@ public class TemporalConvergence {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 0);
-		proxy.registerColors();
 		RecipeHandler.init();
 
 		LOGGER.info(InitLogBuilder.get());

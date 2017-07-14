@@ -22,7 +22,6 @@ package daxum.temporalconvergence.tileentity;
 import java.util.Random;
 
 import daxum.temporalconvergence.block.BlockTimePlant;
-import daxum.temporalconvergence.block.BlockTimePlant.PlantState;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.util.WorldHelper;
@@ -38,7 +37,7 @@ import net.minecraftforge.common.util.Constants;
 public class TileTimePlant extends TileEntityBase implements ITickable {
 	private static final int MAX_SAFE_INSTABILITY = 5000; //If instability rises above this, bad things start to happen
 	private static final int INSTABILITY_INCREASE = 3000; //The amount the instability increases when a plant is bonemealed
-	private static final int MAX_WITHER_TIME = 24000; //The time the plant will stay withered when it looses its bulb (such as when it is sheared)
+	private static final int MAX_WITHER_TIME = 12000; //The time the plant will stay withered when it looses its bulb (such as when it is sheared)
 	private static final int TWILIGHT_CHARGE_INCREASE = 3; //The amount of charge the plant gains when bonemealed at dawn or dusk
 	private static final int NORMAL_CHARGE_INCREASE = 2; //The amount of charge the plant gains when bonemealed during the day, but not at a special time
 	private static final int NOON_CHARGE_INCREASE = 1; //The amount of charge the plant gains when bonemealed at noon
@@ -141,20 +140,8 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 	}
 
 	private void updateBlockState() {
-		PlantState currentState = world.getBlockState(pos).getValue(BlockTimePlant.PLANT_STATE);
-
-		if (isWithered()) {
-			if (currentState != PlantState.WITHERED) {
-				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.PLANT_STATE, PlantState.WITHERED));
-			}
-		}
-		else if (WorldHelper.isNight(world.getWorldTime())) {
-			if (currentState != PlantState.NIGHTTIME) {
-				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.PLANT_STATE, PlantState.NIGHTTIME));
-			}
-		}
-		else if (currentState != PlantState.DAYTIME) {
-			world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.PLANT_STATE, PlantState.DAYTIME));
+		if (isWithered() != world.getBlockState(pos).getValue(BlockTimePlant.WITHERED)) {
+			world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.WITHERED, isWithered()));
 		}
 	}
 
