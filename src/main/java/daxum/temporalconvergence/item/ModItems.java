@@ -63,6 +63,7 @@ public final class ModItems {
 	public static final Item PHASE_CLOTH_LEGS;
 	public static final Item PHASE_CLOTH_BOOTS;
 	public static final Item PHASE_CLOTH_HELMET;
+	public static final Item LUNAR_BOOMERANG;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
@@ -82,6 +83,7 @@ public final class ModItems {
 		PHASE_CLOTH_LEGS = new ItemPhaseClothLegs();
 		PHASE_CLOTH_BOOTS = new ItemPhaseClothBoots();
 		PHASE_CLOTH_HELMET = new ItemPhaseClothHelmet();
+		LUNAR_BOOMERANG = new ItemLunarBoomerang();
 	}
 
 	@SubscribeEvent
@@ -104,6 +106,7 @@ public final class ModItems {
 		itemRegistry.register(PHASE_CLOTH_LEGS);
 		itemRegistry.register(PHASE_CLOTH_BOOTS);
 		itemRegistry.register(PHASE_CLOTH_HELMET);
+		itemRegistry.register(LUNAR_BOOMERANG);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
