@@ -45,7 +45,7 @@ public class ItemBlockTimePlant extends ItemBlock {
 			TileTimePlant timePlant = WorldHelper.getTileEntity(world, pos, TileTimePlant.class);
 
 			if (timePlant != null) {
-				timePlant.setWitherTimer();
+				timePlant.setWithered();
 			}
 		}
 

@@ -24,7 +24,6 @@ import java.util.Random;
 import daxum.temporalconvergence.tileentity.TileTimePlant;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
@@ -52,6 +51,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	public BlockTimePlant() {
 		super("time_plant", BlockPresets.PLANT);
 		setStateDefaults(new Default(WITHERED, true));
+		setTickRandomly(true);
 		setLightLevel(0.4f);
 	}
 
@@ -92,6 +92,13 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	}
 
 	@Override
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+		if (!world.isRemote && world.getTileEntity(pos) instanceof TileTimePlant) {
+			((TileTimePlant) world.getTileEntity(pos)).onRandomTick();
+		}
+	}
+
+	@Override
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(WITHERED, (meta & 1) == 1);
 	}
@@ -114,12 +121,6 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	@Override
 	protected boolean isCube() {
 		return false;
-	}
-
-	@Override
-	public SoundType getSoundType() {
-		return SoundType.PLANT;
-
 	}
 
 	public MapColor getMapColor() {

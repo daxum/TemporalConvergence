@@ -21,6 +21,7 @@ package daxum.temporalconvergence.tileentity;
 
 import java.util.Random;
 
+import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.BlockTimePlant;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
@@ -28,16 +29,18 @@ import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
-public class TileTimePlant extends TileEntityBase implements ITickable {
-	private static final int MAX_SAFE_INSTABILITY = 5000; //If instability rises above this, bad things start to happen
-	private static final int INSTABILITY_INCREASE = 3000; //The amount the instability increases when a plant is bonemealed
-	private static final int MAX_WITHER_TIME = 12000; //The time the plant will stay withered when it looses its bulb (such as when it is sheared)
+public class TileTimePlant extends TileEntityBase {
+	private static final int MAX_SAFE_INSTABILITY = 5; //If instability rises above this, bad things start to happen
+	private static final int MAX_INSTABILITY = 10; //If instability rises above this, the plant becomes withered and loses all charge
+	private static final int INSTABILITY_INCREASE = 2; //The amount the instability increases when a plant is bonemealed
+	private static final int MIN_WITHER_TIME = 12000; //The minimum amount of time a plant will stay withered once it loses its bulb
+	private static final int MAX_WITHER_TIME = 24000; //The maximum amount of time a plant will stay withered
+	private static final int MAX_PASSIVE_CHARGE = 3; //The maximum amount of charge a plant will gain on its own
 	private static final int TWILIGHT_CHARGE_INCREASE = 3; //The amount of charge the plant gains when bonemealed at dawn or dusk
 	private static final int NORMAL_CHARGE_INCREASE = 2; //The amount of charge the plant gains when bonemealed during the day, but not at a special time
 	private static final int NOON_CHARGE_INCREASE = 1; //The amount of charge the plant gains when bonemealed at noon
@@ -48,31 +51,38 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 	private final Random rand = new Random();
 	private int charge = 0;
 	private int instability = 0;
-	private int witherTimer = 0;
+	private long witherRecoveryTime = 0;
+	private boolean withered = false;
 
-	@Override
-	public void update() {
+	public void onRandomTick() {
+		TemporalConvergence.LOGGER.info("Tick start! Data: {}", this);
+		if (!withered && charge < MAX_PASSIVE_CHARGE) {
+			charge++;
+			markDirty();
+		}
+
+		updateWitherState();
 		updateInstability();
 
-		if (witherTimer > 0) {
-			witherTimer--;
-			markDirty();
-		}
-
-		if (world.getWorldTime() == 0 && charge > 0) {
-			charge = charge / 2;
-			markDirty();
-		}
-
-		updateBlockState();
+		TemporalConvergence.LOGGER.info("Tick End! New data: {}", this);
 	}
 
-	public void setWitherTimer() {
-		witherTimer = MAX_WITHER_TIME;
+	public void setWithered() {
+		TemporalConvergence.LOGGER.info("Withering!");
+
+		if (world.getBlockState(pos).getBlock() instanceof BlockTimePlant) {
+			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockTimePlant.WITHERED, true));
+		}
+
+		withered = true;
+		witherRecoveryTime = world.getTotalWorldTime() + MIN_WITHER_TIME + rand.nextInt(MAX_WITHER_TIME - MIN_WITHER_TIME);
+		charge = 0;
+		markDirty();
 	}
 
 	public void onGrowthAccelerated(long time) {
-		if (WorldHelper.isDay(time)) {
+		TemporalConvergence.LOGGER.info("Bonemealed: {}", this);
+		if (!withered) {
 			if (WorldHelper.isDawn(time) || WorldHelper.isDusk(time)) {
 				charge += TWILIGHT_CHARGE_INCREASE;
 			}
@@ -83,15 +93,17 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 				charge += NORMAL_CHARGE_INCREASE;
 			}
 
-			instability += INSTABILITY_INCREASE;
+			instability += INSTABILITY_INCREASE + charge / 5;
 			distributeInstability(INSTABILITY_INCREASE);
+			updateWitherState();
 			markDirty();
 		}
+		TemporalConvergence.LOGGER.info("Bonemeal complete: {}", this);
 	}
 
 	public ItemStack getShearedItem(long worldTime) {
-		if (!isWithered()) {
-			setWitherTimer();
+		if (!withered) {
+			setWithered();
 			ItemStack output = ItemStack.EMPTY;
 
 			int bulbStrength = 1 + MathHelper.ceil(charge / 2.0);
@@ -131,7 +143,7 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 				for (int z = pos.getZ() - INSTABILITY_SPREAD_DISTANCE; z <= pos.getZ() + INSTABILITY_SPREAD_DISTANCE; z++) {
 					BlockPos checkPos = new BlockPos(x, y, z);
 
-					if (world.getBlockState(checkPos).getBlock() == ModBlocks.TIME_PLANT && world.getTileEntity(checkPos) instanceof TileTimePlant) {
+					if (!checkPos.equals(pos) && world.getBlockState(checkPos).getBlock() == ModBlocks.TIME_PLANT && world.getTileEntity(checkPos) instanceof TileTimePlant) {
 						((TileTimePlant)world.getTileEntity(checkPos)).increaseInstability(amount / 2);
 					}
 				}
@@ -139,55 +151,72 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 		}
 	}
 
-	private void updateBlockState() {
-		if (isWithered() != world.getBlockState(pos).getValue(BlockTimePlant.WITHERED)) {
-			world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.WITHERED, isWithered()));
-		}
-	}
-
 	private void updateInstability() {
-		if (instability > MAX_SAFE_INSTABILITY) {
-			if (charge > 0 && instability - MAX_SAFE_INSTABILITY + rand.nextInt(1000) > 1000) {
+		if (instability > 0) {
+			if (instability > MAX_SAFE_INSTABILITY && rand.nextBoolean() && charge > 0) {
 				charge--;
 			}
 
-			if (instability - MAX_SAFE_INSTABILITY > 1000 && rand.nextInt(instability) > MAX_SAFE_INSTABILITY) {
-				charge = 0;
-				setWitherTimer();
-			}
-		}
-
-		if (instability > 0) {
 			instability--;
 			markDirty();
 		}
 	}
 
-	private boolean isWithered() {
-		return witherTimer > 0;
+	private void updateWitherState() {
+		if (withered) {
+			if (world.getTotalWorldTime() > witherRecoveryTime) {
+				withered = false;
+				witherRecoveryTime = 0;
+
+				IBlockState state = world.getBlockState(pos);
+
+				if (state.getBlock() instanceof BlockTimePlant) {
+					world.setBlockState(pos, state.withProperty(BlockTimePlant.WITHERED, false));
+				}
+
+				markDirty();
+			}
+		}
+		else {
+			if (instability > MAX_SAFE_INSTABILITY && (instability > MAX_INSTABILITY || rand.nextInt(MAX_INSTABILITY - MAX_SAFE_INSTABILITY) < instability - MAX_SAFE_INSTABILITY)) {
+				setWithered();
+			}
+		}
 	}
+
+	private static final String CHARGE_TAG = "charge";
+	private static final String INSTABILITY_TAG = "instability";
+	private static final String WITHER_TAG = "witherTime";
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
-		comp.setInteger("charge", charge);
-		comp.setInteger("instability", instability);
-		comp.setInteger("regrowthTimer", witherTimer);
+		comp.setInteger(CHARGE_TAG, charge);
+		comp.setInteger(INSTABILITY_TAG, instability);
+
+		if (withered) {
+			comp.setLong(WITHER_TAG, witherRecoveryTime);
+		}
 
 		return super.writeToNBT(comp);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound comp) {
-		if (comp.hasKey("charge", Constants.NBT.TAG_INT)) {
-			charge = comp.getInteger("charge");
+		if (comp.hasKey(CHARGE_TAG, Constants.NBT.TAG_INT)) {
+			charge = comp.getInteger(CHARGE_TAG);
 		}
 
-		if (comp.hasKey("instability", Constants.NBT.TAG_INT)) {
-			instability = comp.getInteger("instability");
+		if (comp.hasKey(INSTABILITY_TAG, Constants.NBT.TAG_INT)) {
+			instability = comp.getInteger(INSTABILITY_TAG);
 		}
 
-		if (comp.hasKey("regrowthTimer", Constants.NBT.TAG_INT)) {
-			witherTimer = comp.getInteger("regrowthTimer");
+		if (comp.hasKey(WITHER_TAG, Constants.NBT.TAG_LONG)) {
+			withered = true;
+			witherRecoveryTime = comp.getLong(WITHER_TAG);
+		}
+		else {
+			withered = false;
+			witherRecoveryTime = 0;
 		}
 
 		super.readFromNBT(comp);
@@ -196,5 +225,17 @@ public class TileTimePlant extends TileEntityBase implements ITickable {
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
+	}
+
+	@Override
+	public String toString() {
+		String out = this.getClass().toString();
+
+		out += " at " + pos + ". Variables: [";
+		out += "charge = " + charge + ", ";
+		out += "instability = " + instability + ", ";
+		out += "withered = " + withered + " (End time: " + witherRecoveryTime + ")]";
+
+		return out;
 	}
 }
