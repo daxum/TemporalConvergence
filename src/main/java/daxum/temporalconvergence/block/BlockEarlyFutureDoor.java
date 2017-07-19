@@ -250,8 +250,4 @@ public class BlockEarlyFutureDoor extends BlockBase {
 			return name;
 		}
 	}
-
-	public static IBlockState getState(int part, boolean open, boolean ns) {
-		return ModBlocks.EARLY_FUTURE_DOOR.getDefaultState().withProperty(PART, EnumPart.values()[part]).withProperty(OPEN, open).withProperty(NORTH_SOUTH, ns);
-	}
 }
