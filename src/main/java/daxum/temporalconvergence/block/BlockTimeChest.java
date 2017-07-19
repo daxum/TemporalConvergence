@@ -23,7 +23,6 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -44,13 +43,14 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
+public class BlockTimeChest extends BlockBase {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockTimeChest() {
 		super(Material.ROCK, "time_chest", 3.5f, 25.0f, Tool.PICKAXE, MiningLevel.WOOD, SoundType.STONE);
 		setStateDefaults(new Default(FACING, EnumFacing.NORTH));
+		setHasTileEntity();
 	}
 
 
@@ -88,7 +88,7 @@ public class BlockTimeChest extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createTileEntity(World worldIn, IBlockState state) {
 		return new TileTimeChest();
 	}
 

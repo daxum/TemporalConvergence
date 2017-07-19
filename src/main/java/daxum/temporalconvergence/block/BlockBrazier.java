@@ -22,7 +22,6 @@ package daxum.temporalconvergence.block;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileBrazier;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
@@ -48,7 +47,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class BlockBrazier extends BlockBase implements ITileEntityProvider {
+public class BlockBrazier extends BlockBase {
 	public static final PropertyEnum<FilledState> FILL_STATE = PropertyEnum.create("filled", FilledState.class);
 	public static final PropertyBool BURNING = PropertyBool.create("burning");
 	private static final AxisAlignedBB BASE_AABB = new AxisAlignedBB(0.25, 0.0, 0.25, 0.75, 0.125, 0.75);
@@ -59,6 +58,7 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 		super("brazier", BlockPresets.STONE);
 		setMiningLevel(MiningLevel.STONE);
 		setStateDefaults(new Default(FILL_STATE, FilledState.EMPTY), new Default(BURNING, false));
+		setHasTileEntity();
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TileBrazier();
 	}
 

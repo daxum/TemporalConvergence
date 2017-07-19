@@ -49,6 +49,7 @@ import net.minecraft.world.World;
 
 public class BlockBase extends Block {
 	private final Map<IBlockState, AxisAlignedBB[]> stateBoxMap = new HashMap(8);
+	private boolean hasTileEntity = false;
 
 	public BlockBase(Material material, String registryName, float hardness, float resistance, Tool tool, MiningLevel level, SoundType sound) {
 		super(material);
@@ -79,6 +80,10 @@ public class BlockBase extends Block {
 
 	protected void setMiningLevel(MiningLevel level) {
 		setHarvestLevel(getHarvestTool(getDefaultState()), level.level);
+	}
+
+	protected void setHasTileEntity() {
+		hasTileEntity = true;
 	}
 
 	@Override
@@ -219,6 +224,11 @@ public class BlockBase extends Block {
 		else {
 			return rayTrace(pos, start, end, state.getBoundingBox(world, pos));
 		}
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return hasTileEntity;
 	}
 
 	public enum BlockPresets {

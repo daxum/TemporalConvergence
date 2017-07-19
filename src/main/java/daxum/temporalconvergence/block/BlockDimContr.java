@@ -23,7 +23,6 @@ import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,16 +36,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockDimContr extends BlockBase implements ITileEntityProvider {
+public class BlockDimContr extends BlockBase {
 	public static final PropertyEnum POWER_LEVEL = PropertyEnum.create("power_level", EnumPowerLevel.class);
 
 	public BlockDimContr() {
 		super("dim_controller", BlockPresets.STONE_MACHINE);
 		setStateDefaults(new Default(POWER_LEVEL, EnumPowerLevel.EMPTY));
+		setHasTileEntity();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createTileEntity(World worldIn, IBlockState state) {
 		return new TileDimContr();
 	}
 

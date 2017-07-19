@@ -20,7 +20,6 @@
 package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.tileentity.TilePedestal;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,17 +33,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BlockPedestal extends BlockBase implements ITileEntityProvider {
+public class BlockPedestal extends BlockBase {
 	public static final AxisAlignedBB BASE_AABB = new AxisAlignedBB(0.1875, 0.0, 0.1875, 0.8125, 0.1875, 0.8125);
 	public static final AxisAlignedBB MIDDLE_AABB = new AxisAlignedBB(0.3125, 0.1875, 0.3125, 0.6875, 0.8125, 0.6875);
 	public static final AxisAlignedBB TOP_AABB = new AxisAlignedBB(0.0625, 0.8125, 0.0625, 0.9375, 0.875, 0.9375);
 
 	public BlockPedestal() {
 		super("pedestal", BlockPresets.STONE);
+		setHasTileEntity();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new TilePedestal();
 	}
 

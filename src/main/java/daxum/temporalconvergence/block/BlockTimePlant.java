@@ -53,6 +53,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 		setStateDefaults(new Default(WITHERED, true));
 		setTickRandomly(true);
 		setLightLevel(0.4f);
+		setHasTileEntity();
 	}
 
 	@Override
@@ -148,11 +149,6 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 		if (world.getTileEntity(pos) instanceof TileTimePlant) {
 			((TileTimePlant) world.getTileEntity(pos)).onGrowthAccelerated(world.getWorldTime());
 		}
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state) {
-		return true;
 	}
 
 	@Override
