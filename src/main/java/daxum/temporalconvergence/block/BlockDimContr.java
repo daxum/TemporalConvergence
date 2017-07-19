@@ -37,11 +37,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockDimContr extends BlockBase {
-	public static final PropertyEnum POWER_LEVEL = PropertyEnum.create("power_level", EnumPowerLevel.class);
+	public static final PropertyEnum POWER_LEVEL = PropertyEnum.create("power_level", PowerLevel.class);
 
 	public BlockDimContr() {
 		super("dim_controller", BlockPresets.STONE_MACHINE);
-		setStateDefaults(new Default(POWER_LEVEL, EnumPowerLevel.EMPTY));
+		setStateDefaults(new Default(POWER_LEVEL, PowerLevel.EMPTY));
 		setHasTileEntity();
 	}
 
@@ -121,18 +121,18 @@ public class BlockDimContr extends BlockBase {
 		return true;
 	}
 
-	public static enum EnumPowerLevel implements IStringSerializable {
+	public static enum PowerLevel implements IStringSerializable {
 		EMPTY("empty"),
 		LOW("low"),
 		MEDIUM("medium"),
 		HIGH("high"),
 		TOO_HIGH("too_high");
 
-		public static final EnumPowerLevel[] VALUES = values();
+		public static final PowerLevel[] VALUES = values();
 
 		private final String name;
 
-		private EnumPowerLevel(String n) {
+		private PowerLevel(String n) {
 			name = n;
 		}
 

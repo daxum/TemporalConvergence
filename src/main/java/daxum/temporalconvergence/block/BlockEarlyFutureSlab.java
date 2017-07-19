@@ -37,7 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class BlockEarlyFutureSlab extends BlockSlab {
-	public static final PropertyEnum<EnumVar> VARIANT = PropertyEnum.create("variant", EnumVar.class);
+	public static final PropertyEnum<Variant> VARIANT = PropertyEnum.create("variant", Variant.class);
 
 	public BlockEarlyFutureSlab() {
 		super(Material.IRON, MapColor.BLACK);
@@ -56,7 +56,7 @@ public abstract class BlockEarlyFutureSlab extends BlockSlab {
 
 		IBlockState state = blockState.getBaseState();
 
-		state = state.withProperty(VARIANT, EnumVar.EARLY_FUTURE_BLOCK);
+		state = state.withProperty(VARIANT, Variant.EARLY_FUTURE_BLOCK);
 
 		if (!isDouble())
 			state = state.withProperty(HALF, EnumBlockHalf.BOTTOM);
@@ -86,12 +86,12 @@ public abstract class BlockEarlyFutureSlab extends BlockSlab {
 
 	@Override
 	public Comparable<?> getTypeForItem(ItemStack stack) {
-		return EnumVar.getFromMeta(stack.getMetadata() & 7);
+		return Variant.getFromMeta(stack.getMetadata() & 7);
 	}
 
 	@Override
 	public String getUnlocalizedName(int meta) {
-		return super.getUnlocalizedName() + "." + EnumVar.getFromMeta(meta).getName();
+		return super.getUnlocalizedName() + "." + Variant.getFromMeta(meta).getName();
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public abstract class BlockEarlyFutureSlab extends BlockSlab {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-		IBlockState state = getDefaultState().withProperty(VARIANT, EnumVar.getFromMeta(meta));
+		IBlockState state = getDefaultState().withProperty(VARIANT, Variant.getFromMeta(meta));
 
 		if (!isDouble())
 			state = state.withProperty(HALF, (meta & 8) == 8 ? EnumBlockHalf.TOP : EnumBlockHalf.BOTTOM);
@@ -119,13 +119,13 @@ public abstract class BlockEarlyFutureSlab extends BlockSlab {
 		return isDouble() ? new BlockStateContainer(this, new IProperty[] {VARIANT}) : new BlockStateContainer(this, new IProperty[] {HALF, VARIANT});
 	}
 
-	public static enum EnumVar implements IStringSerializable {
+	public static enum Variant implements IStringSerializable {
 		EARLY_FUTURE_BLOCK(0, "early_future_block");
 
 		private final int meta;
 		private final String name;
 
-		private EnumVar(int m, String n) {
+		private Variant(int m, String n) {
 			meta = m;
 			name = n;
 		}
@@ -139,7 +139,7 @@ public abstract class BlockEarlyFutureSlab extends BlockSlab {
 			return meta;
 		}
 
-		public static EnumVar getFromMeta(int meta) {
+		public static Variant getFromMeta(int meta) {
 			switch(meta & 7) {
 			default:
 			case 0: return EARLY_FUTURE_BLOCK;

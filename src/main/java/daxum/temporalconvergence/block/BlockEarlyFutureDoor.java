@@ -46,7 +46,7 @@ import net.minecraft.world.World;
 public class BlockEarlyFutureDoor extends BlockBase {
 	public static final PropertyBool OPEN = PropertyBool.create("open");
 	public static final PropertyBool NORTH_SOUTH = PropertyBool.create("ns");
-	public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
+	public static final PropertyEnum<Part> PART = PropertyEnum.create("part", Part.class);
 	public static final AxisAlignedBB OPEN_LEFT_NS_AABB = new AxisAlignedBB(0.375, 0.0, 0.875, 0.625, 1.0, 1.0);
 	public static final AxisAlignedBB OPEN_RIGHT_NS_AABB = new AxisAlignedBB(0.375, 0.0, 0.0, 0.625, 1.0, 0.125);
 	public static final AxisAlignedBB OPEN_LEFT_WE_AABB = new AxisAlignedBB(0.0, 0.0, 0.375, 0.125, 1.0, 0.625);
@@ -58,7 +58,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	public BlockEarlyFutureDoor() {
 		super("early_future_door");
-		setStateDefaults(new Default(OPEN, false), new Default(PART, EnumPart.BOTTOM_RIGHT), new Default(NORTH_SOUTH, true));
+		setStateDefaults(new Default(OPEN, false), new Default(PART, Part.BOTTOM_RIGHT), new Default(NORTH_SOUTH, true));
 	}
 
 	@Override
@@ -73,19 +73,19 @@ public class BlockEarlyFutureDoor extends BlockBase {
 		else {
 			addCollisionBoxToList(pos, aabb, aabbList, getOpenAABB(state));
 
-			if (state.getValue(PART) == EnumPart.TOP_LEFT || state.getValue(PART) == EnumPart.TOP_RIGHT)
+			if (state.getValue(PART) == Part.TOP_LEFT || state.getValue(PART) == Part.TOP_RIGHT)
 				addCollisionBoxToList(pos, aabb, aabbList, state.getValue(NORTH_SOUTH) ? NS_TOP_AABB : WE_TOP_AABB);
 		}
 	}
 
 	public AxisAlignedBB getOpenAABB(IBlockState state) {
 		if (state.getValue(NORTH_SOUTH)) {
-			if (state.getValue(PART) == EnumPart.BOTTOM_LEFT || state.getValue(PART) == EnumPart.TOP_LEFT)
+			if (state.getValue(PART) == Part.BOTTOM_LEFT || state.getValue(PART) == Part.TOP_LEFT)
 				return OPEN_LEFT_NS_AABB;
 			return OPEN_RIGHT_NS_AABB;
 		}
 		else {
-			if (state.getValue(PART) == EnumPart.BOTTOM_LEFT || state.getValue(PART) == EnumPart.TOP_LEFT)
+			if (state.getValue(PART) == Part.BOTTOM_LEFT || state.getValue(PART) == Part.TOP_LEFT)
 				return OPEN_LEFT_WE_AABB;
 			return OPEN_RIGHT_WE_AABB;
 		}
@@ -100,7 +100,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 			aabbList.add(getOpenAABB(state));
 
-			if (state.getValue(PART) == EnumPart.TOP_LEFT || state.getValue(PART) == EnumPart.TOP_RIGHT)
+			if (state.getValue(PART) == Part.TOP_LEFT || state.getValue(PART) == Part.TOP_RIGHT)
 				aabbList.add(state.getValue(NORTH_SOUTH) ? NS_TOP_AABB : WE_TOP_AABB);
 
 			for (AxisAlignedBB aabb : aabbList) {
@@ -204,10 +204,10 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	public IBlockState togglePart(IBlockState state) {
 		switch(state.getValue(PART)) {
-		case BOTTOM_LEFT: return state.withProperty(PART, EnumPart.BOTTOM_RIGHT);
-		case BOTTOM_RIGHT: return state.withProperty(PART, EnumPart.BOTTOM_LEFT);
-		case TOP_LEFT: return state.withProperty(PART, EnumPart.TOP_RIGHT);
-		case TOP_RIGHT: return state.withProperty(PART, EnumPart.TOP_LEFT);
+		case BOTTOM_LEFT: return state.withProperty(PART, Part.BOTTOM_RIGHT);
+		case BOTTOM_RIGHT: return state.withProperty(PART, Part.BOTTOM_LEFT);
+		case TOP_LEFT: return state.withProperty(PART, Part.TOP_RIGHT);
+		case TOP_RIGHT: return state.withProperty(PART, Part.TOP_LEFT);
 		default: return state;
 		}
 	}
@@ -233,7 +233,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 	}
 
 	//To simplify things, "right" is either north or east, and "left" is south or west, depending on orientation
-	public static enum EnumPart implements IStringSerializable {
+	public static enum Part implements IStringSerializable {
 		TOP_LEFT("top_left"),
 		TOP_RIGHT("top_right"),
 		BOTTOM_LEFT("bottom_left"),
@@ -241,7 +241,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 		private String name;
 
-		private EnumPart(String n) {
+		private Part(String n) {
 			name = n;
 		}
 

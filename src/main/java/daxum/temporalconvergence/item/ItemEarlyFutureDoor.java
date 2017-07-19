@@ -20,7 +20,7 @@
 package daxum.temporalconvergence.item;
 
 import daxum.temporalconvergence.block.BlockEarlyFutureDoor;
-import daxum.temporalconvergence.block.BlockEarlyFutureDoor.EnumPart;
+import daxum.temporalconvergence.block.BlockEarlyFutureDoor.Part;
 import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -74,10 +74,10 @@ public class ItemEarlyFutureDoor extends ItemBase {
 	public void placeDoor(World world, BlockPos pos, BlockPos leftPos, boolean ns) {
 		IBlockState state = ModBlocks.EARLY_FUTURE_DOOR.getDefaultState().withProperty(BlockEarlyFutureDoor.NORTH_SOUTH, ns);
 
-		world.setBlockState(pos, state.withProperty(BlockEarlyFutureDoor.PART, EnumPart.BOTTOM_RIGHT));
-		world.setBlockState(pos.up(), state.withProperty(BlockEarlyFutureDoor.PART, EnumPart.TOP_RIGHT));
-		world.setBlockState(leftPos, state.withProperty(BlockEarlyFutureDoor.PART, EnumPart.BOTTOM_LEFT));
-		world.setBlockState(leftPos.up(), state.withProperty(BlockEarlyFutureDoor.PART, EnumPart.TOP_LEFT));
+		world.setBlockState(pos, state.withProperty(BlockEarlyFutureDoor.PART, Part.BOTTOM_RIGHT));
+		world.setBlockState(pos.up(), state.withProperty(BlockEarlyFutureDoor.PART, Part.TOP_RIGHT));
+		world.setBlockState(leftPos, state.withProperty(BlockEarlyFutureDoor.PART, Part.BOTTOM_LEFT));
+		world.setBlockState(leftPos.up(), state.withProperty(BlockEarlyFutureDoor.PART, Part.TOP_LEFT));
 
 		world.notifyNeighborsOfStateChange(pos, ModBlocks.EARLY_FUTURE_DOOR, false);
 		world.notifyNeighborsOfStateChange(leftPos, ModBlocks.EARLY_FUTURE_DOOR, false);

@@ -36,11 +36,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFancyEarlyFutureStairs extends BlockBase {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	public static final PropertyEnum PART = PropertyEnum.create("part", EnumOrientation.class);
+	public static final PropertyEnum PART = PropertyEnum.create("part", Orientation.class);
 
 	public BlockFancyEarlyFutureStairs() {
 		super("early_future_stairs_fancy", BlockPresets.WEAK_IRON);
-		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(PART, EnumOrientation.BOTTOM));
+		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(PART, Orientation.BOTTOM));
 		setLightLevel(0.95f);
 	}
 
@@ -64,9 +64,9 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		IBlockState state = getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 
-		if (facing == EnumFacing.DOWN) state = state.withProperty(PART, EnumOrientation.BOTTOM);
-		else if (facing == EnumFacing.UP) state = state.withProperty(PART, EnumOrientation.TOP);
-		else state = state.withProperty(PART, EnumOrientation.SIDE);
+		if (facing == EnumFacing.DOWN) state = state.withProperty(PART, Orientation.BOTTOM);
+		else if (facing == EnumFacing.UP) state = state.withProperty(PART, Orientation.TOP);
+		else state = state.withProperty(PART, Orientation.SIDE);
 
 		return state;
 	}
@@ -81,7 +81,7 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
 	}
 
-	public static enum EnumOrientation implements IStringSerializable {
+	public static enum Orientation implements IStringSerializable {
 		TOP,
 		BOTTOM,
 		SIDE;

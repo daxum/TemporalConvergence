@@ -29,17 +29,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockEarlyFuture extends BlockBase {
-	public static final PropertyEnum<EnumFutureBlockType> VARIANT = PropertyEnum.create("variant", EnumFutureBlockType.class);
+	public static final PropertyEnum<FutureBlockType> VARIANT = PropertyEnum.create("variant", FutureBlockType.class);
 
 	BlockEarlyFuture() {
 		super("early_future_block", BlockPresets.WEAK_IRON);
-		setStateDefaults(new Default(VARIANT, EnumFutureBlockType.PLAIN));
+		setStateDefaults(new Default(VARIANT, FutureBlockType.PLAIN));
 	}
 
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(this, 1, EnumFutureBlockType.PLAIN.ordinal()));
-		list.add(new ItemStack(this, 1, EnumFutureBlockType.FLOOR.ordinal()));
+		list.add(new ItemStack(this, 1, FutureBlockType.PLAIN.ordinal()));
+		list.add(new ItemStack(this, 1, FutureBlockType.FLOOR.ordinal()));
 	}
 
 	@Override
@@ -52,13 +52,13 @@ public class BlockEarlyFuture extends BlockBase {
 		return state.getValue(VARIANT).ordinal();
 	}
 
-	public static enum EnumFutureBlockType implements IStringSerializable {
+	public static enum FutureBlockType implements IStringSerializable {
 		PLAIN("plain"),
 		FLOOR("floor");
 
 		private String name;
 
-		private EnumFutureBlockType(String n) {
+		private FutureBlockType(String n) {
 			name = n;
 		}
 

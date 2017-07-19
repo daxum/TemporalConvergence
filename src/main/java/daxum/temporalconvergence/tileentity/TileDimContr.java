@@ -19,7 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
-import daxum.temporalconvergence.block.BlockDimContr.EnumPowerLevel;
+import daxum.temporalconvergence.block.BlockDimContr.PowerLevel;
 import daxum.temporalconvergence.power.PowerDimension;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -29,23 +29,23 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 	protected boolean didThisFreeze = false;
 	protected boolean isFrozen = false;
 	public float renderScale = 0; //Gets set by the tesr, client only
-	public EnumPowerLevel state = EnumPowerLevel.EMPTY;
+	public PowerLevel state = PowerLevel.EMPTY;
 
 	@Override
 	public void update() {
 		if (!world.isRemote) {
-			EnumPowerLevel prevState = state;
+			PowerLevel prevState = state;
 			boolean prevFrozen = isFrozen;
 
 			if (linkId == -1) {
-				state = EnumPowerLevel.EMPTY;
+				state = PowerLevel.EMPTY;
 				isFrozen = false;
 			}
 			else {
 				PowerDimension connected = PowerDimension.get(world, linkId);
 
 				if (connected == null) {
-					state = EnumPowerLevel.EMPTY;
+					state = PowerLevel.EMPTY;
 					isFrozen = false;
 				}
 				else {
@@ -53,13 +53,13 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 					double ratio = connected.getPowerRatio();
 
 					if (ratio < 0.15)
-						state = EnumPowerLevel.LOW;
+						state = PowerLevel.LOW;
 					else if (ratio < 0.5)
-						state = EnumPowerLevel.MEDIUM;
+						state = PowerLevel.MEDIUM;
 					else if (ratio <= 1)
-						state = EnumPowerLevel.HIGH;
+						state = PowerLevel.HIGH;
 					else if (ratio > 1)
-						state = EnumPowerLevel.TOO_HIGH;
+						state = PowerLevel.TOO_HIGH;
 				}
 			}
 
@@ -154,7 +154,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 		if (comp.hasKey("freeze"))
 			didThisFreeze = comp.getBoolean("freeze");
 		if (comp.hasKey("state"))
-			state = EnumPowerLevel.VALUES[comp.getInteger("state")];
+			state = PowerLevel.VALUES[comp.getInteger("state")];
 		if (comp.hasKey("isdimf"))
 			isFrozen = comp.getBoolean("isdimf");
 
