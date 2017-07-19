@@ -39,7 +39,7 @@ public class TileTimeChestRenderer extends TileEntitySpecialRenderer<TileTimeChe
 		GlStateManager.translate(x, y, z);
 
 		bindTexture(timeChestTexture);
-		timeChestModel.render(te.getBlockMetadata(), -(float) ((te.prevLidAngle + (te.lidAngle - te.prevLidAngle) * partialTicks) * Math.PI / 2.0f));
+		timeChestModel.render(te.getRotation(), -(float) ((te.prevLidAngle + (te.lidAngle - te.prevLidAngle) * partialTicks) * Math.PI / 2.0f));
 
 		GlStateManager.popMatrix();
 	}

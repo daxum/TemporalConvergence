@@ -19,6 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
+import daxum.temporalconvergence.block.BlockTimeChest;
 import daxum.temporalconvergence.gui.ContainerTimeChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -127,5 +128,13 @@ public class TileTimeChest extends TileEntity implements ITickable {
 
 	public void setUsed() {
 		beingUsed = true;
+	}
+
+	public EnumFacing getRotation() {
+		if (world.getBlockState(pos).getBlock() instanceof BlockTimeChest) {
+			return world.getBlockState(pos).getValue(BlockTimeChest.FACING);
+		}
+
+		return EnumFacing.NORTH;
 	}
 }

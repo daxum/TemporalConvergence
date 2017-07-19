@@ -20,8 +20,10 @@
 package daxum.temporalconvergence.model;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.util.RenderHelper;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.util.EnumFacing;
 
 //TODO: base probably doesn't need to be TESR, might be able to move rest to fastTESR
 public class ModelTimeChest extends ModelBase {
@@ -48,12 +50,12 @@ public class ModelTimeChest extends ModelBase {
 		lid.addChild(latch);
 	}
 
-	public void render(int facing, float lidRotation) {
+	public void render(EnumFacing facing, float lidRotation) {
 		switch(facing) {
-		case 2: base.rotateAngleY = 0.0f; break;
-		case 3: base.rotateAngleY = (float) Math.PI; break;
-		case 4: base.rotateAngleY = (float) (Math.PI / 2); break;
-		case 5: base.rotateAngleY = (float) (3 * Math.PI / 2); break;
+		case NORTH: base.rotateAngleY = 0.0f; break;
+		case EAST: base.rotateAngleY = 3.0f * RenderHelper.PIF / 2.0f; break;
+		case SOUTH: base.rotateAngleY = RenderHelper.PIF; break;
+		case WEST: base.rotateAngleY = RenderHelper.PIF / 2.0f; break;
 		default: TemporalConvergence.LOGGER.error("ModelTimeChest.render(): Invalid rotation " + facing + "!");
 		}
 
