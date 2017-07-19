@@ -95,7 +95,7 @@ public class BlockRewoundTime extends BlockBase {
 		if (state.getValue(AGE) == 0)
 			stacks.add(new ItemStack(ModItems.REWOUND_TIME_SEEDS));
 		else if (state.getValue(AGE) == 7)
-			stacks.add(new ItemStack(ModItems.TIME_BULB, Math.max(RANDOM.nextInt(fortune + 2), MathHelper.ceil(fortune / 2.0)), 1));
+			stacks.add(new ItemStack(ModItems.TIME_BULB, Math.max(RANDOM.nextInt(fortune + 2), MathHelper.ceil(fortune / 2.0))));
 
 		return stacks;
 	}
@@ -106,23 +106,8 @@ public class BlockRewoundTime extends BlockBase {
 	}
 
 	@Override
-	public int damageDropped(IBlockState state) {
-		return state.getValue(AGE) == 7 ? 1 : 0;
-	}
-
-	@Override
 	public ItemStack getItem(World world, BlockPos pos, IBlockState state) {
 		return new ItemStack(ModItems.REWOUND_TIME_SEEDS);
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(AGE, meta > 7 ? 0 : meta < 0 ? 0 : meta);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(AGE);
 	}
 
 	@Override

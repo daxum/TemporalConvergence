@@ -99,16 +99,6 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(WITHERED, (meta & 1) == 1);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(WITHERED) ? 1: 0;
-	}
-
-	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		return AABB;
 	}

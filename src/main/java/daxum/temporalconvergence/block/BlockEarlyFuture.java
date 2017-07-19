@@ -19,9 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -40,57 +38,28 @@ public class BlockEarlyFuture extends BlockBase {
 
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-		list.add(new ItemStack(this, 1, EnumFutureBlockType.PLAIN.getMeta()));
-		list.add(new ItemStack(this, 1, EnumFutureBlockType.FLOOR.getMeta()));
+		list.add(new ItemStack(this, 1, EnumFutureBlockType.PLAIN.ordinal()));
+		list.add(new ItemStack(this, 1, EnumFutureBlockType.FLOOR.ordinal()));
 	}
 
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-		return new ItemStack(this, 1, state.getValue(VARIANT).getMeta());
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(VARIANT, EnumFutureBlockType.getFromMeta(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(VARIANT).getMeta();
-	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] {VARIANT});
+		return new ItemStack(this, 1, state.getValue(VARIANT).ordinal());
 	}
 
 	@Override
 	public int damageDropped(IBlockState state) {
-		return state.getValue(VARIANT).getMeta();
+		return state.getValue(VARIANT).ordinal();
 	}
 
 	public static enum EnumFutureBlockType implements IStringSerializable {
-		PLAIN(0, "plain"),
-		FLOOR(1, "floor");
+		PLAIN("plain"),
+		FLOOR("floor");
 
-		private int meta;
 		private String name;
 
-		private EnumFutureBlockType(int m, String n) {
-			meta = m;
+		private EnumFutureBlockType(String n) {
 			name = n;
-		}
-
-		public int getMeta() {
-			return meta;
-		}
-
-		public static EnumFutureBlockType getFromMeta(int meta) {
-			switch(meta) {
-			default:
-			case 0: return PLAIN;
-			case 1: return FLOOR;
-			}
 		}
 
 		@Override

@@ -141,7 +141,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
 		comp.setInteger("linkid", linkId);
 		comp.setBoolean("freeze", didThisFreeze);
-		comp.setInteger("state", state.getIndex());
+		comp.setInteger("state", state.ordinal());
 		comp.setBoolean("isdimf", isFrozen);
 
 		return super.writeToNBT(comp);
@@ -154,7 +154,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 		if (comp.hasKey("freeze"))
 			didThisFreeze = comp.getBoolean("freeze");
 		if (comp.hasKey("state"))
-			state = EnumPowerLevel.getValue(comp.getInteger("state"));
+			state = EnumPowerLevel.VALUES[comp.getInteger("state")];
 		if (comp.hasKey("isdimf"))
 			isFrozen = comp.getBoolean("isdimf");
 

@@ -157,39 +157,23 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 		return state.getValue(FILL_STATE) == FilledState.EMPTY;
 	}
 
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FILL_STATE, FilledState.getFromMeta(meta & 7)).withProperty(BURNING, (meta & 8) == 8);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FILL_STATE).getMeta() | (state.getValue(BURNING) ? 8 : 0);
-	}
-
 	public enum FilledState implements IStringSerializable {
-		EMPTY("empty", 0),
-		LEVEL_1("level1", 1),
-		LEVEL_2("level2", 2),
-		LEVEL_3("level3", 3),
-		LEVEL_4("level4", 4),
-		NETHERRACK("netherrack", 5);
+		EMPTY("empty"),
+		LEVEL_1("level1"),
+		LEVEL_2("level2"),
+		LEVEL_3("level3"),
+		LEVEL_4("level4"),
+		NETHERRACK("netherrack");
 
 		private String name;
-		private int meta;
 
-		private FilledState(String n, int m) {
+		private FilledState(String n) {
 			name = n;
-			meta = m;
 		}
 
 		@Override
 		public String getName() {
 			return name;
-		}
-
-		public int getMeta() {
-			return meta;
 		}
 
 		public ItemStack getItem() {
@@ -230,18 +214,6 @@ public class BlockBrazier extends BlockBase implements ITileEntityProvider {
 
 		public boolean isDust() {
 			return this != EMPTY && this != NETHERRACK;
-		}
-
-		public static FilledState getFromMeta(int meta) {
-			switch (meta) {
-			default:
-			case 0: return EMPTY;
-			case 1: return LEVEL_1;
-			case 2: return LEVEL_2;
-			case 3: return LEVEL_3;
-			case 4: return LEVEL_4;
-			case 5: return NETHERRACK;
-			}
 		}
 	}
 

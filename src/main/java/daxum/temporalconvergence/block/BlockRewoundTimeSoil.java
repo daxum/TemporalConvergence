@@ -96,24 +96,4 @@ public class BlockRewoundTimeSoil extends BlockBase {
 				.withProperty(SOUTH, world.getBlockState(pos).getBlock() != this)
 				.withProperty(WEST, world.getBlockState(pos).getBlock() != this);
 	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		int meta = state.getValue(NORTH) ? 1 : 0;
-		meta |= state.getValue(EAST) ? 2 : 0;
-		meta |= state.getValue(SOUTH) ? 4 : 0;
-		meta |= state.getValue(WEST) ? 8 : 0;
-
-		return meta;
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		IBlockState state = getDefaultState().withProperty(NORTH, (meta & 1) == 1);
-		state = state.withProperty(EAST, (meta & 2) == 2);
-		state = state.withProperty(SOUTH, (meta & 4) == 4);
-		state = state.withProperty(WEST, (meta & 8) == 8);
-
-		return state;
-	}
 }

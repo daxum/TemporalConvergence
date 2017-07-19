@@ -22,6 +22,7 @@ package daxum.temporalconvergence.block;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -103,6 +106,14 @@ public class BlockBase extends Block {
 				}
 			}
 		}
+
+		//TODO: remove sorting in 1.13, it's only needed because of state -> meta
+		properties.sort(new Comparator<IProperty>() {
+			@Override
+			public int compare(IProperty arg0, IProperty arg1) {
+				return arg0.getName().compareTo(arg1.getName());
+			}
+		});
 
 		return properties.toArray(new IProperty[0]);
 	}
@@ -262,5 +273,40 @@ public class BlockBase extends Block {
 		private MiningLevel(int l) {
 			level = l;
 		}
+	}
+
+	//TODO: remove three methods below in 1.13
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return blockState.getValidStates().get(meta);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		if (state.getPropertyKeys().isEmpty()) {
+			return 0;
+		}
+		else {
+			for (int i = 0; i < blockState.getValidStates().size() && i < 16; i++) {
+				if (blockState.getValidStates().get(i).equals(state)) {
+					return i;
+				}
+			}
+
+			TemporalConvergence.LOGGER.error("Couldn't convert blockState {} to meta", state);
+
+			return 0;
+		}
+	}
+
+	//Bit of a hack to fix improper meta ordering
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		if (meta == 0) {
+			return getDefaultState();
+		}
+
+		return getStateFromMeta(meta);
 	}
 }

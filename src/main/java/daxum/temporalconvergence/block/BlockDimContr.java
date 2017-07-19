@@ -121,55 +121,24 @@ public class BlockDimContr extends BlockBase implements ITileEntityProvider {
 		return true;
 	}
 
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(POWER_LEVEL, EnumPowerLevel.getValue(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return ((EnumPowerLevel) state.getValue(POWER_LEVEL)).getIndex();
-	}
-
 	public static enum EnumPowerLevel implements IStringSerializable {
-		EMPTY,
-		LOW,
-		MEDIUM,
-		HIGH,
-		TOO_HIGH;
+		EMPTY("empty"),
+		LOW("low"),
+		MEDIUM("medium"),
+		HIGH("high"),
+		TOO_HIGH("too_high");
 
-		public int getIndex() {
-			switch(this) {
-			case EMPTY: return 0;
-			case LOW: return 1;
-			case MEDIUM: return 2;
-			case HIGH: return 3;
-			case TOO_HIGH: return 4;
-			default: return 0;
-			}
-		}
+		public static final EnumPowerLevel[] VALUES = values();
 
-		public static EnumPowerLevel getValue(int i) {
-			switch(i) {
-			case 0:
-			default: return EMPTY;
-			case 1: return LOW;
-			case 2: return MEDIUM;
-			case 3: return HIGH;
-			case 4: return TOO_HIGH;
-			}
+		private final String name;
+
+		private EnumPowerLevel(String n) {
+			name = n;
 		}
 
 		@Override
 		public String getName() {
-			switch(this) {
-			case EMPTY: return "empty";
-			case HIGH: return "high";
-			case LOW: return "low";
-			case MEDIUM: return "medium";
-			case TOO_HIGH: return "too_high";
-			default: return "NAV"; //Not a value
-			}
+			return name;
 		}
 	}
 }

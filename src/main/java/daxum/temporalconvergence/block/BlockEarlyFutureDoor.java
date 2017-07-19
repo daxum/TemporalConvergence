@@ -213,20 +213,6 @@ public class BlockEarlyFutureDoor extends BlockBase {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		IBlockState state = getDefaultState().withProperty(OPEN, (meta & 1) == 1);
-		state = state.withProperty(NORTH_SOUTH, (meta >> 1 & 1) == 1);
-		state = state.withProperty(PART, EnumPart.getFromMeta(meta >> 2 & 3));
-
-		return state;
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return (state.getValue(OPEN) ? 1 : 0) | (state.getValue(NORTH_SOUTH) ? 2 : 0) | state.getValue(PART).getMeta();
-	}
-
-	@Override
 	protected boolean isCube() {
 		return false;
 	}
@@ -248,40 +234,24 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	//To simplify things, "right" is either north or east, and "left" is south or west, depending on orientation
 	public static enum EnumPart implements IStringSerializable {
-		TOP_LEFT("top_left", 0),
-		TOP_RIGHT("top_right", 4),
-		BOTTOM_LEFT("bottom_left", 8),
-		BOTTOM_RIGHT("bottom_right", 12);
+		TOP_LEFT("top_left"),
+		TOP_RIGHT("top_right"),
+		BOTTOM_LEFT("bottom_left"),
+		BOTTOM_RIGHT("bottom_right");
 
 		private String name;
-		private int meta;
 
-		private EnumPart(String n, int m) {
+		private EnumPart(String n) {
 			name = n;
-			meta = m;
 		}
 
 		@Override
 		public String getName() {
 			return name;
 		}
-
-		public int getMeta() {
-			return meta;
-		}
-
-		public static EnumPart getFromMeta(int meta) {
-			switch(meta) {
-			default:
-			case 0: return TOP_LEFT;
-			case 1: return TOP_RIGHT;
-			case 2: return BOTTOM_LEFT;
-			case 3: return BOTTOM_RIGHT;
-			}
-		}
 	}
 
 	public static IBlockState getState(int part, boolean open, boolean ns) {
-		return ModBlocks.EARLY_FUTURE_DOOR.getDefaultState().withProperty(PART, EnumPart.getFromMeta(part)).withProperty(OPEN, open).withProperty(NORTH_SOUTH, ns);
+		return ModBlocks.EARLY_FUTURE_DOOR.getDefaultState().withProperty(PART, EnumPart.values()[part]).withProperty(OPEN, open).withProperty(NORTH_SOUTH, ns);
 	}
 }

@@ -87,16 +87,6 @@ public class BlockTimeStonePillar extends BlockBase {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(TOP, (meta & 1) == 1).withProperty(BOTTOM, (meta & 2) == 2);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return (state.getValue(TOP) ? 1 : 0) | (state.getValue(BOTTOM) ? 2 : 0);
-	}
-
-	@Override
 	protected boolean isCube() {
 		return false;
 	}

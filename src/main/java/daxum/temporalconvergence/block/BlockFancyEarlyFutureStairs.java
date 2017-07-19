@@ -72,19 +72,6 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		IBlockState state = getDefaultState();
-
-		state = state.withProperty(FACING, EnumFacing.getFront(5 - (meta & 3)));
-		return state.withProperty(PART, EnumOrientation.get(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return 5 - state.getValue(FACING).getIndex() | ((EnumOrientation)state.getValue(PART)).getMetaVal();
-	}
-
-	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot) {
 		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
@@ -106,24 +93,6 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 			case BOTTOM: return "bottom";
 			case SIDE: return "side";
 			case TOP: return "top";
-			}
-		}
-
-		public int getMetaVal() {
-			switch(this) {
-			default:
-			case BOTTOM: return 0;
-			case SIDE: return 4;
-			case TOP: return 8;
-			}
-		}
-
-		public static EnumOrientation get(int meta) {
-			switch(meta >> 2 & 3) {
-			default:
-			case 0: return BOTTOM;
-			case 1: return SIDE;
-			case 2: return TOP;
 			}
 		}
 	}

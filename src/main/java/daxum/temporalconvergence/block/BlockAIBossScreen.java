@@ -114,47 +114,21 @@ public class BlockAIBossScreen extends BlockBase {
 	}
 
 	public enum ScreenState implements IStringSerializable {
-		OFF(0, "off"),
-		STATIC(1, "static"),
-		OCCUPIED(2, "occupied"),
-		FIRING(3, "firing");
+		OFF("off"),
+		STATIC("static"),
+		OCCUPIED("occupied"),
+		FIRING("firing");
 
 		private String name;
-		private int meta;
 
-		private ScreenState(int m, String n) {
+		private ScreenState(String n) {
 			name = n;
-			meta = m;
 		}
 
 		@Override
 		public String getName() {
 			return name;
 		}
-
-		public int getMeta() {
-			return meta;
-		}
-
-		public static ScreenState getFromMeta(int meta) {
-			switch(meta) {
-			case 0: return OFF;
-			case 1: return STATIC;
-			case 2: return OCCUPIED;
-			case 3: return FIRING;
-			default: return OFF;
-			}
-		}
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta & 3)).withProperty(STATE, ScreenState.getFromMeta(meta >> 2 & 3));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getHorizontalIndex() | state.getValue(STATE).getMeta() << 2;
 	}
 
 	@Override

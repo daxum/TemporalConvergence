@@ -212,14 +212,4 @@ public class BlockTimeFurnace extends BlockBase {
 
 		return 0;
 	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(ACTIVE, (meta & 1) == 1).withProperty(CONTROLLER, (meta & 2) == 2);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return (state.getValue(ACTIVE) ? 1 : 0) | (state.getValue(CONTROLLER) ? 2 : 0);
-	}
 }
