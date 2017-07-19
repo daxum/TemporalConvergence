@@ -21,7 +21,6 @@ package daxum.temporalconvergence.tileentity;
 
 import java.util.Random;
 
-import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.block.BlockTimePlant;
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
@@ -55,7 +54,6 @@ public class TileTimePlant extends TileEntityBase {
 	private boolean withered = false;
 
 	public void onRandomTick() {
-		TemporalConvergence.LOGGER.info("Tick start! Data: {}", this);
 		if (!withered && charge < MAX_PASSIVE_CHARGE) {
 			charge++;
 			markDirty();
@@ -63,13 +61,9 @@ public class TileTimePlant extends TileEntityBase {
 
 		updateWitherState();
 		updateInstability();
-
-		TemporalConvergence.LOGGER.info("Tick End! New data: {}", this);
 	}
 
 	public void setWithered() {
-		TemporalConvergence.LOGGER.info("Withering!");
-
 		if (world.getBlockState(pos).getBlock() instanceof BlockTimePlant) {
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockTimePlant.WITHERED, true));
 		}
@@ -81,7 +75,6 @@ public class TileTimePlant extends TileEntityBase {
 	}
 
 	public void onGrowthAccelerated(long time) {
-		TemporalConvergence.LOGGER.info("Bonemealed: {}", this);
 		if (!withered) {
 			if (WorldHelper.isDawn(time) || WorldHelper.isDusk(time)) {
 				charge += TWILIGHT_CHARGE_INCREASE;
@@ -98,7 +91,6 @@ public class TileTimePlant extends TileEntityBase {
 			updateWitherState();
 			markDirty();
 		}
-		TemporalConvergence.LOGGER.info("Bonemeal complete: {}", this);
 	}
 
 	public ItemStack getShearedItem(long worldTime) {
