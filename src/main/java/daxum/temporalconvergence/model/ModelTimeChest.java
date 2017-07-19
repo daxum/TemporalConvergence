@@ -53,9 +53,9 @@ public class ModelTimeChest extends ModelBase {
 	public void render(EnumFacing facing, float lidRotation) {
 		switch(facing) {
 		case NORTH: base.rotateAngleY = 0.0f; break;
-		case EAST: base.rotateAngleY = 3.0f * RenderHelper.PIF / 2.0f; break;
-		case SOUTH: base.rotateAngleY = RenderHelper.PIF; break;
-		case WEST: base.rotateAngleY = RenderHelper.PIF / 2.0f; break;
+		case EAST: base.rotateAngleY = 3.0f * RenderHelper.PI / 2.0f; break;
+		case SOUTH: base.rotateAngleY = RenderHelper.PI; break;
+		case WEST: base.rotateAngleY = RenderHelper.PI / 2.0f; break;
 		default: TemporalConvergence.LOGGER.error("ModelTimeChest.render(): Invalid rotation " + facing + "!");
 		}
 

@@ -51,7 +51,7 @@ public final class RenderHelper {
 	private static Map<Long, Integer> sphereRenderMap = new HashMap<>();
 	private static Map<Long, Integer> sphereMeshRenderMap = new HashMap<>();
 
-	public static final float PIF = (float) Math.PI; //PI as a float, to save annoyance over casting
+	public static final float PI = (float) Math.PI; //PI as a float, to save annoyance over casting
 
 	//rotationOffset is used to randomize rotation, and should be the same every time the function is called. If it doesn't need to be randomized, use the version below
 	//Translate should be called before this function to position the item
@@ -59,7 +59,7 @@ public final class RenderHelper {
 	public static void renderItem(long time, ItemStack stack, int rotationOffset, float partialTicks, boolean shouldBob) {
 		if (!stack.isEmpty()) {
 			int offset = rotationOffset * 7;
-			float angle = (time + partialTicks + offset) / 20.0f * (180f / PIF);
+			float angle = (time + partialTicks + offset) / 20.0f * (180f / PI);
 			float bobHeight = shouldBob ? MathHelper.sin((time + partialTicks + offset) / 10.0f) * 0.1f + 0.1f : 0.0f;
 
 			GlStateManager.pushMatrix();
@@ -139,15 +139,15 @@ public final class RenderHelper {
 			if (!alt) {
 				for (int j = 0; j <= 180 + step; j += step) {
 					if (alt) {
-						float theta = j * PIF / 180.0f;
-						float phi = i * PIF / 180.0f;
+						float theta = j * PI / 180.0f;
+						float phi = i * PI / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
 						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta));
 					}
 					else {
-						float theta = j * PIF / 180.0f;
-						float phi = (i + step) * PIF / 180.0f;
+						float theta = j * PI / 180.0f;
+						float phi = (i + step) * PI / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
 						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta));
@@ -159,15 +159,15 @@ public final class RenderHelper {
 			else {
 				for (int j = 180; j >= -step; j -= step) {
 					if (alt) {
-						float theta = j * PIF / 180.0f;
-						float phi = i * PIF / 180.0f;
+						float theta = j * PI / 180.0f;
+						float phi = i * PI / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
 						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta));
 					}
 					else {
-						float theta = j * PIF / 180.0f;
-						float phi = (i + step) * PIF / 180.0f;
+						float theta = j * PI / 180.0f;
+						float phi = (i + step) * PI / 180.0f;
 						float sintheta = MathHelper.sin(theta);
 
 						vb.pos(radius * sintheta * MathHelper.cos(phi), radius * sintheta * MathHelper.sin(phi), radius * MathHelper.cos(theta));
