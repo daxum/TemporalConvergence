@@ -97,9 +97,9 @@ public class BlockBase extends Block {
 					}
 				}
 				catch (IllegalArgumentException | IllegalAccessException e) {
-					TemporalConvergence.LOGGER.fatal("Reflective BlockState wizardry failed for class {}!", getClass());
+					TemporalConvergence.LOGGER.fatal("Reflective BlockState wizardry failed for {}!", getClass());
 
-					throw new ReportedException(new CrashReport("Reflective BlockState wizardry failed for class " + getClass() + "!", e));
+					throw new ReportedException(new CrashReport("Reflective BlockState wizardry failed for " + getClass() + "!", e));
 				}
 			}
 		}
