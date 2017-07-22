@@ -67,6 +67,8 @@ public final class ModBlocks {
 	public static final Block BOSS_SCREEN;
 	public static final Block FAKE_BOSS_SCREEN;
 	public static final Block TIME_FURNACE;
+	public static final Block EARLY_FUTURE_ROAD_STRIPE;
+	public static final Block EARLY_FUTURE_ROAD;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -78,6 +80,7 @@ public final class ModBlocks {
 				return world.getBlockState(pos).getBlock() == this;
 			}
 		};
+		EARLY_FUTURE_ROAD = new BlockBase("early_future_road", BlockPresets.STONE);
 
 		LUNAR_WOOD = new BlockLunarWood();
 		TIME_SAND = new BlockTimeSand();
@@ -116,6 +119,7 @@ public final class ModBlocks {
 		BOSS_SCREEN = new BlockAIBossScreen();
 		FAKE_BOSS_SCREEN = new BlockFakeScreen();
 		TIME_FURNACE = new BlockTimeFurnace();
+		EARLY_FUTURE_ROAD_STRIPE = new BlockEarlyFutureRoadStripe();
 	}
 
 	@SubscribeEvent
@@ -152,6 +156,8 @@ public final class ModBlocks {
 		blockRegistry.register(BOSS_SCREEN);
 		blockRegistry.register(FAKE_BOSS_SCREEN);
 		blockRegistry.register(TIME_FURNACE);
+		blockRegistry.register(EARLY_FUTURE_ROAD_STRIPE);
+		blockRegistry.register(EARLY_FUTURE_ROAD);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");

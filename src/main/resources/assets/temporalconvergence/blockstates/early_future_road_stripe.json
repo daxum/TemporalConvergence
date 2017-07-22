@@ -1,0 +1,25 @@
+{
+   "variants": {
+       "east=true,north=true,south=true,west=true": { "model": "temporalconvergence:early_future_road_stripe_all" },
+
+       "east=true,north=false,south=true,west=true": { "model": "temporalconvergence:early_future_road_stripe_three" },
+       "east=false,north=true,south=true,west=true": { "model": "temporalconvergence:early_future_road_stripe_three", "y": 90 },
+       "east=true,north=true,south=false,west=true": { "model": "temporalconvergence:early_future_road_stripe_three", "y": 180 },
+       "east=true,north=true,south=true,west=false": { "model": "temporalconvergence:early_future_road_stripe_three", "y": 270 },
+
+       "east=false,north=true,south=false,west=true": { "model": "temporalconvergence:early_future_road_stripe_two", "y": 90 },
+       "east=true,north=true,south=false,west=false": { "model": "temporalconvergence:early_future_road_stripe_two", "y": 180 },
+       "east=true,north=false,south=true,west=false": { "model": "temporalconvergence:early_future_road_stripe_two", "y": 270 },
+       "east=false,north=false,south=true,west=true": { "model": "temporalconvergence:early_future_road_stripe_two" },
+
+       "east=true,north=false,south=false,west=true": { "model": "temporalconvergence:early_future_road_stripe_two_par" },
+       "east=false,north=true,south=true,west=false": { "model": "temporalconvergence:early_future_road_stripe_two_par", "y": 90 },
+
+       "east=false,north=true,south=false,west=false": { "model": "temporalconvergence:early_future_road_stripe_one" },
+       "east=true,north=false,south=false,west=false": { "model": "temporalconvergence:early_future_road_stripe_one", "y": 90 },
+       "east=false,north=false,south=true,west=false": { "model": "temporalconvergence:early_future_road_stripe_one", "y": 180 },
+       "east=false,north=false,south=false,west=true": { "model": "temporalconvergence:early_future_road_stripe_one", "y": 270 },
+
+       "east=false,north=false,south=false,west=false": { "model": "temporalconvergence:early_future_road_stripe_none" }
+   }
+}

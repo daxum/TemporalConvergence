@@ -83,6 +83,8 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.SOLAR_WOOD));
 		registerRender(Item.getItemFromBlock(ModBlocks.SOLAR_PLANKS));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_FURNACE));
+		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_ROAD_STRIPE));
+		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_ROAD));
 	}
 
 	@Override

@@ -143,5 +143,7 @@ public final class ModItems {
 			}
 		}.setRegistryName(ModBlocks.SOLAR_PLANKS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_FURNACE).setRegistryName(ModBlocks.TIME_FURNACE.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_ROAD_STRIPE).setRegistryName(ModBlocks.EARLY_FUTURE_ROAD_STRIPE.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_ROAD).setRegistryName(ModBlocks.EARLY_FUTURE_ROAD.getRegistryName()));
 	}
 }

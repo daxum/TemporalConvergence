@@ -1,0 +1,24 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"tex": "temporalconvergence:blocks/early_future_road_stripe_none",
+		"road": "temporalconvergence:blocks/early_future_road",
+		"particle": "temporalconvergence:blocks/early_future_road_stripe_none"
+	},
+
+	"elements": [
+	    {
+	        "name": "main_block",
+	        "from": [0, 0, 0],
+	        "to": [16, 16, 16],
+	        "faces": {
+	            "north": { "texture": "#road", "cullface": "north" },
+	            "east": { "texture": "#road", "cullface": "east" },
+	            "south": { "texture": "#road", "cullface": "south" },
+	            "west": { "texture": "#road", "cullface": "west" },
+	            "up": { "texture": "#tex", "cullface": "up" },
+	            "down": { "texture": "#road", "cullface": "down" }
+	        }
+	    }
+	]
+}
