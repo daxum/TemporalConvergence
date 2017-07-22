@@ -49,7 +49,7 @@ public class BlockFakeScreen extends BlockBase {
 	public BlockFakeScreen() {
 		super("fake_boss_screen", BlockPresets.UNBREAKABLE);
 		setSoundType(SoundType.METAL);
-		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(TOP, false));
+		setStateDefaults(FACING, EnumFacing.NORTH, TOP, false);
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class BlockTimeChest extends BlockBase {
 
 	public BlockTimeChest() {
 		super(Material.ROCK, "time_chest", 3.5f, 25.0f, Tool.PICKAXE, MiningLevel.WOOD, SoundType.STONE);
-		setStateDefaults(new Default(FACING, EnumFacing.NORTH));
+		setStateDefaults(FACING, EnumFacing.NORTH);
 		setHasTileEntity();
 	}
 

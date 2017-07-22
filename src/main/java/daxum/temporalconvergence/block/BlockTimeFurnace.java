@@ -48,7 +48,7 @@ public class BlockTimeFurnace extends BlockBase {
 
 	public BlockTimeFurnace() {
 		super("time_furnace", BlockPresets.STONE_MACHINE);
-		setStateDefaults(new Default(ACTIVE, false), new Default(CONTROLLER, false));
+		setStateDefaults(ACTIVE, false, CONTROLLER, false);
 	}
 
 	@Override

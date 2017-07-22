@@ -41,7 +41,7 @@ public class BlockDimContr extends BlockBase {
 
 	public BlockDimContr() {
 		super("dim_controller", BlockPresets.STONE_MACHINE);
-		setStateDefaults(new Default(POWER_LEVEL, PowerLevel.EMPTY));
+		setStateDefaults(POWER_LEVEL, PowerLevel.EMPTY);
 		setHasTileEntity();
 	}
 

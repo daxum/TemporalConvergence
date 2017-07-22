@@ -50,7 +50,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	public BlockTimePlant() {
 		super("time_plant", BlockPresets.PLANT);
-		setStateDefaults(new Default(WITHERED, true));
+		setStateDefaults(WITHERED, true);
 		setTickRandomly(true);
 		setLightLevel(0.4f);
 		setHasTileEntity();

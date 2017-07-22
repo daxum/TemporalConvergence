@@ -46,7 +46,7 @@ public class BlockAIBossScreen extends BlockBase {
 	public BlockAIBossScreen() {
 		super("boss_screen", BlockPresets.UNBREAKABLE);
 		setSoundType(SoundType.METAL);
-		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(STATE, ScreenState.OFF));
+		setStateDefaults(FACING, EnumFacing.NORTH, STATE, ScreenState.OFF);
 	}
 
 	@Override

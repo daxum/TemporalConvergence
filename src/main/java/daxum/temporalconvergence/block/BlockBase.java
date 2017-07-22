@@ -123,24 +123,31 @@ public class BlockBase extends Block {
 		return properties.toArray(new IProperty[0]);
 	}
 
-	//TODO: find way to remove Default class
-	protected void setStateDefaults(Default... defaults) {
+	protected void setStateDefaults(Object... objects) {
 		IBlockState defaultState = blockState.getBaseState();
 
-		for (Default def : defaults) {
-			defaultState = defaultState.withProperty(def.property, def.value);
+		for (int i = 0; i < objects.length; i += 2) {
+			if (objects[i] instanceof IProperty && i + 1 < objects.length) {
+				defaultState = setStateValue(defaultState, (IProperty)objects[i], objects[i + 1]);
+			}
+			else {
+				TemporalConvergence.LOGGER.fatal("Malformed default list for {}", getClass());
+
+				throw new IllegalArgumentException("Malformed default list for " + getClass());
+			}
 		}
 
 		setDefaultState(defaultState);
 	}
 
-	protected class Default<T extends Comparable<T>> {
-		public IProperty<T> property;
-		public T value;
+	private <T extends Comparable<T>> IBlockState setStateValue(IBlockState state, IProperty<T> property, Object value) {
+		try {
+			return state.withProperty(property, (T)value);
+		}
+		catch(ClassCastException e) {
+			TemporalConvergence.LOGGER.fatal("Failed to assign property {} of {} to {}", property, getClass(), value);
 
-		public Default(IProperty<T> p, T v) {
-			property = p;
-			value = v;
+			throw new ReportedException(new CrashReport("Failed to assign property " + property + " of " + getClass() + " to " + value, e));
 		}
 	}
 

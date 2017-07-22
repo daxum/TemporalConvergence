@@ -57,7 +57,7 @@ public class BlockRewoundTime extends BlockBase {
 		setTickRandomly(true);
 		setCreativeTab(null);
 		disableStats();
-		setStateDefaults(new Default(AGE, 7));
+		setStateDefaults(AGE, 7);
 	}
 
 	@Override

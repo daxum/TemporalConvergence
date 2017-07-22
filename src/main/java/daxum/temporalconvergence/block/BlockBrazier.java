@@ -57,7 +57,7 @@ public class BlockBrazier extends BlockBase {
 	public BlockBrazier() {
 		super("brazier", BlockPresets.STONE);
 		setMiningLevel(MiningLevel.STONE);
-		setStateDefaults(new Default(FILL_STATE, FilledState.EMPTY), new Default(BURNING, false));
+		setStateDefaults(FILL_STATE, FilledState.EMPTY, BURNING, false);
 		setHasTileEntity();
 	}
 

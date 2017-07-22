@@ -33,7 +33,7 @@ public class BlockEarlyFuture extends BlockBase {
 
 	BlockEarlyFuture() {
 		super("early_future_block", BlockPresets.WEAK_IRON);
-		setStateDefaults(new Default(VARIANT, FutureBlockType.PLAIN));
+		setStateDefaults(VARIANT, FutureBlockType.PLAIN);
 	}
 
 	@Override

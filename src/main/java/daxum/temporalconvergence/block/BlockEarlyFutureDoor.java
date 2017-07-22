@@ -58,7 +58,7 @@ public class BlockEarlyFutureDoor extends BlockBase {
 
 	public BlockEarlyFutureDoor() {
 		super("early_future_door");
-		setStateDefaults(new Default(OPEN, false), new Default(PART, Part.BOTTOM_RIGHT), new Default(NORTH_SOUTH, true));
+		setStateDefaults(OPEN, false, PART, Part.BOTTOM_RIGHT, NORTH_SOUTH, true);
 	}
 
 	@Override

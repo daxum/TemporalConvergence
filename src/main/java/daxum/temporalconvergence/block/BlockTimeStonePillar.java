@@ -41,7 +41,7 @@ public class BlockTimeStonePillar extends BlockBase {
 
 	BlockTimeStonePillar() {
 		super("time_stone_pillar");
-		setStateDefaults(new Default(TOP, true), new Default(BOTTOM, true));
+		setStateDefaults(TOP, true, BOTTOM, true);
 	}
 
 	@Override

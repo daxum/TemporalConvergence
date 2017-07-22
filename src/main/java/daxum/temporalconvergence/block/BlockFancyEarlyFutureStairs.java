@@ -40,7 +40,7 @@ public class BlockFancyEarlyFutureStairs extends BlockBase {
 
 	public BlockFancyEarlyFutureStairs() {
 		super("early_future_stairs_fancy", BlockPresets.WEAK_IRON);
-		setStateDefaults(new Default(FACING, EnumFacing.NORTH), new Default(PART, Orientation.BOTTOM));
+		setStateDefaults(FACING, EnumFacing.NORTH, PART, Orientation.BOTTOM);
 		setLightLevel(0.95f);
 	}
 

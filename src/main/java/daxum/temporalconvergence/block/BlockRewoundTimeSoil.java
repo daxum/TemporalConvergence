@@ -48,7 +48,7 @@ public class BlockRewoundTimeSoil extends BlockBase {
 
 	public BlockRewoundTimeSoil() {
 		super(Material.GROUND, "rewound_soil", 0.6f, 3.0f, Tool.SHOVEL, MiningLevel.WOOD, SoundType.SLIME);
-		setStateDefaults(new Default(NORTH, true), new Default(EAST, true), new Default(SOUTH, true), new Default(WEST, true));
+		setStateDefaults(NORTH, true, EAST, true, SOUTH, true, WEST, true);
 		setTickRandomly(true);
 	}
 
