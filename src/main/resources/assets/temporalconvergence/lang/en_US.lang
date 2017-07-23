@@ -30,3 +30,13 @@ item.early_future_door.name=Futuristic Door
 item.rewound_time_seeds.name=Rewound Time Seeds
 
 fluid.time_water=Time Essence
+
+commands.tempconvexport.usage=/tempconvexport <x1> <y1> <z1> <x2> <y2> <z2> <filename>
+commands.tempconvexport.noserver=This command can only be used in singleplayer
+commands.tempconvexport.outsideworld=Cannot access blocks outside of the world
+commands.tempconvexport.tobig=x or z distance is too large, must be at most 16
+commands.tempconvexport.nametolong=Filename too long, must be at most 251 characters
+commands.tempconvexport.invalidname=Filename contains invalid characters
+commands.tempconvexport.success=Block section successfully saved as %s
+commands.tempconvexport.filefail=Error writing to file
+commands.tempconvexport.verywrong=Did you really expect that to do something?

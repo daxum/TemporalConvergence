@@ -22,6 +22,7 @@ package daxum.temporalconvergence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import daxum.temporalconvergence.command.CommandExportStructure;
 import daxum.temporalconvergence.entity.ModEntities;
 import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.network.PacketHandler;
@@ -37,6 +38,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -86,5 +88,10 @@ public class TemporalConvergence {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 
+	}
+
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event) {
+		event.registerServerCommand(new CommandExportStructure());
 	}
 }
