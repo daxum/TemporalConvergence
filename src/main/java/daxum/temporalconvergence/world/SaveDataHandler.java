@@ -24,15 +24,19 @@ import java.util.Map;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.power.PowerDimension;
+import daxum.temporalconvergence.world.futurecity.FutureCityGenerator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.common.util.Constants;
 
 public class SaveDataHandler extends WorldSavedData {
 	public static final String DATA_NAME = TemporalConvergence.MODID + "-SaveData";
 
 	private  Map<Integer, PowerDimension> powerDims = new HashMap<>();
 	private int nextDimId = 0;
+	private FutureCityGenerator futureGen = null;
 
 	public SaveDataHandler() {
 		super(DATA_NAME);
@@ -40,6 +44,14 @@ public class SaveDataHandler extends WorldSavedData {
 
 	public SaveDataHandler(String name) {
 		super(name);
+	}
+
+	public FutureCityGenerator getFutureCityGenerator() {
+		if (futureGen == null) {
+			futureGen = new FutureCityGenerator(this);
+		}
+
+		return futureGen;
 	}
 
 	public PowerDimension getNewPowerDim() {
@@ -72,6 +84,13 @@ public class SaveDataHandler extends WorldSavedData {
 		if (comp.hasKey("nextdim"))
 			nextDimId = comp.getInteger("nextdim");
 
+		if (comp.hasKey("futureGen")) {
+			FutureCityGenerator cityGen = new FutureCityGenerator(this);
+			cityGen.deserializeNBT(comp.getTagList("futureGen", Constants.NBT.TAG_COMPOUND));
+
+			futureGen = cityGen;
+		}
+
 		for (int i = 0; i < nextDimId; i++)
 			if (comp.hasKey("dim#" + i)) {
 				powerDims.put(i, new PowerDimension(this, i));
@@ -87,10 +106,19 @@ public class SaveDataHandler extends WorldSavedData {
 			if (pde.getValue() != null)
 				comp.setTag("dim#" + pde.getValue().id, pde.getValue().serializeNBT());
 
+		if (futureGen != null) {
+			comp.setTag("futureGen", futureGen.serializeNBT());
+		}
+
 		return comp;
 	}
 
 	public static SaveDataHandler get(World world) {
+		MapStorage store = world.getMapStorage();
+
+		if (store == null) {
+			TemporalConvergence.LOGGER.info("MapStorage null on {}", world.isRemote);
+		}
 		SaveDataHandler instance = (SaveDataHandler) world.getMapStorage().getOrLoadData(SaveDataHandler.class, DATA_NAME);
 
 		if (instance == null) {

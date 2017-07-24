@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import daxum.temporalconvergence.world.futurecity.FutureCityGenerator;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockDirt.DirtType;
 import net.minecraft.block.state.IBlockState;
@@ -41,9 +42,9 @@ import net.minecraft.world.gen.MapGenRavine;
 import net.minecraft.world.gen.NoiseGeneratorOctaves;
 
 public class ChunkProviderEarlyFuture implements IChunkGenerator {
-	private static final IBlockState TOP_BLOCK = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, DirtType.COARSE_DIRT);
-	private static final IBlockState BOTTOM_BLOCK = Blocks.STONE.getDefaultState();
-	private static final IBlockState BASE_BLOCK = Blocks.BEDROCK.getDefaultState();
+	public static final IBlockState TOP_BLOCK = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, DirtType.COARSE_DIRT);
+	public static final IBlockState BOTTOM_BLOCK = Blocks.STONE.getDefaultState();
+	public static final IBlockState BASE_BLOCK = Blocks.BEDROCK.getDefaultState();
 	private static final IBlockState OCEAN_BLOCK = Blocks.WATER.getDefaultState();
 	private static final double depthNoiseScaleXZ = 200.0;
 	private static final double xzScale = 684.412;
@@ -61,6 +62,7 @@ public class ChunkProviderEarlyFuture implements IChunkGenerator {
 	private final double[] heightMap = new double[825];
 	private final MapGenBase ravineGenerator = new MapGenRavine();
 	private final MapGenBase caveGenerator = new MapGenCaves();
+	private FutureCityGenerator cityGenerator = null;
 
 	private NoiseGeneratorOctaves mainPerlinNoise;
 	private NoiseGeneratorOctaves minLimitPerlinNoise;
@@ -84,13 +86,25 @@ public class ChunkProviderEarlyFuture implements IChunkGenerator {
 
 	@Override
 	public Chunk generateChunk(int x, int z) {
-		heightRand.setSeed(x * 341873128712L + z * 132897987541L);
-		ChunkPrimer primer = new ChunkPrimer();
-		fillPrimer(primer, x, z);
-		fillTop(primer);
+		//Needed because chunkProviders are created before mapStorage
+		if (cityGenerator == null) {
+			cityGenerator = FutureCityGenerator.getGenerator(world);
+		}
 
-		caveGenerator.generate(world, x, z, primer);
-		ravineGenerator.generate(world, x, z, primer);
+		ChunkPrimer primer;
+
+		if (cityGenerator.isChunkCity(x, z)) {
+			primer = cityGenerator.getPrimerForChunk(x, z);
+		}
+		else {
+			heightRand.setSeed(x * 341873128712L + z * 132897987541L);
+			primer = new ChunkPrimer();
+			fillPrimer(primer, x, z);
+			fillTop(primer);
+
+			caveGenerator.generate(world, x, z, primer);
+			ravineGenerator.generate(world, x, z, primer);
+		}
 
 		fillWithWater(primer);
 
@@ -240,7 +254,7 @@ public class ChunkProviderEarlyFuture implements IChunkGenerator {
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				for (int y = world.getSeaLevel(); y > 0; y--) {
-					if (primer.getBlockState(x, y, z).getBlock() == Blocks.AIR) {
+					if (primer.getBlockState(x, y, z).getBlock() == Blocks.AIR || primer.getBlockState(x, y, z).getBlock() == Blocks.LAVA || primer.getBlockState(x, y, z).getBlock() == Blocks.FLOWING_LAVA) {
 						primer.setBlockState(x, y, z, OCEAN_BLOCK);
 					}
 				}
