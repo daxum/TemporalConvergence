@@ -24,6 +24,8 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -58,5 +60,71 @@ public class BlockEarlyFutureRoadStripe extends BlockBase {
 		boolean west = world.getBlockState(pos.west()).getBlock() != this;
 
 		return getDefaultState().withProperty(NORTH, north).withProperty(EAST, east).withProperty(SOUTH, south).withProperty(WEST, west);
+	}
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot) {
+		final boolean north = state.getValue(NORTH);
+		final boolean east = state.getValue(EAST);
+		final boolean south = state.getValue(SOUTH);
+		final boolean west = state.getValue(WEST);
+
+		boolean newNorth = north;
+		boolean newEast = east;
+		boolean newSouth = south;
+		boolean newWest = west;
+
+		switch (rot) {
+		case CLOCKWISE_180:
+			newNorth = south;
+			newEast = west;
+			newSouth = north;
+			newWest = east;
+			break;
+		case CLOCKWISE_90:
+			newNorth = west;
+			newEast = north;
+			newSouth = east;
+			newWest = south;
+			break;
+		case COUNTERCLOCKWISE_90:
+			newNorth = east;
+			newEast = south;
+			newSouth = west;
+			newWest = north;
+			break;
+		case NONE: return state;
+		default: return state;
+		}
+
+		return state.withProperty(NORTH, newNorth).withProperty(EAST, newEast).withProperty(SOUTH, newSouth).withProperty(WEST, newWest);
+	}
+
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirror) {
+		final boolean north = state.getValue(NORTH);
+		final boolean east = state.getValue(EAST);
+		final boolean south = state.getValue(SOUTH);
+		final boolean west = state.getValue(WEST);
+
+		boolean newNorth = north;
+		boolean newEast = east;
+		boolean newSouth = south;
+		boolean newWest = west;
+
+		switch (mirror) {
+		case FRONT_BACK:
+			newNorth = south;
+			newSouth = north;
+			break;
+		case LEFT_RIGHT:
+			newEast = west;
+			newWest = east;
+			break;
+		case NONE: return state;
+		default: return state;
+		}
+
+		return state.withProperty(NORTH, newNorth).withProperty(EAST, newEast).withProperty(SOUTH, newSouth).withProperty(WEST, newWest);
 	}
 }
