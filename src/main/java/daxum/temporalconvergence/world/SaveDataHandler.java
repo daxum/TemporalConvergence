@@ -27,7 +27,6 @@ import daxum.temporalconvergence.power.PowerDimension;
 import daxum.temporalconvergence.world.futurecity.FutureCityGenerator;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
@@ -114,11 +113,6 @@ public class SaveDataHandler extends WorldSavedData {
 	}
 
 	public static SaveDataHandler get(World world) {
-		MapStorage store = world.getMapStorage();
-
-		if (store == null) {
-			TemporalConvergence.LOGGER.info("MapStorage null on {}", world.isRemote);
-		}
 		SaveDataHandler instance = (SaveDataHandler) world.getMapStorage().getOrLoadData(SaveDataHandler.class, DATA_NAME);
 
 		if (instance == null) {

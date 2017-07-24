@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.SaveDataHandler;
 import net.minecraft.nbt.NBTBase;
@@ -126,7 +125,6 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 			cityIdMap = new int[cityWidth][cityLength];
 
 			generateCity();
-			TemporalConvergence.LOGGER.info("Generated new city: {}", this);
 		}
 
 		public boolean containsChunk(int x, int z) {

@@ -19,7 +19,6 @@
  **************************************************************************/
 package daxum.temporalconvergence.command;
 
-import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.futurecity.FutureCityGenerator;
 import net.minecraft.command.CommandBase;
@@ -53,14 +52,14 @@ public class CommandFindCity extends CommandBase {
 				if (args.length == 2) {
 					long sectX = parseInt(args[0]);
 					long sectZ = parseInt(args[1]);
-					TemporalConvergence.LOGGER.info("Section: {}, {}, packed: {}", sectX, sectZ, sectX << 32 | sectZ);
+
 					BlockPos pos = gen.getCityLocationForSection(sectX << 32 | sectZ & 0xFFFFFFFFL);
 					notifyCommandListener(sender, this, "commands.findfuturecity.success", pos.getX(), pos.getY(), pos.getZ());
 				}
 				else {
 					int chunkX = sender.getPosition().getX() / 16;
 					int chunkZ = sender.getPosition().getZ() / 16;
-					TemporalConvergence.LOGGER.info("Sender position: {}, {}, Chunk position: {}, {}", sender.getPosition().getX(), sender.getPosition().getZ(), chunkX, chunkZ);
+
 					BlockPos pos = gen.getCityLocationForSection(gen.getSectionForChunk(chunkX, chunkZ));
 					notifyCommandListener(sender, this, "commands.findfuturecity.success", pos.getX(), pos.getY(), pos.getZ());
 				}
