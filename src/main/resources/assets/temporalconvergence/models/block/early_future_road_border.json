@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"all": "temporalconvergence:blocks/early_future_road_border"
+	}
+}

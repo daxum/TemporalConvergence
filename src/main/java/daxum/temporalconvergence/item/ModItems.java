@@ -145,5 +145,7 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.TIME_FURNACE).setRegistryName(ModBlocks.TIME_FURNACE.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_ROAD_STRIPE).setRegistryName(ModBlocks.EARLY_FUTURE_ROAD_STRIPE.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_ROAD).setRegistryName(ModBlocks.EARLY_FUTURE_ROAD.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_ROAD_BORDER).setRegistryName(ModBlocks.EARLY_FUTURE_ROAD_BORDER.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.ROAD_BORDER_STAIRS).setRegistryName(ModBlocks.ROAD_BORDER_STAIRS.getRegistryName()));
 	}
 }
