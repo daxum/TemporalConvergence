@@ -37,9 +37,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
@@ -130,7 +128,7 @@ public class CommandExportStructure extends CommandBase {
 		for (int i = 0; i < states.length; i++) {
 			for (int j = 0; j < states[i].length; j++) {
 				for (int k = 0; k < states[i][j].length; k++) {
-					if (states[i][j][k] != Blocks.AIR.getDefaultState() && stateMap.get(states[i][j][k]) == null) {
+					if (stateMap.get(states[i][j][k]) == null) {
 						stateMap.put(states[i][j][k], id++);
 						stateList.add(states[i][j][k]);
 					}
@@ -149,19 +147,18 @@ public class CommandExportStructure extends CommandBase {
 		for (int i = 0; i < states.length; i++) {
 			for (int j = 0; j < states[i].length; j++) {
 				for (int k = 0; k < states[i][j].length; k++) {
-					if (states[i][j][k] != Blocks.AIR.getDefaultState()) {
-						NBTTagCompound comp = new NBTTagCompound();
+					NBTTagCompound comp = new NBTTagCompound();
 
-						comp.setLong("pos", (long)(i & 15) << 32 | (long)(k & 15) << 36 | j);
-						comp.setInteger("state", stateMap.get(states[i][j][k]));
+					comp.setLong("pos", (long)(i & 15) << 32 | (long)(k & 15) << 36 | j);
+					comp.setInteger("state", stateMap.get(states[i][j][k]));
 
-						statePos.appendTag(comp);
-					}
+					statePos.appendTag(comp);
 				}
 			}
 		}
-
+		TemporalConvergence.LOGGER.info("Saved {} blocks", statePos.tagCount());
 		NBTTagCompound toSave = new NBTTagCompound();
+		toSave.setByte("size", (byte) (states.length - 1 & 15 | (states[0][0].length - 1 & 15) << 4));
 		toSave.setTag("map", stateIds);
 		toSave.setTag("data", statePos);
 
@@ -182,11 +179,6 @@ public class CommandExportStructure extends CommandBase {
 		}
 		finally {
 			IOUtils.closeQuietly(stream);
-		}
-
-		TemporalConvergence.LOGGER.info(stateIds);
-		for (NBTBase comp : statePos) {
-			TemporalConvergence.LOGGER.info(comp);
 		}
 	}
 
