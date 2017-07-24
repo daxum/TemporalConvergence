@@ -23,6 +23,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import daxum.temporalconvergence.command.CommandExportStructure;
+import daxum.temporalconvergence.command.CommandFindCity;
+import daxum.temporalconvergence.command.CommandImportStructure;
+import daxum.temporalconvergence.command.CommandTimeTravel;
 import daxum.temporalconvergence.entity.ModEntities;
 import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.network.PacketHandler;
@@ -93,5 +96,8 @@ public class TemporalConvergence {
 	@EventHandler
 	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new CommandExportStructure());
+		event.registerServerCommand(new CommandImportStructure());
+		event.registerServerCommand(new CommandTimeTravel());
+		event.registerServerCommand(new CommandFindCity());
 	}
 }
