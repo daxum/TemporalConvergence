@@ -19,9 +19,15 @@
  **************************************************************************/
 package daxum.temporalconvergence.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public final class WorldHelper {
 	public static <T extends TileEntity> T getTileEntity(IBlockAccess world, BlockPos pos, Class<T> targetClass) {
@@ -32,6 +38,18 @@ public final class WorldHelper {
 		}
 
 		return null;
+	}
+
+	public static List<EntityPlayer> getPlayersWithinAABB(World world, AxisAlignedBB aabb) {
+		List<EntityPlayer> players = new ArrayList<>();
+
+		for (EntityPlayer player : world.playerEntities) {
+			if (player.getEntityBoundingBox().intersects(aabb)) {
+				players.add(player);
+			}
+		}
+
+		return players;
 	}
 
 	//These 6 functions are meant to be called with the result of world.getWorldTime()
