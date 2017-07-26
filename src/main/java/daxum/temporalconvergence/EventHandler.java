@@ -36,7 +36,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
@@ -60,6 +59,7 @@ public final class EventHandler {
 
 		if (!TemporalConvergence.proxy.isDedicatedServer()) {
 			MinecraftForge.EVENT_BUS.register(ParticleHandler.class);
+			MinecraftForge.EVENT_BUS.register(AIBossBarRenderer.class);
 		}
 	}
 
@@ -91,12 +91,6 @@ public final class EventHandler {
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		TemporalConvergence.proxy.registerItemRenderer();
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
-		AIBossBarRenderer.renderBossBar(event);
 	}
 
 	@SubscribeEvent

@@ -36,6 +36,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -48,6 +49,7 @@ public final class AIBossBarRenderer {
 		AI_BOSS_LIST.put(toAdd.getBossBarUUID(), new WeakReference(toAdd));
 	}
 
+	@SubscribeEvent
 	public static void renderBossBar(RenderGameOverlayEvent.BossInfo event) {
 		BossInfoClient info = event.getBossInfo();
 		//get get get get get get get. Haha, now get doesn't sound like a word anymore
