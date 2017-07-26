@@ -1,0 +1,64 @@
+{
+    "parent": "minecraft:block/block",
+
+    "textures": {
+        "front": "temporalconvergence:blocks/future_chest_front_open",
+        "top": "temporalconvergence:blocks/future_chest_top_open",
+        "side": "temporalconvergence:blocks/future_chest_side",
+        "bottom": "temporalconvergence:blocks/future_chest_bottom",
+        "empty": "temporalconvergence:blocks/origin_stone",
+        "particle": "temporalconvergence:blocks/future_chest_side"
+    },
+
+    "elements": [
+        {
+            "name": "main",
+            "from": [1, 0, 1],
+            "to": [15, 14, 15],
+            "faces": {
+                "north": { "texture": "#front", "uv": [0, 0, 16, 16] },
+                "east": { "texture": "#side", "uv": [0, 0, 16, 16] },
+                "south": { "texture": "#side", "uv": [0, 0, 16, 16] },
+                "west": { "texture": "#side", "uv": [0, 0, 16, 16] },
+                "up": { "texture": "#top", "rotation": 180, "uv": [0, 0, 16, 16] },
+                "down": { "texture": "#bottom", "uv": [0, 0, 16, 16], "cullface": "down" }
+            }
+        },
+
+        {
+            "name": "bottom",
+            "from": [3, 0, 1],
+            "to": [13, 6.125, 15],
+            "faces": {
+                "up": { "texture": "#empty" }
+            }
+        },
+
+        {
+            "name": "left",
+            "from": [13, 0, 1],
+            "to": [15, 14, 15],
+            "faces": {
+                "west": { "texture": "#empty" }
+            }
+        },
+
+        {
+            "name": "right",
+            "from": [1, 0, 1],
+            "to": [3, 14, 15],
+            "faces": {
+                "east": { "texture": "#empty", "uv": [0, 0, 16, 16] }
+            }
+        },
+
+        {
+            "name": "back",
+            "from": [3, 6.125, 13],
+            "to": [13, 14, 15],
+            "faces": {
+                "north": { "texture": "#empty" }
+            }
+        }
+    ]
+}

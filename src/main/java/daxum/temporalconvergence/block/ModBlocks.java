@@ -23,6 +23,7 @@ import daxum.temporalconvergence.block.BlockBase.BlockPresets;
 import daxum.temporalconvergence.tileentity.TileBrazier;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import daxum.temporalconvergence.tileentity.TileDimGen;
+import daxum.temporalconvergence.tileentity.TileFutureChest;
 import daxum.temporalconvergence.tileentity.TilePedestal;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import daxum.temporalconvergence.tileentity.TileTimeFurnace;
@@ -71,6 +72,7 @@ public final class ModBlocks {
 	public static final Block EARLY_FUTURE_ROAD;
 	public static final Block EARLY_FUTURE_ROAD_BORDER;
 	public static final Block ROAD_BORDER_STAIRS;
+	public static final Block FUTURE_CHEST;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -124,6 +126,7 @@ public final class ModBlocks {
 		TIME_FURNACE = new BlockTimeFurnace();
 		EARLY_FUTURE_ROAD_STRIPE = new BlockEarlyFutureRoadStripe();
 		ROAD_BORDER_STAIRS = new BlockRoadBorderStairs();
+		FUTURE_CHEST = new BlockFutureChest();
 	}
 
 	@SubscribeEvent
@@ -164,6 +167,7 @@ public final class ModBlocks {
 		blockRegistry.register(EARLY_FUTURE_ROAD);
 		blockRegistry.register(EARLY_FUTURE_ROAD_BORDER);
 		blockRegistry.register(ROAD_BORDER_STAIRS);
+		blockRegistry.register(FUTURE_CHEST);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
@@ -174,5 +178,6 @@ public final class ModBlocks {
 		GameRegistry.registerTileEntity(TileBrazier.class, "brazier");
 		GameRegistry.registerTileEntity(TileTimeFurnace.class, "time_furnace");
 		GameRegistry.registerTileEntity(TileTimeFurnaceController.class, "time_furnace_controller");
+		GameRegistry.registerTileEntity(TileFutureChest.class, "future_chest");
 	}
 }

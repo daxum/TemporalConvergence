@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "facing=north,open=false": { "model": "temporalconvergence:future_chest_closed", "y": 180 },
+        "facing=east,open=false": { "model": "temporalconvergence:future_chest_closed", "y": 270 },
+        "facing=south,open=false": { "model": "temporalconvergence:future_chest_closed" },
+        "facing=west,open=false": { "model": "temporalconvergence:future_chest_closed", "y": 90 },
+        "facing=north,open=true": { "model": "temporalconvergence:future_chest_open", "y": 180 },
+        "facing=east,open=true": { "model": "temporalconvergence:future_chest_open", "y": 270 },
+        "facing=south,open=true": { "model": "temporalconvergence:future_chest_open" },
+        "facing=west,open=true": { "model": "temporalconvergence:future_chest_open", "y": 90 }
+    }
+}

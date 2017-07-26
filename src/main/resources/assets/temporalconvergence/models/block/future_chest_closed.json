@@ -1,0 +1,27 @@
+{
+    "parent": "minecraft:block/block",
+
+    "textures": {
+        "front": "temporalconvergence:blocks/future_chest_front",
+        "top": "temporalconvergence:blocks/future_chest_top",
+        "side": "temporalconvergence:blocks/future_chest_side",
+        "bottom": "temporalconvergence:blocks/future_chest_bottom",
+        "particle": "temporalconvergence:blocks/future_chest_side"
+    },
+
+    "elements": [
+        {
+            "name": "future_chest",
+            "from": [1, 0, 1],
+            "to": [15, 14, 15],
+            "faces": {
+                "north": { "texture": "#front", "uv": [0, 0, 16, 16] },
+                "east": { "texture": "#side", "uv": [0, 0, 16, 16] },
+                "south": { "texture": "#side", "uv": [0, 0, 16, 16] },
+                "west": { "texture": "#side", "uv": [0, 0, 16, 16] },
+                "up": { "texture": "#top", "rotation": 180, "uv": [0, 0, 16, 16] },
+                "down": { "texture": "#bottom", "uv": [0, 0, 16, 16], "cullface": "down" }
+            }
+        }
+    ]
+}
