@@ -33,6 +33,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.crash.CrashReport;
@@ -170,6 +171,11 @@ public class BlockBase extends Block {
 		return isCube();
 	}
 
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing side) {
+		return isNormalCube(state, world, pos) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+	}
+
 	protected AxisAlignedBB[] getNewBoundingBoxList(World world, BlockPos pos, IBlockState state) {
 		return new AxisAlignedBB[] {state.getBoundingBox(world, pos)};
 	}
@@ -245,7 +251,8 @@ public class BlockBase extends Block {
 		IRON(Material.IRON, 5.0f, 30.0f, Tool.PICKAXE, MiningLevel.STONE, SoundType.METAL),
 		WOOD(Material.WOOD, 2.0f, 15.0f, Tool.AXE, MiningLevel.HAND, SoundType.WOOD),
 		STONE_MACHINE(Material.ROCK, 5.0f, 30.0f, Tool.PICKAXE, MiningLevel.IRON, SoundType.STONE),
-		WEAK_IRON(Material.IRON, 2.0f, 10.0f, Tool.PICKAXE, MiningLevel.WOOD, SoundType.METAL);
+		WEAK_IRON(Material.IRON, 2.0f, 10.0f, Tool.PICKAXE, MiningLevel.WOOD, SoundType.METAL),
+		GLASS(Material.GLASS, 0.3f, 1.5f, Tool.NONE, MiningLevel.HAND, SoundType.GLASS);
 
 		private final Material material;
 		private final float hardness;
