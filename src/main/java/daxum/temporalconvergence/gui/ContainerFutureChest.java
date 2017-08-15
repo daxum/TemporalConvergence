@@ -20,6 +20,7 @@
 package daxum.temporalconvergence.gui;
 
 import daxum.temporalconvergence.tileentity.TileFutureChest;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -36,6 +37,14 @@ public class ContainerFutureChest extends ContainerBase<TileFutureChest> {
 				addSlotToContainer(new SlotItemHandler(tile.getInventory(), x + y * 9, 8 + x * 18, 18 + y * 18));
 			}
 		}
+	}
 
+	@Override
+	public void onContainerClosed(EntityPlayer player) {
+		if (!tile.getWorld().isRemote) {
+			tile.removeUsingPlayer();
+		}
+
+		super.onContainerClosed(player);
 	}
 }
