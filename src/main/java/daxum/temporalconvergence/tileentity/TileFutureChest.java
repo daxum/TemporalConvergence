@@ -84,14 +84,6 @@ public class TileFutureChest extends TileEntityInventoried {
 		return inventory;
 	}
 
-	public EnumFacing getRotation() {
-		if (world.getBlockState(pos).getBlock() instanceof BlockFutureChest) {
-			return world.getBlockState(pos).getValue(BlockFutureChest.FACING);
-		}
-
-		return EnumFacing.NORTH;
-	}
-
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
