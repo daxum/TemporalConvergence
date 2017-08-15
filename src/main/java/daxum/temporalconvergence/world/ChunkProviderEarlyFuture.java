@@ -273,7 +273,6 @@ public class ChunkProviderEarlyFuture implements IChunkGenerator {
 	@Override
 	public void populate(int x, int z) {}
 
-
 	@Override
 	public boolean generateStructures(Chunk chunkIn, int x, int z) {
 		return false;

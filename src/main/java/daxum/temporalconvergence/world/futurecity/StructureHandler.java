@@ -38,22 +38,43 @@ import net.minecraft.util.Rotation;
 import net.minecraftforge.common.util.Constants;
 
 public class StructureHandler {
-	private static final Map<String, StateData[]> structureNameMap = new HashMap<>();
+	private static final Map<String, StateData[][]> structureNameMap = new HashMap<>();
 
-	public static StateData[] getStructure(String name) {
-		StateData[] data = structureNameMap.get(name);
+	private static StateData[][] getStructure(String name) {
+		StateData[][] data = structureNameMap.get(name);
 
 		if (data == null) {
-			data = readStructureFromFile("/assets/temporalconvergence/city_structures/" + name + ".nbt");
+			data = new StateData[][] {null, null, null, null};
+			data[0] = readStructureFromFile("/assets/temporalconvergence/city_structures/" + name + ".nbt");
 			structureNameMap.put(name, data);
+			TemporalConvergence.LOGGER.info("Created new data for structure {}", name);
 		}
 
 		return data;
 	}
 
-	public static StateData[] rotateStructure(StateData[] structure, Rotation rot) {
-		StateData[] newStruct;
+	public static StateData[] getStructureWithRotation(String name, Rotation rot) {
+		StateData[][] data = getStructure(name);
 
+		int index;
+		switch(rot) {
+		case CLOCKWISE_180: index = 2; break;
+		case CLOCKWISE_90: index = 1; break;
+		case COUNTERCLOCKWISE_90: index = 3; break;
+		case NONE:
+		default: index = 0; break;
+		}
+
+		if (data[index] == null) {
+			data[index] = rotateStructure(data[0], rot);
+		}
+
+		return data[index];
+	}
+
+	private static StateData[] rotateStructure(StateData[] structure, Rotation rot) {
+		StateData[] newStruct;
+		TemporalConvergence.LOGGER.info("Creating new rotation data for rotation {}", rot);
 		switch(rot) {
 		case CLOCKWISE_180:
 			newStruct = new StateData[structure.length];

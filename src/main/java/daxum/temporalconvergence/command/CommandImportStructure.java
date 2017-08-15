@@ -75,7 +75,7 @@ public class CommandImportStructure extends CommandBase {
 				}
 			}
 
-			StateData[] data = StructureHandler.rotateStructure(StructureHandler.getStructure(args[3]), rot);
+			StateData[] data = StructureHandler.getStructureWithRotation(args[3], rot);
 
 			if (data == null) {
 				throw new CommandException("commands.tempconvimport.nofile", args[3] + ".nbt");

@@ -270,12 +270,11 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 	}
 
 	static {
+		int id = 1;
+
 		GENERATORS.add(new EmptyStructureGenerator());
-		GENERATORS.add(new BossBuildingGenerator(1));
-		GENERATORS.add(new GenericBuildingGenerator(2, 3, 3, 0.7, '9'));
-		GENERATORS.add(new GenericBuildingGenerator(3, 2, 2, 0.7, '4'));
-		GENERATORS.add(new GenericBuildingGenerator(4, 1, 2, 0.7, '2'));
-		GENERATORS.add(new GenericBuildingGenerator(5, 1, 1, 0.7, '1'));
+		GENERATORS.add(new BossBuildingGenerator(id++));
+		GENERATORS.add(new HouseGenerator(id++));
 	}
 
 	@Override

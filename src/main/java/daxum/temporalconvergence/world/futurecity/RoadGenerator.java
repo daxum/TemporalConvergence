@@ -38,13 +38,15 @@ public class RoadGenerator extends FutureStructureGenerator {
 		boolean roadSouth = cityMap[chunkX][chunkZ + 1] == getId();
 		boolean roadWest = cityMap[chunkX - 1][chunkZ] == getId();
 
-		StateData[] data = getDataForConnections(roadNorth, roadEast, roadSouth, roadWest);
+		String dataName = getDataNameForConnections(roadNorth, roadEast, roadSouth, roadWest);
 
-		if (data == null || data.length == 0) {
+		if (dataName == null) {
 			return getBasePrimer(groundLevel);
 		}
 
-		data = getRotationForConnections(data, roadNorth, roadEast, roadSouth, roadWest);
+		Rotation roadRotation = getRotationForConnections(roadNorth, roadEast, roadSouth, roadWest);
+
+		StateData[] data = StructureHandler.getStructureWithRotation(dataName, roadRotation);
 
 		ChunkPrimer primer = getBasePrimer(groundLevel);
 
@@ -55,7 +57,7 @@ public class RoadGenerator extends FutureStructureGenerator {
 		return primer;
 	}
 
-	private StateData[] getDataForConnections(boolean north, boolean east, boolean south, boolean west) {
+	private String getDataNameForConnections(boolean north, boolean east, boolean south, boolean west) {
 		int amount = 0;
 
 		if (north) {
@@ -76,15 +78,15 @@ public class RoadGenerator extends FutureStructureGenerator {
 
 		switch (amount) {
 		case 0: return null;
-		case 1: return StructureHandler.getStructure("road_end");
-		case 2: return north && south || east && west ? StructureHandler.getStructure("road_straight") : StructureHandler.getStructure("road_curve");
-		case 3: return StructureHandler.getStructure("road_three_intersect");
-		case 4: return StructureHandler.getStructure("road_four_intersect");
+		case 1: return "road_end";
+		case 2: return north && south || east && west ? "road_straight" : "road_curve";
+		case 3: return "road_three_intersect";
+		case 4: return "road_four_intersect";
 		default: return null;
 		}
 	}
 
-	private StateData[] getRotationForConnections(StateData[] data, boolean north, boolean east, boolean south, boolean west) {
+	private Rotation getRotationForConnections(boolean north, boolean east, boolean south, boolean west) {
 		int amount = 0;
 
 		if (north) {
@@ -104,18 +106,18 @@ public class RoadGenerator extends FutureStructureGenerator {
 		}
 
 		switch (amount) {
-		case 0: return data;
-		case 1: return StructureHandler.rotateStructure(data, getOneRotation(north, east, south, west));
+		case 0: return Rotation.NONE;
+		case 1: return getOneRotation(north, east, south, west);
 		case 2:
 			if (north && south || east && west) {
-				return north && south ? data : StructureHandler.rotateStructure(data, Rotation.CLOCKWISE_90);
+				return north && south ? Rotation.NONE : Rotation.CLOCKWISE_90;
 			}
 			else {
-				return StructureHandler.rotateStructure(data, getCornerRotation(north, east, south, west));
+				return getCornerRotation(north, east, south, west);
 			}
-		case 3: return StructureHandler.rotateStructure(data, getThreeRotation(north, east, south, west));
-		case 4: return data;
-		default: return data;
+		case 3: return getThreeRotation(north, east, south, west);
+		case 4: return Rotation.NONE;
+		default: return Rotation.NONE;
 		}
 	}
 
