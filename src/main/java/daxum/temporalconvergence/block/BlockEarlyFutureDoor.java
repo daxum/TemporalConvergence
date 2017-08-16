@@ -25,6 +25,7 @@ import java.util.Random;
 
 import daxum.temporalconvergence.item.ModItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
@@ -220,6 +221,11 @@ public class BlockEarlyFutureDoor extends BlockBase {
 	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
+	}
+
+	@Override
+	public EnumPushReaction getMobilityFlag(IBlockState state) {
+		return EnumPushReaction.BLOCK;
 	}
 
 	@Override
