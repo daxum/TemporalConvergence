@@ -148,5 +148,12 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_ROAD_BORDER).setRegistryName(ModBlocks.EARLY_FUTURE_ROAD_BORDER.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.ROAD_BORDER_STAIRS).setRegistryName(ModBlocks.ROAD_BORDER_STAIRS.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.FUTURE_CHEST).setRegistryName(ModBlocks.FUTURE_CHEST.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_LEAVES) {
+			@Override
+			public int getMetadata(int damage) {
+				return damage | 1;
+			}
+		}.setRegistryName(ModBlocks.SOLAR_LEAVES.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_SAPLING).setRegistryName(ModBlocks.SOLAR_SAPLING.getRegistryName()));
 	}
 }

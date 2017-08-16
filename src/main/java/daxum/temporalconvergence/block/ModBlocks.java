@@ -73,6 +73,8 @@ public final class ModBlocks {
 	public static final Block EARLY_FUTURE_ROAD_BORDER;
 	public static final Block ROAD_BORDER_STAIRS;
 	public static final Block FUTURE_CHEST;
+	public static final Block SOLAR_LEAVES;
+	public static final Block SOLAR_SAPLING;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -127,6 +129,8 @@ public final class ModBlocks {
 		EARLY_FUTURE_ROAD_STRIPE = new BlockEarlyFutureRoadStripe();
 		ROAD_BORDER_STAIRS = new BlockRoadBorderStairs();
 		FUTURE_CHEST = new BlockFutureChest();
+		SOLAR_LEAVES = new BlockSolarLeaves();
+		SOLAR_SAPLING = new BlockSolarSapling();
 	}
 
 	@SubscribeEvent
@@ -168,6 +172,8 @@ public final class ModBlocks {
 		blockRegistry.register(EARLY_FUTURE_ROAD_BORDER);
 		blockRegistry.register(ROAD_BORDER_STAIRS);
 		blockRegistry.register(FUTURE_CHEST);
+		blockRegistry.register(SOLAR_LEAVES);
+		blockRegistry.register(SOLAR_SAPLING);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
