@@ -57,7 +57,6 @@ public final class ModItems {
 	public static final Item DIM_LINKER;
 	public static final Item EARLY_FUTURE_DOOR;
 	public static final Item REWOUND_TIME_SEEDS;
-	public static final Item INFUSED_WOOD;
 	public static final Item STABLE_CHARCOAL;
 	public static final Item PHASE_CLOTH_CHEST;
 	public static final Item PHASE_CLOTH_LEGS;
@@ -78,7 +77,6 @@ public final class ModItems {
 		DIM_LINKER = new ItemDimensionalLinker();
 		EARLY_FUTURE_DOOR = new ItemEarlyFutureDoor();
 		REWOUND_TIME_SEEDS = new ItemRewoundTimeSeeds();
-		INFUSED_WOOD = new ItemInfusedWood();
 		PHASE_CLOTH_CHEST = new ItemPhaseClothChest();
 		PHASE_CLOTH_LEGS = new ItemPhaseClothLegs();
 		PHASE_CLOTH_BOOTS = new ItemPhaseClothBoots();
@@ -100,7 +98,6 @@ public final class ModItems {
 		itemRegistry.register(SOLAR_WOOD_SHOVEL);
 		itemRegistry.register(EARLY_FUTURE_DOOR);
 		itemRegistry.register(REWOUND_TIME_SEEDS);
-		itemRegistry.register(INFUSED_WOOD);
 		itemRegistry.register(STABLE_CHARCOAL);
 		itemRegistry.register(PHASE_CLOTH_CHEST);
 		itemRegistry.register(PHASE_CLOTH_LEGS);
