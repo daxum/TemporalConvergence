@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "check_decay=false,decayable=false": { "model": "temporalconvergence:solar_leaves" },
+        "check_decay=true,decayable=false": { "model": "temporalconvergence:solar_leaves" },
+        "check_decay=false,decayable=true": { "model": "temporalconvergence:solar_leaves" },
+        "check_decay=true,decayable=true": { "model": "temporalconvergence:solar_leaves" }
+    }
+}
