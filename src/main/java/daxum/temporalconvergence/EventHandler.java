@@ -28,6 +28,7 @@ import daxum.temporalconvergence.power.PowerDimension;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.world.DimensionHandler;
+import daxum.temporalconvergence.world.ModWorldGenerator;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,6 +57,7 @@ public final class EventHandler {
 	public static void init() {
 		MinecraftForge.EVENT_BUS.register(ModBlocks.class);
 		MinecraftForge.EVENT_BUS.register(ModItems.class);
+		MinecraftForge.EVENT_BUS.register(ModWorldGenerator.class);
 
 		if (!TemporalConvergence.proxy.isDedicatedServer()) {
 			MinecraftForge.EVENT_BUS.register(ParticleHandler.class);
