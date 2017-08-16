@@ -43,7 +43,7 @@ public final class ModBlocks {
 	public static final Block TIME_STEEL;
 	public static final Block LUNAR_WOOD;
 	public static final Block LUNAR_PLANKS;
-	public static final Block TIME_SAND;
+	public static final Block TIMESTONE_MIX;
 	public static final Block TIME_PLANT;
 	public static final Block TIME_CHEST;
 	public static final Block TIME_WATER;
@@ -90,7 +90,7 @@ public final class ModBlocks {
 		EARLY_FUTURE_ROAD_BORDER = new BlockBase("early_future_road_border", BlockPresets.STONE);
 
 		LUNAR_WOOD = new BlockLunarWood();
-		TIME_SAND = new BlockTimeSand();
+		TIMESTONE_MIX = new BlockTimestoneMix();
 		TIME_PLANT = new BlockTimePlant();
 		TIME_CHEST = new BlockTimeChest();
 		TIME_WATER = new BlockFluidTimeWater();
@@ -144,7 +144,7 @@ public final class ModBlocks {
 		blockRegistry.register(TEST_TELEPORTER);
 		blockRegistry.register(TIME_CHEST);
 		blockRegistry.register(TIME_PLANT);
-		blockRegistry.register(TIME_SAND);
+		blockRegistry.register(TIMESTONE_MIX);
 		blockRegistry.register(TIME_STEEL);
 		blockRegistry.register(TIME_STONE);
 		blockRegistry.register(TIME_STONE_PILLAR);

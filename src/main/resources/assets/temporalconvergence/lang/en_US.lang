@@ -3,7 +3,7 @@ itemGroup.temporalconvergence=Temporal Convergence
 #I went a bit overboard with "time" in names, huh?
 
 tile.origin_stone.name=Origin Stone
-tile.time_sand.name=Timestone Mix
+tile.timestone_mix.name=Timestone Mix
 tile.time_stone.name=Timestone
 tile.time_steel.name=Block of Temporal Steel
 tile.time_chest.name=Asynchronous Chest

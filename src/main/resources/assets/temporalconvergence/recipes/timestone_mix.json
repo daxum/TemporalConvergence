@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        "GGG",
+        "GDG",
+        "GGG"
+    ],
+
+    "key": {
+        "G": {"item": "minecraft:gravel"},
+        "D": {"item": "temporalconvergence:time_dust"}
+    },
+
+    "result": {"item": "temporalconvergence:timestone_mix", "count": 8}
+}

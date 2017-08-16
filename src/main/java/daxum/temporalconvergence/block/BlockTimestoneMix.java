@@ -24,11 +24,11 @@ import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 
-public class BlockTimeSand extends BlockFalling {
-	public BlockTimeSand () {
+public class BlockTimestoneMix extends BlockFalling {
+	public BlockTimestoneMix () {
 		super(Material.SAND);
-		setUnlocalizedName("time_sand");
-		setRegistryName("time_sand");
+		setUnlocalizedName("timestone_mix");
+		setRegistryName("timestone_mix");
 		setCreativeTab(ModItems.TEMPCONVTAB);
 		setHardness(0.5f);
 		setHarvestLevel("shovel", 0);
