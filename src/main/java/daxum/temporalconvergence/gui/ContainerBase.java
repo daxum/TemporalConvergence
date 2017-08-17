@@ -21,7 +21,6 @@ package daxum.temporalconvergence.gui;
 
 import daxum.temporalconvergence.tileentity.TileEntityInventoried;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -58,11 +57,8 @@ public abstract class ContainerBase<T extends TileEntityInventoried> extends Con
 	protected abstract void addTileSlots();
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entity) {
-		EntityPlayerMP player = (EntityPlayerMP) entity;
-		double reachSq = player.interactionManager.getBlockReachDistance() * player.interactionManager.getBlockReachDistance();
-
-		return tile.getDistanceSq(player.posX, player.posY, player.posZ) <= reachSq && !tile.isInvalid();
+	public boolean canInteractWith(EntityPlayer player) {
+		return tile.getDistanceSq(player.posX, player.posY, player.posZ) <= 64.0 && !tile.isInvalid();
 	}
 
 	public T getTileEntity() {
