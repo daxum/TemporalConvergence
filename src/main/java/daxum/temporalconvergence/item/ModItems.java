@@ -66,7 +66,12 @@ public final class ModItems {
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
-		STABLE_CHARCOAL = new ItemBase("stable_charcoal");
+		STABLE_CHARCOAL = new ItemBase("stable_charcoal") {
+			@Override
+			public int getItemBurnTime(ItemStack fuel) {
+				return 1200;
+			}
+		};
 
 		TIME_BULB = new ItemTimeBulb();
 		TIME_DUST = new ItemTimeDust();
