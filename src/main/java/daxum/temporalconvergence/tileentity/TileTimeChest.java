@@ -37,7 +37,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileTimeChest extends TileEntityInventoried implements ITickable {
+public class TileTimeChest extends TileEntityBase implements TileEntityInventoried, ITickable {
 	private ItemStackHandler inventory = new ItemStackHandler(27) { //Yay anonymous class ^.^
 		@Override
 		protected void onContentsChanged(int slot) {

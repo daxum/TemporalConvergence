@@ -19,10 +19,9 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
-import daxum.temporalconvergence.block.ModBlocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemStackHandler;
@@ -65,17 +64,16 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase {
 
 	private class ControllerInventory extends ItemStackHandler {
 		private static final int FUEL_SLOT = 0;
-		private static final int INPUT_SLOT_1 = 1;
-		private static final int INPUT_SLOT_2 = 2;
-		private static final int OUTPUT_SLOT = 3;
+		private static final int INPUT_SLOT = 1;
+		private static final int OUTPUT_SLOT = 2;
 
 		public ControllerInventory() {
-			super(4);
+			super(3);
 		}
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (slot == FUEL_SLOT && stack.getItem() == Item.getItemFromBlock(ModBlocks.SOLAR_WOOD) || slot == INPUT_SLOT_1 || slot == INPUT_SLOT_2) {
+			if (slot == FUEL_SLOT && TileEntityFurnace.isItemFuel(stack) || slot == INPUT_SLOT) {
 				return super.insertItem(slot, stack, simulate);
 			}
 

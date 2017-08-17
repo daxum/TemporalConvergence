@@ -22,6 +22,7 @@ package daxum.temporalconvergence.gui;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -54,7 +55,7 @@ public class GuiTimeChest extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRenderer.drawString("Asynchronous Chest", 8, 6, 4210752);
-		fontRenderer.drawString("Inventory", 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format("container.timechest"), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
 }

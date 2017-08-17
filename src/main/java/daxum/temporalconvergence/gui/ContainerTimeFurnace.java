@@ -17,15 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.tileentity;
+package daxum.temporalconvergence.gui;
 
-import net.minecraftforge.items.IItemHandler;
+import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
+import net.minecraft.inventory.IInventory;
+import net.minecraftforge.items.SlotItemHandler;
 
-//Used for gui purposes
-public interface TileEntityInventoried {
-	public IItemHandler getInventory();
+public class ContainerTimeFurnace extends ContainerBase<TileTimeFurnaceBase> {
 
-	//Below two needed for canInteractWith() in ContainerBase
-	public double getDistanceSq(double x, double y, double z);
-	public boolean isInvalid();
+	public ContainerTimeFurnace(IInventory playerInventory, TileTimeFurnaceBase tile) {
+		super(playerInventory, tile, 84);
+	}
+
+	@Override
+	protected void addTileSlots() {
+		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 0, 0));
+		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 18, 0));
+		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 2, 36, 0));
+	}
+
 }

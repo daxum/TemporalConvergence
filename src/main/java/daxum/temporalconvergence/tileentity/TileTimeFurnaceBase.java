@@ -27,9 +27,10 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileTimeFurnaceBase extends TileEntityBase {
+public abstract class TileTimeFurnaceBase extends TileEntityBase implements TileEntityInventoried {
 	private BlockPos bottomCorner = null; //The northwest bottom corner of the structure, used for breaking
 
+	@Override
 	public abstract ItemStackHandler getInventory();
 
 	public abstract TileTimeFurnaceController getController();

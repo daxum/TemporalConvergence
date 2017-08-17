@@ -20,6 +20,7 @@
 package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.gui.GuiHandler;
 import daxum.temporalconvergence.tileentity.TileTimeFurnace;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceController;
@@ -80,13 +81,8 @@ public class BlockTimeFurnace extends BlockBase {
 		else if (state.getValue(ACTIVE)) {
 			TileTimeFurnaceBase timeFurnace = WorldHelper.getTileEntity(world, pos, TileTimeFurnaceBase.class);
 
-			if (timeFurnace != null) {
-				BlockPos controllerPos = timeFurnace.getControllerPos();
-				TileTimeFurnaceController controller = timeFurnace.getController();
-
-				if (controller != null && controllerPos != null) {
-					//player.openGui(TemporalConvergence.instance, GuiHandler.TIME_FURNACE_GUI, world, controllerPos.getX(), controllerPos.getY(), controllerPos.getZ());
-				}
+			if (timeFurnace != null && timeFurnace.getController() != null) {
+				player.openGui(TemporalConvergence.instance, GuiHandler.TIME_FURNACE_GUI, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 
 			return true;

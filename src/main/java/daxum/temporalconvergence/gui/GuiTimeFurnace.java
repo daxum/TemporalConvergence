@@ -19,19 +19,19 @@
  **************************************************************************/
 package daxum.temporalconvergence.gui;
 
-import daxum.temporalconvergence.tileentity.TileFutureChest;
+import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiFutureChest extends GuiContainer {
-	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
+public class GuiTimeFurnace extends GuiContainer {
+	private static final ResourceLocation FURNACE_GUI_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/gui/time_furnace.png");
 
-	public GuiFutureChest(IInventory playerInv, TileFutureChest tc) {
-		super(new ContainerFutureChest(playerInv, tc));
-		ySize = 222;
+	public GuiTimeFurnace(IInventory playerInv, TileTimeFurnaceBase tfc) {
+		super(new ContainerTimeFurnace(playerInv, tfc));
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class GuiFutureChest extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		mc.getTextureManager().bindTexture(CHEST_GUI_TEXTURE);
+		mc.getTextureManager().bindTexture(FURNACE_GUI_TEXTURE);
 		int i = (width - xSize) / 2;
 		int j = (height - ySize) / 2;
 		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
@@ -52,7 +52,8 @@ public class GuiFutureChest extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRenderer.drawString(I18n.format("container.futurechest"), 8, 6, 4210752);
+		fontRenderer.drawString(I18n.format("container.timefurnace"), 8, 6, 4210752);
 		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
 	}
+
 }

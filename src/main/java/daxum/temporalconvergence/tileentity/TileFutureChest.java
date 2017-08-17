@@ -30,7 +30,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileFutureChest extends TileEntityInventoried {
+public class TileFutureChest extends TileEntityBase implements TileEntityInventoried {
 	private ItemStackHandler inventory = new ItemStackHandler(54) {
 		@Override
 		protected void onContentsChanged(int slot) {
