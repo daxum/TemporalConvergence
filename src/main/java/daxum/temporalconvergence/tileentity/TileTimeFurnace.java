@@ -19,8 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemStackHandler;
@@ -52,11 +52,7 @@ public class TileTimeFurnace extends TileTimeFurnaceBase {
 	@Override
 	public TileTimeFurnaceController getController() {
 		if (controllerPos != null) {
-			TileEntity contr = world.getTileEntity(controllerPos);
-
-			if (contr instanceof TileTimeFurnaceController) {
-				return (TileTimeFurnaceController) contr;
-			}
+			return WorldHelper.getTileEntity(world, controllerPos, TileTimeFurnaceController.class);
 		}
 
 		return null;
