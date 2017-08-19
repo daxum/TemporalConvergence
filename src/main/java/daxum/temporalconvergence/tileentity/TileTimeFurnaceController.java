@@ -22,12 +22,19 @@ package daxum.temporalconvergence.tileentity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TileTimeFurnaceController extends TileTimeFurnaceBase {
+public class TileTimeFurnaceController extends TileTimeFurnaceBase implements ITickable {
 	private ControllerInventory inventory = new ControllerInventory();
+
+	@Override
+	public void update() {
+		//Check special recipes for power-using smelting
+		//If not special recipe, function like a generic furnace
+	}
 
 	@Override
 	public ItemStackHandler getInventory() {

@@ -32,6 +32,7 @@ public class GuiTimeFurnace extends GuiContainer {
 
 	public GuiTimeFurnace(IInventory playerInv, TileTimeFurnaceBase tfc) {
 		super(new ContainerTimeFurnace(playerInv, tfc));
+		ySize = 172;
 	}
 
 	@Override
@@ -52,8 +53,8 @@ public class GuiTimeFurnace extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRenderer.drawString(I18n.format("container.timefurnace"), 8, 6, 4210752);
-		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format("container.timefurnace"), 9, 7, 9838347);
+		fontRenderer.drawString(I18n.format("container.inventory"), 9, 78, 9838347);
 	}
 
 }

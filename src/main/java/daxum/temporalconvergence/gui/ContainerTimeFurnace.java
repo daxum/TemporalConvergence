@@ -26,14 +26,14 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerTimeFurnace extends ContainerBase<TileTimeFurnaceBase> {
 
 	public ContainerTimeFurnace(IInventory playerInventory, TileTimeFurnaceBase tile) {
-		super(playerInventory, tile, 84);
+		super(playerInventory, tile, 90);
 	}
 
 	@Override
 	protected void addTileSlots() {
-		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 0, 0));
-		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 18, 0));
-		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 2, 36, 0));
+		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 56, 56));
+		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 56, 20));
+		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 2, 116, 38));
 	}
 
 }
