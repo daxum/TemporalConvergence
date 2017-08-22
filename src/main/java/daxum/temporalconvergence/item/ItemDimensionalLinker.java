@@ -21,7 +21,6 @@ package daxum.temporalconvergence.item;
 
 import java.util.List;
 
-import daxum.temporalconvergence.power.PowerDimension;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,7 +58,7 @@ public class ItemDimensionalLinker extends ItemBase {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected) {
 		if (!world.isRemote && isBound(stack)) {
-			PowerDimension pd = PowerDimension.get(world, stack.getTagCompound().getInteger("dimid"));
+			/*PowerDimension pd = PowerDimension.get(world, stack.getTagCompound().getInteger("dimid"));
 
 			if (pd != null) {
 				stack.getTagCompound().setString("debug", pd.toString());
@@ -68,7 +67,7 @@ public class ItemDimensionalLinker extends ItemBase {
 				stack.getTagCompound().setString("debug", "Empty dimension");
 			}
 
-			stack.getTagCompound().setBoolean("empty", pd == null);
+			stack.getTagCompound().setBoolean("empty", pd == null);*/
 		}
 	}
 

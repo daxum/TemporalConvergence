@@ -20,7 +20,6 @@
 package daxum.temporalconvergence.tileentity;
 
 import daxum.temporalconvergence.block.BlockDimContr.PowerLevel;
-import daxum.temporalconvergence.power.PowerDimension;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 
@@ -41,7 +40,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 				state = PowerLevel.EMPTY;
 				isFrozen = false;
 			}
-			else {
+			/*else {
 				PowerDimension connected = PowerDimension.get(world, linkId);
 
 				if (connected == null) {
@@ -61,7 +60,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 					else if (ratio > 1)
 						state = PowerLevel.TOO_HIGH;
 				}
-			}
+			}*/
 
 			if (state != prevState || isFrozen != prevFrozen)
 				sendBlockUpdate();
@@ -69,7 +68,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 	}
 
 	public void freezeDim() {
-		if (world.isRemote || didThisFreeze) return;
+		/*if (world.isRemote || didThisFreeze) return;
 
 		PowerDimension connected = PowerDimension.get(world, linkId);
 
@@ -77,11 +76,11 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 			connected.addFreezer();
 
 		didThisFreeze = true;
-		sendBlockUpdate();
+		sendBlockUpdate();*/
 	}
 
 	public void unFreezeDim() {
-		if (!world.isRemote && didThisFreeze) {
+		/*if (!world.isRemote && didThisFreeze) {
 			PowerDimension connected = PowerDimension.get(world, linkId);
 
 			if (connected != null) {
@@ -89,11 +88,11 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 				didThisFreeze = false;
 				sendBlockUpdate();
 			}
-		}
+		}*/
 	}
 
 	public void unbind() {
-		if (!world.isRemote) {
+		/*if (!world.isRemote) {
 			if (didThisFreeze) {
 				PowerDimension connected = PowerDimension.get(world, linkId);
 
@@ -103,12 +102,12 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 
 			linkId = -1;
 			sendBlockUpdate();
-		}
+		}*/
 	}
 
 	public void setId(int i) {
 		if (!world.isRemote && i != linkId && i >= 0) {
-			if (didThisFreeze) {
+			/*if (didThisFreeze) {
 				PowerDimension old = PowerDimension.get(world, linkId);
 
 				if (old != null)
@@ -125,7 +124,7 @@ public class TileDimContr extends TileEntityBase implements ITickable {
 				linkId = i;
 			}
 
-			sendBlockUpdate();
+			sendBlockUpdate();*/
 		}
 	}
 

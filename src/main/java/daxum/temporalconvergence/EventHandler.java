@@ -24,7 +24,6 @@ import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ItemPhaseClothChest;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.particle.ParticleHandler;
-import daxum.temporalconvergence.power.PowerDimension;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.world.DimensionHandler;
@@ -69,7 +68,7 @@ public final class EventHandler {
 	@SubscribeEvent
 	public static void worldTick(WorldTickEvent event) {
 		if (event.side == Side.SERVER && event.phase == Phase.END && event.world.provider.getDimension() == 0) {
-			PowerDimension.updateDimensions(event.world);
+			//PowerDimension.updateDimensions(event.world);
 			ItemPhaseClothChest.updateDodgeState();
 		}
 	}

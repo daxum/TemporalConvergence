@@ -22,17 +22,17 @@ package daxum.temporalconvergence.power;
 import java.util.Random;
 
 import daxum.temporalconvergence.TemporalConvergence;
-import daxum.temporalconvergence.world.SaveDataHandler;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 //WARNING: Wall of comments incoming!
+@Deprecated
+//Currently unused, probably will be repurposed later
 public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 	//These four values don't need to be saved.
 	public static final int MAX_INSTABILITY = 300; //Determines how long a dimension can stay above maxIoRate before it destabilizes.
 	public final int id; //The unique id for the dimension. Use this to obtain the proper dimension using get below.
-	private final SaveDataHandler sdh; //This needs to be here so the dimension can delete itself / mark save data as dirty.
+	//private final SaveDataHandler sdh; //This needs to be here so the dimension can delete itself / mark save data as dirty.
 	private final Random rand = new Random();
 
 	//All values below this are used for update logic
@@ -56,9 +56,9 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 
 	//Use makeNew or get to obtain an instance.
 	//Don't use SaveDataHandler to get a new instance, as it will not be initialized.
-	public PowerDimension(SaveDataHandler s, int ID) {
+	public PowerDimension(/*SaveDataHandler s,*/ int ID) {
 		id = ID;
-		sdh = s;
+		//sdh = s;
 	}
 
 	public void update() {
@@ -94,7 +94,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		}
 
 		if (amount <= 0) { //Dimension out of time, collapses
-			sdh.removePowerDim(id);
+			//sdh.removePowerDim(id);
 			return;
 		}
 
@@ -132,7 +132,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		powerRequested = 0;
 		attemptedInsertion = 0;
 
-		sdh.markDirty();
+		//sdh.markDirty();
 	}
 
 	//Returns the amount of power gotten
@@ -160,11 +160,11 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 		}
 
 		if (amount <= 0) {
-			sdh.removePowerDim(id);
+			//sdh.removePowerDim(id);
 		}
 
 		powerDrawn += returnAmount;
-		sdh.markDirty();
+		//sdh.markDirty();
 		return returnAmount;
 	}
 
@@ -188,7 +188,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 
 		amount += insertAmount - unInserted;
 		powerInserted += insertAmount - unInserted;
-		sdh.markDirty();
+		//sdh.markDirty();
 		return unInserted;
 	}
 
@@ -252,17 +252,17 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 
 	public void addFreezer() {
 		frozenCount++;
-		sdh.markDirty();
+		//sdh.markDirty();
 	}
 
 	public void removeFreezer() {
 		if (frozenCount > 0) {
 			frozenCount--;
-			sdh.markDirty();
+			//sdh.markDirty();
 		}
 	}
 
-	public static PowerDimension makeNew(World world, int initialAmount, int timeLossRate, int maxSafeAmount, int maxSafeIoRate, int timeLossFrequency) {
+	/*public static PowerDimension makeNew(World world, int initialAmount, int timeLossRate, int maxSafeAmount, int maxSafeIoRate, int timeLossFrequency) {
 		PowerDimension newDim = SaveDataHandler.get(world).getNewPowerDim(); //This marks the SaveDataHandler as dirty, so I don't need to repeat it here.
 		newDim.init(initialAmount, timeLossRate, maxSafeAmount, maxSafeIoRate, timeLossFrequency);
 
@@ -285,7 +285,7 @@ public class PowerDimension implements INBTSerializable<NBTTagCompound> {
 				next.update();
 			}
 		}
-	}
+	}*/
 
 	@Override
 	public String toString() {

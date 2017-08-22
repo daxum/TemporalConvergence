@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Random;
 
 import daxum.temporalconvergence.world.DimensionHandler;
-import daxum.temporalconvergence.world.SaveDataHandler;
+import daxum.temporalconvergence.world.savedata.CitySaveData;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -50,9 +50,9 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 
 	private final Random rand = new Random();
 	private final Map<Long, CityData> cityMap = new HashMap<>();
-	private final SaveDataHandler saveHandler;
+	private final CitySaveData saveHandler;
 
-	public FutureCityGenerator(SaveDataHandler sdh) {
+	public FutureCityGenerator(CitySaveData sdh) {
 		saveHandler = sdh;
 	}
 
@@ -310,9 +310,9 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 	}
 
 	public static FutureCityGenerator getGenerator(World world) {
-		if (world.provider.getDimensionType() == DimensionHandler.EARLY_FUTURE) {
-			SaveDataHandler sdh = SaveDataHandler.get(world);
-			return sdh.getFutureCityGenerator();
+		if (!world.isRemote && world.provider.getDimensionType() == DimensionHandler.EARLY_FUTURE) {
+			CitySaveData sd = CitySaveData.get(world);
+			return sd.getFutureCityGenerator();
 		}
 
 		return null;
