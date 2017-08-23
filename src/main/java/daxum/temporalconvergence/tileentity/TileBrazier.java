@@ -22,6 +22,7 @@ package daxum.temporalconvergence.tileentity;
 import java.util.Random;
 
 import daxum.temporalconvergence.block.BlockBrazier;
+import daxum.temporalconvergence.power.IPowerProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
-public class TileBrazier extends TileEntityBase implements ITickable {
+public class TileBrazier extends TileEntityBase implements ITickable, IPowerProvider {
 	private static final int MAX_BURN_TIME = 2400;
 
 	private final Random rand = new Random();
@@ -64,6 +65,11 @@ public class TileBrazier extends TileEntityBase implements ITickable {
 				world.playSound(null, pos, SoundEvents.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS, 1.0f + rand.nextFloat(), rand.nextFloat() * 0.7f + 0.3f);
 			}
 		}
+	}
+
+	@Override
+	public int getPower(String type, int amount) {
+		return 0;
 	}
 
 	public void startBurning() {

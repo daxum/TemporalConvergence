@@ -63,6 +63,7 @@ public final class ModItems {
 	public static final Item PHASE_CLOTH_BOOTS;
 	public static final Item PHASE_CLOTH_HELMET;
 	public static final Item LUNAR_BOOMERANG;
+	public static final Item BRAZIER;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
@@ -87,6 +88,7 @@ public final class ModItems {
 		PHASE_CLOTH_BOOTS = new ItemPhaseClothBoots();
 		PHASE_CLOTH_HELMET = new ItemPhaseClothHelmet();
 		LUNAR_BOOMERANG = new ItemLunarBoomerang();
+		BRAZIER = new ItemBrazier();
 	}
 
 	@SubscribeEvent
@@ -109,6 +111,7 @@ public final class ModItems {
 		itemRegistry.register(PHASE_CLOTH_BOOTS);
 		itemRegistry.register(PHASE_CLOTH_HELMET);
 		itemRegistry.register(LUNAR_BOOMERANG);
+		itemRegistry.register(BRAZIER);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
@@ -131,7 +134,6 @@ public final class ModItems {
 		itemRegistry.register(new ItemSlab(ModBlocks.EARLY_FUTURE_HALF_SLAB, (BlockSlab) ModBlocks.EARLY_FUTURE_HALF_SLAB, (BlockSlab) ModBlocks.EARLY_FUTURE_DOUBLE_SLAB).setRegistryName(ModBlocks.EARLY_FUTURE_HALF_SLAB.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.REWOUND_SOIL).setRegistryName(ModBlocks.REWOUND_SOIL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.EARLY_FUTURE_BUTTON).setRegistryName(ModBlocks.EARLY_FUTURE_BUTTON.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.BRAZIER).setRegistryName(ModBlocks.BRAZIER.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_WOOD) {
 			@Override
 			public int getItemBurnTime(ItemStack fuel) {

@@ -9,8 +9,8 @@
     "elements": [
         {
             "name": "fill",
-            "from": [5, 17.5, 5],
-            "to": [11, 17.5, 11],
+            "from": [5, 2.5, 5],
+            "to": [11, 2.5, 11],
             "faces": {
                 "up": { "texture": "#brazier", "uv": [0, 0, 16, 16] }
             }

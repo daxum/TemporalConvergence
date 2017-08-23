@@ -55,6 +55,7 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.PHASE_CLOTH_BOOTS);
 		registerRender(ModItems.PHASE_CLOTH_HELMET);
 		registerRender(ModItems.LUNAR_BOOMERANG);
+		registerRender(ModItems.BRAZIER);
 
 		//Blocks
 		registerRender(Item.getItemFromBlock(ModBlocks.ORIGIN_STONE));
@@ -78,7 +79,6 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_HALF_SLAB));
 		registerRender(Item.getItemFromBlock(ModBlocks.REWOUND_SOIL));
 		registerRender(Item.getItemFromBlock(ModBlocks.EARLY_FUTURE_BUTTON));
-		registerRender(Item.getItemFromBlock(ModBlocks.BRAZIER));
 		registerRender(Item.getItemFromBlock(ModBlocks.SOLAR_WOOD));
 		registerRender(Item.getItemFromBlock(ModBlocks.SOLAR_PLANKS));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_FURNACE));

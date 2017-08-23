@@ -75,6 +75,7 @@ public final class ModBlocks {
 	public static final Block FUTURE_CHEST;
 	public static final Block SOLAR_LEAVES;
 	public static final Block SOLAR_SAPLING;
+	public static final Block BRAZIER_BOTTOM;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -131,6 +132,7 @@ public final class ModBlocks {
 		FUTURE_CHEST = new BlockFutureChest();
 		SOLAR_LEAVES = new BlockSolarLeaves();
 		SOLAR_SAPLING = new BlockSolarSapling();
+		BRAZIER_BOTTOM = new BlockBrazierBottom();
 	}
 
 	@SubscribeEvent
@@ -174,6 +176,7 @@ public final class ModBlocks {
 		blockRegistry.register(FUTURE_CHEST);
 		blockRegistry.register(SOLAR_LEAVES);
 		blockRegistry.register(SOLAR_SAPLING);
+		blockRegistry.register(BRAZIER_BOTTOM);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
