@@ -23,13 +23,13 @@ import java.util.Random;
 
 import daxum.temporalconvergence.tileentity.TileTimePlant;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCrops;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -45,12 +45,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
-	public static final PropertyBool WITHERED = PropertyBool.create("withered");
+	public static final PropertyInteger AGE = BlockCrops.AGE;
 	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.9375, 0.9375);
 
 	public BlockTimePlant() {
 		super("time_plant", BlockPresets.PLANT);
-		setStateDefaults(WITHERED, true);
+		setStateDefaults(AGE, 0);
 		setTickRandomly(true);
 		setLightLevel(0.4f);
 		setHasTileEntity();
@@ -74,19 +74,15 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (player != null && player.getHeldItem(hand).getItem() instanceof ItemShears) {
-			if (world.getTileEntity(pos) instanceof TileTimePlant) {
-				ItemStack toDrop = ((TileTimePlant)world.getTileEntity(pos)).getShearedItem(world.getWorldTime());
+		if (world.getBlockState(pos).getValue(AGE) == 7 && world.getTileEntity(pos) instanceof TileTimePlant) {
+			ItemStack toDrop = ((TileTimePlant)world.getTileEntity(pos)).getHarvestItem(world.getWorldTime());
+			world.setBlockState(pos, state.withProperty(AGE, 0));
 
-				if (!toDrop.isEmpty()) {
-					if (!world.isRemote) {
-						world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.9, pos.getZ() + 0.5, toDrop));
-						player.getHeldItem(hand).damageItem(1, player);
-					}
-
-					return true;
-				}
+			if (!world.isRemote) {
+				world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.9, pos.getZ() + 0.5, toDrop));
 			}
+
+			return true;
 		}
 
 		return false;
@@ -94,8 +90,12 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-		if (!world.isRemote && world.getTileEntity(pos) instanceof TileTimePlant) {
-			((TileTimePlant) world.getTileEntity(pos)).onRandomTick();
+		if (!world.isRemote && state.getValue(AGE) < 7 && rand.nextInt(48) == 0) {
+			world.setBlockState(pos, state.cycleProperty(AGE));
+
+			if (world.getTileEntity(pos) instanceof TileTimePlant) {
+				((TileTimePlant)world.getTileEntity(pos)).increaseCharge(1);
+			}
 		}
 	}
 
@@ -136,19 +136,17 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public boolean canGrow(World world, BlockPos pos, IBlockState state, boolean isClient) {
-		return !state.getValue(WITHERED);
+		return state.getValue(AGE) < 7;
 	}
 
 	@Override
 	public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state) {
-		return !state.getValue(WITHERED);
+		return state.getValue(AGE) < 7 && rand.nextBoolean();
 	}
 
 	@Override
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
-		if (world.getTileEntity(pos) instanceof TileTimePlant) {
-			((TileTimePlant) world.getTileEntity(pos)).onGrowthAccelerated(world.getWorldTime());
-		}
+		world.setBlockState(pos, state.cycleProperty(AGE));
 	}
 
 	@Override

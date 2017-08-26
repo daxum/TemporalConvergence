@@ -1,6 +1,0 @@
-{
-	"parent": "minecraft:block/cross",
-	"textures": {
-		"cross": "temporalconvergence:blocks/time_plant_withered"
-	}
-}

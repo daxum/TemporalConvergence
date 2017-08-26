@@ -21,7 +21,6 @@ package daxum.temporalconvergence.world;
 
 import java.util.Random;
 
-import daxum.temporalconvergence.block.BlockTimePlant;
 import daxum.temporalconvergence.block.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -68,7 +67,7 @@ public class ModWorldGenerator implements IWorldGenerator {
 			IBlockState state = world.getBlockState(downPos);
 
 			if (world.isAirBlock(pos) && state.getBlock().canSustainPlant(state, world, downPos, EnumFacing.UP, (IPlantable) ModBlocks.TIME_PLANT)) {
-				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState().withProperty(BlockTimePlant.WITHERED, false), 2);
+				world.setBlockState(pos, ModBlocks.TIME_PLANT.getDefaultState(), 2);
 			}
 		}
 	}
