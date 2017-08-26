@@ -19,16 +19,18 @@
  **************************************************************************/
 package daxum.temporalconvergence.recipes;
 
+import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class RecipeHandler {
-	/*
-	GameRegistry.addSmelting(ModBlocks.TIME_SAND, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
-	 */
-	public static void init() { initDimGen(); }
+	public static void init() {
+		initDimGen();
+		GameRegistry.addSmelting(ModBlocks.TIMESTONE_MIX, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
+	}
 	/*
 	public static void initOreDict() {
 		OreDictionary.registerOre("logWood", ModBlocks.LUNAR_WOOD);
