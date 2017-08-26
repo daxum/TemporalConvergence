@@ -19,6 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.world.futurecity;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 public class BossBuildingGenerator extends FutureStructureGenerator {
@@ -30,12 +32,12 @@ public class BossBuildingGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public ChunkPrimer generateStructure(int[][] cityMap, int chunkX, int chunkZ, int groundLevel) {
+	public ChunkPrimer generateStructure(int[][] cityMap, int dataMap[][], int chunkX, int chunkZ, int groundLevel) {
 		return getBasePrimer(groundLevel);
 	}
 
 	@Override
-	public void placeInMap(int[][] cityMap) {
+	public void placeInMap(int[][] cityMap, int[][] dataMap) {
 		final int cityWidth = cityMap.length;
 		final int cityLength = cityMap[0].length;
 		final int MAX_AREA = FutureCityGenerator.MAX_CITY_SIZE * FutureCityGenerator.MAX_CITY_SIZE;
@@ -54,6 +56,11 @@ public class BossBuildingGenerator extends FutureStructureGenerator {
 	@Override
 	public char getSymbol() {
 		return 'B';
+	}
+
+	@Override
+	public void setTiles(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, World world, BlockPos startPos, int groundLevel) {
+		//TODO
 	}
 
 }

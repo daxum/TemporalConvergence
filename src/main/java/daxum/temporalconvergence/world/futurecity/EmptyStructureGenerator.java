@@ -19,6 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.world.futurecity;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 public class EmptyStructureGenerator extends FutureStructureGenerator {
@@ -28,16 +30,19 @@ public class EmptyStructureGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public ChunkPrimer generateStructure(int[][] cityMap, int chunkX, int chunkZ, int groundLevel) {
+	public ChunkPrimer generateStructure(int[][] cityMap, int dataMap[][], int chunkX, int chunkZ, int groundLevel) {
 		return getBasePrimer(groundLevel);
 	}
 
 	@Override
-	public void placeInMap(int[][] cityMap) {}
+	public void placeInMap(int[][] cityMap, int dataMap[][]) {}
 
 	@Override
 	public char getSymbol() {
 		return ' ';
 	}
+
+	@Override
+	public void setTiles(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, World world, BlockPos startPos, int groundLevel) {}
 
 }

@@ -22,6 +22,8 @@ package daxum.temporalconvergence.world.futurecity;
 import java.util.Random;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 //For testing purposes only
@@ -41,7 +43,7 @@ public class GenericBuildingGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public ChunkPrimer generateStructure(int[][] cityMap, int chunkX, int chunkZ, int groundLevel) {
+	public ChunkPrimer generateStructure(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, int groundLevel) {
 		final int height = groundLevel + rand.nextInt(81) + 9;
 		ChunkPrimer primer = getBasePrimer(groundLevel);
 
@@ -57,7 +59,7 @@ public class GenericBuildingGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public void placeInMap(int[][] cityMap) {
+	public void placeInMap(int[][] cityMap, int[][] dataMap) {
 		if (width == length) {
 			placeInMap(cityMap, width, length, chance);
 		}
@@ -71,4 +73,7 @@ public class GenericBuildingGenerator extends FutureStructureGenerator {
 	public char getSymbol() {
 		return symbol;
 	}
+
+	@Override
+	public void setTiles(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, World world, BlockPos startPos, int groundLevel) {}
 }

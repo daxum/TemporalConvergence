@@ -113,6 +113,7 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 		private int cityWidth;
 		private int cityLength;
 		private int[][] cityIdMap;
+		private int[][] cityDataMap;
 
 		public CityData() {}
 
@@ -123,6 +124,7 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 			cityLength = length;
 			groundLevel = rand.nextInt(maxGroundVariation * 2) - maxGroundVariation + averageGroundLevel;
 			cityIdMap = new int[cityWidth][cityLength];
+			cityDataMap = new int[cityWidth][cityLength];
 
 			generateCity();
 		}
@@ -135,7 +137,7 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 			int mapX = Math.abs(chunkX - startChunkX);
 			int mapZ = Math.abs(chunkZ - startChunkZ);
 
-			return getGeneratorById(cityIdMap[mapX][mapZ]).generateStructure(cityIdMap, mapX, mapZ, groundLevel);
+			return getGeneratorById(cityIdMap[mapX][mapZ]).generateStructure(cityIdMap, cityDataMap, mapX, mapZ, groundLevel);
 		}
 
 		private void generateCity() {
@@ -154,7 +156,7 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 
 			//Generate roads
 
-			ROAD_GENERATOR.placeInMap(cityIdMap);
+			ROAD_GENERATOR.placeInMap(cityIdMap, cityDataMap);
 
 			//If city too small, start over
 
@@ -182,7 +184,7 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 			//Generate other buildings
 
 			for (FutureStructureGenerator gen : GENERATORS) {
-				gen.placeInMap(cityIdMap);
+				gen.placeInMap(cityIdMap, cityDataMap);
 			}
 
 			saveHandler.markDirty();
@@ -210,6 +212,7 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 		private static final String LENGTH_TAG = "length";
 		private static final String GROUND_TAG = "ground";
 		private static final String MAP_TAG = "city";
+		private static final String DATA_MAP_TAG = "cityData";
 
 		@Override
 		public NBTTagCompound serializeNBT() {
@@ -222,14 +225,17 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 			comp.setInteger(GROUND_TAG, groundLevel);
 
 			int[] flattenedMap = new int[cityWidth * cityLength];
+			int[] flattenedData = new int[cityWidth * cityLength];
 
 			for (int i = 0; i < cityWidth; i++) {
 				for (int j = 0; j < cityLength; j++) {
 					flattenedMap[i * cityLength + j] = cityIdMap[i][j];
+					flattenedData[i * cityLength + j] = cityDataMap[i][j];
 				}
 			}
 
 			comp.setIntArray(MAP_TAG, flattenedMap);
+			comp.setIntArray(DATA_MAP_TAG, flattenedData);
 
 			return comp;
 		}
@@ -263,6 +269,17 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 				for (int i = 0; i < cityWidth; i++) {
 					for (int j = 0; j < cityLength; j++) {
 						cityIdMap[i][j] = flatMap[i * cityLength + j];
+					}
+				}
+			}
+
+			if (comp.hasKey(DATA_MAP_TAG, Constants.NBT.TAG_INT_ARRAY)) {
+				int[] flatMap = comp.getIntArray(DATA_MAP_TAG);
+				cityDataMap = new int[cityWidth][cityLength];
+
+				for (int i = 0; i < cityWidth; i++) {
+					for (int j = 0; j < cityLength; j++) {
+						cityDataMap[i][j] = flatMap[i * cityLength + j];
 					}
 				}
 			}

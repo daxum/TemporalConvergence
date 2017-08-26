@@ -75,6 +75,7 @@ public class StructureHandler {
 	private static StateData[] rotateStructure(StateData[] structure, Rotation rot) {
 		StateData[] newStruct;
 		TemporalConvergence.LOGGER.info("Creating new rotation data for rotation {}", rot);
+
 		switch(rot) {
 		case CLOCKWISE_180:
 			newStruct = new StateData[structure.length];
@@ -83,7 +84,8 @@ public class StructureHandler {
 				StateData current = structure[i];
 				long newPos = compressPos(current.sizeX() - current.getX() - 1, current.getY(), current.sizeZ() - current.getZ() - 1);
 
-				newStruct[i] = new StateData(newPos, current.size, current.state.withRotation(rot));
+				newStruct[i] = new StateData(newPos, current.size, current.state.withRotation(rot), current.tileData == null ? null : current.tileData.copy());
+				setTilePosToStateDataPos(newStruct[i]);
 			}
 
 			return newStruct;
@@ -95,7 +97,8 @@ public class StructureHandler {
 				long newPos = compressPos(current.sizeZ() - current.getZ() - 1, current.getY(), current.getX());
 				int newSize = (current.sizeX() - 1 & 15) << 4 | current.sizeZ() - 1;
 
-				newStruct[i] = new StateData(newPos, newSize, current.state.withRotation(rot));
+				newStruct[i] = new StateData(newPos, newSize, current.state.withRotation(rot), current.tileData == null ? null : current.tileData.copy());
+				setTilePosToStateDataPos(newStruct[i]);
 			}
 
 			return newStruct;
@@ -107,13 +110,22 @@ public class StructureHandler {
 				long newPos = compressPos(current.getZ(), current.getY(), current.sizeX() - current.getX() - 1);
 				int newSize = (current.sizeX() - 1 & 15) << 4 | current.sizeZ() - 1;
 
-				newStruct[i] = new StateData(newPos, newSize, current.state.withRotation(rot));
+				newStruct[i] = new StateData(newPos, newSize, current.state.withRotation(rot), current.tileData == null ? null : current.tileData.copy());
+				setTilePosToStateDataPos(newStruct[i]);
 			}
 
 			return newStruct;
 		case NONE:
 		default: return structure;
 
+		}
+	}
+
+	private static void setTilePosToStateDataPos(StateData data) {
+		if (data.tileData != null && data.tileData.hasKey("x", Constants.NBT.TAG_INT) && data.tileData.hasKey("y", Constants.NBT.TAG_INT) && data.tileData.hasKey("z", Constants.NBT.TAG_INT)) {
+			data.tileData.setInteger("x", data.getX());
+			data.tileData.setInteger("y", data.getY());
+			data.tileData.setInteger("z", data.getZ());
 		}
 	}
 
@@ -125,11 +137,13 @@ public class StructureHandler {
 		private final long pos;
 		public final int size;
 		public final IBlockState state;
+		public final NBTTagCompound tileData;
 
-		public StateData(long position, int compressedSize, IBlockState blockState) {
+		public StateData(long position, int compressedSize, IBlockState blockState, NBTTagCompound data) {
 			pos = position;
 			state = blockState;
 			size = compressedSize;
+			tileData = data;
 		}
 
 		public int getX() {
@@ -195,7 +209,13 @@ public class StructureHandler {
 						NBTTagCompound comp = statePos.getCompoundTagAt(i);
 
 						if (comp.hasKey("pos", Constants.NBT.TAG_LONG) && comp.hasKey("state", Constants.NBT.TAG_INT)) {
-							stateList.add(new StateData(comp.getLong("pos"), size, stateMap.get(comp.getInteger("state"))));
+							NBTTagCompound tileTag = null;
+
+							if (comp.hasKey("tile", Constants.NBT.TAG_COMPOUND)) {
+								tileTag = comp.getCompoundTag("tile");
+							}
+
+							stateList.add(new StateData(comp.getLong("pos"), size, stateMap.get(comp.getInteger("state")), tileTag));
 						}
 					}
 

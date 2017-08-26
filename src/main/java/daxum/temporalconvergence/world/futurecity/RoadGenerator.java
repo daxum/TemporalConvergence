@@ -22,6 +22,8 @@ package daxum.temporalconvergence.world.futurecity;
 import daxum.temporalconvergence.world.futurecity.StructureHandler.StateData;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 public class RoadGenerator extends FutureStructureGenerator {
@@ -32,7 +34,7 @@ public class RoadGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public ChunkPrimer generateStructure(int[][] cityMap, int chunkX, int chunkZ, int groundLevel) {
+	public ChunkPrimer generateStructure(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, int groundLevel) {
 		boolean roadNorth = cityMap[chunkX][chunkZ - 1] == getId();
 		boolean roadEast = cityMap[chunkX + 1][chunkZ] == getId();
 		boolean roadSouth = cityMap[chunkX][chunkZ + 1] == getId();
@@ -182,7 +184,7 @@ public class RoadGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public void placeInMap(int[][] cityMap) {
+	public void placeInMap(int[][] cityMap, int dataMap[][]) {
 		final int roadStartX = rand.nextInt(cityMap.length - 2) + 1;
 		final int roadStartZ = rand.nextInt(cityMap[0].length - 2) + 1;
 
@@ -290,4 +292,7 @@ public class RoadGenerator extends FutureStructureGenerator {
 			}
 		}
 	}
+
+	@Override
+	public void setTiles(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, World world, BlockPos startPos, int groundLevel) {}
 }

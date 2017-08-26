@@ -21,7 +21,13 @@ package daxum.temporalconvergence.world.futurecity;
 
 import java.util.Random;
 
+import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.world.ChunkProviderEarlyFuture;
+import daxum.temporalconvergence.world.futurecity.StructureHandler.StateData;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 public abstract class FutureStructureGenerator {
@@ -32,9 +38,11 @@ public abstract class FutureStructureGenerator {
 		id = idnum;
 	}
 
-	public abstract ChunkPrimer generateStructure(int[][] cityMap, int chunkX, int chunkZ, int groundLevel);
+	public abstract ChunkPrimer generateStructure(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, int groundLevel);
 
-	public abstract void placeInMap(int[][] cityMap);
+	public abstract void placeInMap(int[][] cityMap, int[][] dataMap);
+
+	public abstract void setTiles(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, World world, BlockPos startPos, int groundLevel);
 
 	//For debug purposes
 	public abstract char getSymbol();
@@ -91,6 +99,28 @@ public abstract class FutureStructureGenerator {
 		}
 
 		return primer;
+	}
+
+	protected void setTiles(World world, StateData[] dataArray, BlockPos start, Rotation rot, int yOffset) {
+		for (StateData data : dataArray) {
+			if (data.tileData != null) {
+				data.tileData.setInteger("x", data.getX() + start.getX());
+				data.tileData.setInteger("y", data.getY() + start.getY() + yOffset);
+				data.tileData.setInteger("z", data.getZ() + start.getZ());
+
+				TileEntity te = data.state.getBlock().createTileEntity(world, data.state);
+				BlockPos pos = new BlockPos(data.getX() + start.getX(), data.getY() + start.getY() + yOffset, data.getZ() + start.getZ());
+
+				if (te != null) {
+					te.rotate(rot);
+					world.setTileEntity(pos, te);
+					te.readFromNBT(data.tileData);
+				}
+				else {
+					TemporalConvergence.LOGGER.warn("Block at {} (state {}) has no tile entity!?", pos, data.state);
+				}
+			}
+		}
 	}
 
 	public int getId() {

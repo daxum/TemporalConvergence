@@ -44,6 +44,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class CommandExportStructure extends CommandBase {
 
@@ -87,7 +88,9 @@ public class CommandExportStructure extends CommandBase {
 
 			BlockPos endPos = new BlockPos(largeX, largeY, largeZ);
 
-			if (sender.getEntityWorld().isOutsideBuildHeight(startPos) || sender.getEntityWorld().isOutsideBuildHeight(endPos)) {
+			World world = sender.getEntityWorld();
+
+			if (world.isOutsideBuildHeight(startPos) || world.isOutsideBuildHeight(endPos)) {
 				throw new CommandException("commands.tempconvexport.outsideworld");
 			}
 
@@ -103,24 +106,34 @@ public class CommandExportStructure extends CommandBase {
 				throw new CommandException("commands.tempconvexport.invalidname");
 			}
 
-			IBlockState[][][] states = new IBlockState[Math.abs(startPos.getX() - endPos.getX()) + 1][Math.abs(startPos.getY() - endPos.getY()) + 1][Math.abs(startPos.getZ() - endPos.getZ()) + 1];
+			int xLength = Math.abs(startPos.getX() - endPos.getX()) + 1;
+			int yLength = Math.abs(startPos.getY() - endPos.getY()) + 1;
+			int zLength = Math.abs(startPos.getZ() - endPos.getZ()) + 1;
+
+			IBlockState[][][] states = new IBlockState[xLength][yLength][zLength];
+			NBTTagCompound[][][] tileData = new NBTTagCompound[xLength][yLength][zLength];
 
 			for (int x = startPos.getX(); x <= endPos.getX(); x++) {
 				for (int y = startPos.getY(); y <= endPos.getY(); y++) {
 					for (int z = startPos.getZ(); z <= endPos.getZ(); z++) {
-						states[x - startPos.getX()][y - startPos.getY()][z - startPos.getZ()] = sender.getEntityWorld().getChunkFromChunkCoords(x >> 4, z >> 4).getBlockState(x, y, z);
+						BlockPos pos = new BlockPos(x, y, z);
+						states[x - startPos.getX()][y - startPos.getY()][z - startPos.getZ()] = sender.getEntityWorld().getBlockState(pos);
+
+						if (world.getTileEntity(pos) != null) {
+							tileData[x - startPos.getX()][y - startPos.getY()][z - startPos.getZ()] = world.getTileEntity(pos).writeToNBT(new NBTTagCompound());
+						}
 					}
 				}
 			}
 
 			//Currently not possible to reach on dedicated server, but just in case
-			saveStructure((server.isSinglePlayer() ? "saves/" : "") + server.getFolderName() + "/temporalconvergence_structures/", args[6] + ".nbt", states);
+			saveStructure((server.isSinglePlayer() ? "saves/" : "") + server.getFolderName() + "/temporalconvergence_structures/", args[6] + ".nbt", states, tileData);
 
 			notifyCommandListener(sender, this, "commands.tempconvexport.success", args[6] + ".nbt");
 		}
 	}
 
-	private void saveStructure(String parentFolder, String saveFile, IBlockState[][][] states) throws CommandException {
+	private void saveStructure(String parentFolder, String saveFile, IBlockState[][][] states, NBTTagCompound[][][] tileData) throws CommandException {
 		Map<IBlockState, Integer> stateMap = new HashMap<>();
 		List<IBlockState> stateList = new ArrayList<>();
 
@@ -152,10 +165,15 @@ public class CommandExportStructure extends CommandBase {
 					comp.setLong("pos", (long)(i & 15) << 32 | (long)(k & 15) << 36 | j);
 					comp.setInteger("state", stateMap.get(states[i][j][k]));
 
+					if (tileData[i][j][k] != null) {
+						comp.setTag("tile", tileData[i][j][k]);
+					}
+
 					statePos.appendTag(comp);
 				}
 			}
 		}
+
 		TemporalConvergence.LOGGER.info("Saved {} blocks", statePos.tagCount());
 		NBTTagCompound toSave = new NBTTagCompound();
 		toSave.setByte("size", (byte) (states.length - 1 & 15 | (states[0][0].length - 1 & 15) << 4));

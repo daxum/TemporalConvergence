@@ -21,6 +21,8 @@ package daxum.temporalconvergence.world.futurecity;
 
 import daxum.temporalconvergence.world.futurecity.StructureHandler.StateData;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkPrimer;
 
 public class HouseGenerator extends FutureStructureGenerator {
@@ -30,7 +32,7 @@ public class HouseGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public ChunkPrimer generateStructure(int[][] cityMap, int chunkX, int chunkZ, int groundLevel) {
+	public ChunkPrimer generateStructure(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, int groundLevel) {
 		ChunkPrimer primer = getBasePrimer(groundLevel);
 
 		Rotation rot;
@@ -60,7 +62,7 @@ public class HouseGenerator extends FutureStructureGenerator {
 
 		StateData[] middleData = StructureHandler.getStructureWithRotation("house1_middle", rot);
 
-		final int height = rand.nextInt(10) + 10;
+		final int height = dataMap[chunkX][chunkZ];
 		for (int i = 0; i < height; i++) {
 			for (StateData sd : middleData) {
 				primer.setBlockState(sd.getX(), sd.getY() + i * 5 + groundLevel + 6, sd.getZ(), sd.state);
@@ -71,11 +73,12 @@ public class HouseGenerator extends FutureStructureGenerator {
 	}
 
 	@Override
-	public void placeInMap(int[][] cityMap) {
+	public void placeInMap(int[][] cityMap, int[][] dataMap) {
 		for (int x = 0; x < cityMap.length; x++) {
 			for (int z = 0; z < cityMap[0].length; z++) {
 				if (cityMap[x][z] == FutureCityGenerator.EMPTY_ID) {
 					cityMap[x][z] = getId();
+					dataMap[x][z] = rand.nextInt(10) + 10;
 				}
 			}
 		}
@@ -84,6 +87,32 @@ public class HouseGenerator extends FutureStructureGenerator {
 	@Override
 	public char getSymbol() {
 		return 'H';
+	}
+
+	@Override
+	public void setTiles(int[][] cityMap, int[][] dataMap, int chunkX, int chunkZ, World world, BlockPos startPos, int groundLevel) {
+		Rotation rot = Rotation.NONE;
+		final int ROAD_ID = FutureCityGenerator.ROAD_ID;
+
+		if (cityMap[chunkX][chunkZ - 1] == ROAD_ID) {
+			rot = Rotation.CLOCKWISE_180;
+		}
+		else if (cityMap[chunkX + 1][chunkZ] == ROAD_ID) {
+			rot = Rotation.COUNTERCLOCKWISE_90;
+		}
+		else if (cityMap[chunkX - 1][chunkZ] == ROAD_ID) {
+			rot = Rotation.CLOCKWISE_90;
+		}
+
+		StateData[] floorData = StructureHandler.getStructureWithRotation("house1_floor", rot);
+		StateData[] middleData = StructureHandler.getStructureWithRotation("house1_middle", rot);
+
+		setTiles(world, floorData, startPos, rot, groundLevel);
+
+		final int height = dataMap[chunkX][chunkZ];
+		for (int i = 0; i < height; i++) {
+			setTiles(world, middleData, startPos, rot, i * 5 + groundLevel + 6);
+		}
 	}
 
 }
