@@ -258,7 +258,7 @@ public class BlockBrazier extends BlockBase {
 
 	@Override
 	public void onEntityWalk(World world, BlockPos pos, Entity entity) {
-		if (!world.isRemote && !entity.isImmuneToFire()) {
+		if (!world.isRemote && world.getBlockState(pos).getValue(BURNING) && !entity.isImmuneToFire()) {
 			entity.setFire(3);
 		}
 	}

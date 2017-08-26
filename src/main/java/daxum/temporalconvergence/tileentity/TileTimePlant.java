@@ -29,7 +29,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -43,7 +42,7 @@ public class TileTimePlant extends TileEntityBase {
 	private static final int TWILIGHT_CHARGE_INCREASE = 3; //The amount of charge the plant gains when bonemealed at dawn or dusk
 	private static final int NORMAL_CHARGE_INCREASE = 2; //The amount of charge the plant gains when bonemealed during the day, but not at a special time
 	private static final int NOON_CHARGE_INCREASE = 1; //The amount of charge the plant gains when bonemealed at noon
-	private static final int INSTABILITY_SPREAD_DISTANCE = 2; //The distance instability spreads to other time plants when this one is bonemealed
+	private static final int INSTABILITY_SPREAD_DISTANCE = 1; //The distance instability spreads to other time plants when this one is bonemealed
 	private static final int MIDNIGHT_CHARGE_BONUS = 2; //The amount of bonus charge a bulb gets when harvested at midnight
 	private static final int MOON_CHARGE_BONUS = 4; //The amount of bonus charge a bulb gets when harvested during a full moon (other phases are fractions of this)
 
@@ -98,7 +97,7 @@ public class TileTimePlant extends TileEntityBase {
 			setWithered();
 			ItemStack output = ItemStack.EMPTY;
 
-			int bulbStrength = 1 + MathHelper.ceil(charge / 2.0);
+			int bulbStrength = 1 + charge;
 
 			if (WorldHelper.isNight(worldTime)) {
 				bulbStrength *= 2;
