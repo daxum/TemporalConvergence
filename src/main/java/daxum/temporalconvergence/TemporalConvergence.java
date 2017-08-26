@@ -83,6 +83,7 @@ public class TemporalConvergence {
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 0);
 		RecipeHandler.init();
+		proxy.registerColors();
 
 		LOGGER.info(InitLogBuilder.get());
 	}

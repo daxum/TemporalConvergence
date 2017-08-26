@@ -46,7 +46,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	public static final PropertyInteger AGE = BlockCrops.AGE;
-	public static final AxisAlignedBB AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.9375, 0.9375);
+	public static final AxisAlignedBB SMALL_AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.5, 0.9375);
+	public static final AxisAlignedBB MEDIUM_AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.6875, 0.9375);
+	public static final AxisAlignedBB LARGE_AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 0.875, 0.9375);
+	public static final AxisAlignedBB FULL_AABB = new AxisAlignedBB(0.0625, 0.0, 0.0625, 0.9375, 1.0, 0.9375);
 
 	public BlockTimePlant() {
 		super("time_plant", BlockPresets.PLANT);
@@ -101,7 +104,20 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+		int growth = state.getValue(AGE);
+
+		if (growth == 0 || growth == 1) {
+			return SMALL_AABB;
+		}
+		else if (growth == 2 || growth == 3 || growth == 4) {
+			return MEDIUM_AABB;
+		}
+		else if (growth == 5 || growth == 6) {
+			return LARGE_AABB;
+		}
+		else {
+			return FULL_AABB;
+		}
 	}
 
 	@Override

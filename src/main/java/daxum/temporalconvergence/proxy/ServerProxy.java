@@ -34,6 +34,9 @@ public class ServerProxy implements IProxy{
 	public void registerEntityRenderer() {}
 
 	@Override
+	public void registerColors() {}
+
+	@Override
 	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {}
 
 	@Override
