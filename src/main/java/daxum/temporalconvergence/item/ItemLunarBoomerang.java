@@ -19,10 +19,14 @@
  **************************************************************************/
 package daxum.temporalconvergence.item;
 
+import daxum.temporalconvergence.entity.EntityLunarBoomerang;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -30,6 +34,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class ItemLunarBoomerang extends ItemBase {
+	private static final int MAX_USAGE_DURATION = 76000;
 
 	public ItemLunarBoomerang() {
 		super("lunar_boomerang");
@@ -37,7 +42,23 @@ public class ItemLunarBoomerang extends ItemBase {
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft) {
+		float velocity = ItemBow.getArrowVelocity(timeLeft);
 
+		if (!world.isRemote && velocity > 0.1f) {
+			EntityPlayer user = null;
+
+			if (entity instanceof EntityPlayer) {
+				user = (EntityPlayer)entity;
+			}
+
+			int additionalHits = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
+
+			EntityLunarBoomerang boomerang = new EntityLunarBoomerang(world, user, stack.copy(), 3.0f, 5 + additionalHits);
+			boomerang.setAim(user, user.rotationPitch * (Math.PI / 180.0), user.rotationYaw * (Math.PI / 180.0), velocity * 2.0f);
+
+			world.spawnEntity(boomerang);
+			stack.setCount(0);
+		}
 	}
 
 	@Override
@@ -53,7 +74,7 @@ public class ItemLunarBoomerang extends ItemBase {
 
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
-		return 72000;
+		return MAX_USAGE_DURATION;
 	}
 
 	@Override
