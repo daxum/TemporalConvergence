@@ -21,6 +21,7 @@ package daxum.temporalconvergence.block;
 
 import java.util.Random;
 
+import daxum.temporalconvergence.particle.ParticleHandler;
 import daxum.temporalconvergence.tileentity.TileTimePlant;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
@@ -55,7 +56,6 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 		super("time_plant", BlockPresets.PLANT);
 		setStateDefaults(AGE, 0);
 		setTickRandomly(true);
-		setLightLevel(0.4f);
 		setHasTileEntity();
 	}
 
@@ -103,6 +103,18 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) {
+		if (state.getValue(AGE) == 7 && rand.nextBoolean()) {
+			final double x = pos.getX() + rand.nextDouble();
+			final double y = pos.getY() + rand.nextDouble();
+			final double z = pos.getZ() + rand.nextDouble();
+
+			ParticleHandler.spawnSmallEndRodParticle(x, y, z, 0.0, 0.005, 0.0, 0.0005f);
+		}
+	}
+
+	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
 		int growth = state.getValue(AGE);
 
@@ -118,6 +130,15 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 		else {
 			return FULL_AABB;
 		}
+	}
+
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		if (state.getValue(AGE) == 7) {
+			return 6;
+		}
+
+		return 0;
 	}
 
 	@Override

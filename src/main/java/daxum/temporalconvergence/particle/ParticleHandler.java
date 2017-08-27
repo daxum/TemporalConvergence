@@ -53,6 +53,10 @@ public final class ParticleHandler {
 		}
 	}
 
+	public static void spawnSmallEndRodParticle(double x, double y, double z, double xMotion, double yMotion, double zMotion, float yAcceleration) {
+		spawnParticle(new ParticleEndRodSmall(x, y, z, xMotion, yMotion, zMotion, yAcceleration));
+	}
+
 	public static void spawnParticle(Particle particle) {
 		Minecraft.getMinecraft().effectRenderer.addEffect(particle);
 	}
