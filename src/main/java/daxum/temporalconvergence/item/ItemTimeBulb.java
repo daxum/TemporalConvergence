@@ -44,11 +44,13 @@ public class ItemTimeBulb extends ItemBase {
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (stack.getItem() == this) {
+			final int dropAmount = getAmountToDrop(stack);
+
 			if (!player.isCreative()) {
 				stack.shrink(1);
 			}
 
-			ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.TIME_DUST, getAmountToDrop(stack)));
+			ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.TIME_DUST, dropAmount));
 
 			return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 		}
