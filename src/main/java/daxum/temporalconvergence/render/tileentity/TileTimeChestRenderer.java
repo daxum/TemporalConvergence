@@ -25,21 +25,21 @@ import daxum.temporalconvergence.tileentity.TileTimeChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class TileTimeChestRenderer extends TileEntitySpecialRenderer<TileTimeChest> {
 	private final ResourceLocation timeChestTexture = new ResourceLocation(TemporalConvergence.MODID, "textures/blocks/time_chest.png");
 	private final ModelTimeChest timeChestModel = new ModelTimeChest();
 
 	@Override
 	public void render(TileTimeChest te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GlStateManager.enableDepth();
-		GlStateManager.depthFunc(515); //No idea what this is, but vanilla chest has it.
-		GlStateManager.depthMask(true);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 
 		bindTexture(timeChestTexture);
-		timeChestModel.render(te.getRotation(), -(float) ((te.prevLidAngle + (te.lidAngle - te.prevLidAngle) * partialTicks) * Math.PI / 2.0f));
+		timeChestModel.render(te.getRotation(), te.getAdjustedLidAngle(partialTicks));
 
 		GlStateManager.popMatrix();
 	}

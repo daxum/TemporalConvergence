@@ -21,6 +21,7 @@ package daxum.temporalconvergence.tileentity;
 
 import daxum.temporalconvergence.block.BlockTimeChest;
 import daxum.temporalconvergence.gui.ContainerTimeChest;
+import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,6 +35,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -46,8 +49,8 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 	};
 
 	private boolean beingUsed = false;
-	public float prevLidAngle = 0.0f;
-	public float lidAngle = 0.0f;
+	private float prevLidAngle = 0.0f;
+	private float lidAngle = 0.0f;
 
 	@Override
 	//The 55,142nd prime number is 681,047
@@ -89,24 +92,30 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 			prevLidAngle = lidAngle;
 
 			//If just opened, play opening sound
-			if (beingUsed && lidAngle == 0.0f)
+			if (beingUsed && lidAngle == 0.0f) {
 				world.playSound(player, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1f + 0.9f);
+			}
 
 			//Update lid angle based on players using
 			if (!beingUsed && lidAngle > 0.0f || beingUsed && lidAngle < 1.0f) {
-				if (beingUsed)
+				if (beingUsed) {
 					lidAngle += 0.1f;
-				else
+				}
+				else {
 					lidAngle -= 0.1f;
+				}
 
-				if (lidAngle > 1.0f)
+				if (lidAngle > 1.0f) {
 					lidAngle = 1.0f;
-				else if (lidAngle < 0.0f)
+				}
+				else if (lidAngle < 0.0f) {
 					lidAngle = 0.0f;
+				}
 
 				//If closing, play closing sound
-				if (lidAngle < 0.5f && prevLidAngle >= 0.5f)
+				if (lidAngle < 0.5f && prevLidAngle >= 0.5f) {
 					world.playSound(player, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5f, world.rand.nextFloat() * 0.1f + 0.9f);
+				}
 			}
 		}
 	}
@@ -160,5 +169,13 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 
 		return EnumFacing.NORTH;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public float getAdjustedLidAngle(float partialTicks) {
+		float angle = 1.0f - (prevLidAngle + (lidAngle - prevLidAngle) * partialTicks);
+		angle = 1.0f - angle * angle * angle;
+
+		return -(angle * (RenderHelper.PI / 2.0f));
 	}
 }

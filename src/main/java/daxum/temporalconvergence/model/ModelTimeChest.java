@@ -25,7 +25,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.EnumFacing;
 
-//TODO: base probably doesn't need to be TESR, might be able to move rest to fastTESR
 public class ModelTimeChest extends ModelBase {
 	public final ModelRenderer base;
 	public final ModelRenderer lid;
@@ -40,7 +39,7 @@ public class ModelTimeChest extends ModelBase {
 		base.setRotationPoint(8.0f, 0.0f, 8.0f);
 
 		lid = new ModelRenderer(this, 0, 0);
-		lid.addBox(-7.0f, 0.0f, 0.0f, 14, 5, 14, 0.01f);
+		lid.addBox(-7.0f, 0.0f, 0.0f, 14, 5, 14);
 		lid.setRotationPoint(0.0f, 9.0f, -7.0f);
 
 		latch = new ModelRenderer(this, 0, 0);
