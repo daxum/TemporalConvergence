@@ -93,11 +93,16 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-		if (!world.isRemote && state.getValue(AGE) < 7 && rand.nextInt(48) == 0) {
+		if (!world.isRemote && state.getValue(AGE) < 7 && rand.nextInt(5) == 0) {
 			world.setBlockState(pos, state.cycleProperty(AGE));
 
 			if (world.getTileEntity(pos) instanceof TileTimePlant) {
-				((TileTimePlant)world.getTileEntity(pos)).increaseCharge(1);
+				if (state.getValue(AGE) == 6) {
+					((TileTimePlant)world.getTileEntity(pos)).increaseCharge(3);
+				}
+				else {
+					((TileTimePlant)world.getTileEntity(pos)).increaseCharge(2);
+				}
 			}
 		}
 	}
@@ -135,7 +140,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 		if (state.getValue(AGE) == 7) {
-			return 6;
+			return 8;
 		}
 
 		return 0;
@@ -178,7 +183,7 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 
 	@Override
 	public boolean canUseBonemeal(World world, Random rand, BlockPos pos, IBlockState state) {
-		return state.getValue(AGE) < 7 && rand.nextBoolean();
+		return state.getValue(AGE) < 7 && rand.nextInt(5) != 0;
 	}
 
 	@Override

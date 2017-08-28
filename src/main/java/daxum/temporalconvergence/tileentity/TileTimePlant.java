@@ -43,13 +43,13 @@ public class TileTimePlant extends TileEntityBase {
 		int bulbStrength = 1 + charge;
 
 		if (WorldHelper.isNight(worldTime) && world.canBlockSeeSky(pos)) {
-			bulbStrength *= 2;
-
 			if (WorldHelper.isMidnight(worldTime)) {
 				bulbStrength += MIDNIGHT_CHARGE_BONUS;
 			}
 
 			bulbStrength += MOON_CHARGE_BONUS * world.getCurrentMoonPhaseFactor();
+
+			bulbStrength *= 1.5;
 		}
 
 		ItemStack output = new ItemStack(ModItems.TIME_BULB, 1);
