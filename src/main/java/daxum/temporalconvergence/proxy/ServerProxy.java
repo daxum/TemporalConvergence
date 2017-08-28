@@ -21,7 +21,6 @@ package daxum.temporalconvergence.proxy;
 
 import daxum.temporalconvergence.entity.EntityAIBoss;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 
 public class ServerProxy implements IProxy{
 	@Override
@@ -35,12 +34,6 @@ public class ServerProxy implements IProxy{
 
 	@Override
 	public void registerColors() {}
-
-	@Override
-	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {}
-
-	@Override
-	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz) {}
 
 	@Override
 	public void addAIBoss(EntityAIBoss toAdd) {}

@@ -23,7 +23,6 @@ import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.entity.EntityAIBoss;
 import daxum.temporalconvergence.fluid.FluidRenderRegister;
 import daxum.temporalconvergence.item.ModItems;
-import daxum.temporalconvergence.particle.ParticleDimGenCraft;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.render.entity.EntityRenderRegister;
 import net.minecraft.block.state.IBlockState;
@@ -32,11 +31,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 
@@ -127,16 +124,6 @@ public class ClientProxy implements IProxy {
 				return world != null && pos != null ? BiomeColorHelper.getGrassColorAtPos(world, pos) :  ColorizerGrass.getGrassColor(0.5, 1.0);
 			}
 		}, ModBlocks.TIME_PLANT);
-	}
-
-	@Override
-	public void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {
-		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDimGenCraft(world, posX, posY, posZ, targetX, targetY, targetZ));
-	}
-
-	@Override
-	public void spawnWaterParticle(World world, double x, double y, double z, double vx, double vy, double vz) {
-		world.spawnParticle(EnumParticleTypes.WATER_SPLASH, x, y, z, vx, vy, vz, 0);
 	}
 
 	@Override

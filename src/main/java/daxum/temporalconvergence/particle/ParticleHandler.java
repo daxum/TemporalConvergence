@@ -26,6 +26,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,6 +41,10 @@ public final class ParticleHandler {
 		TextureMap map = event.getMap();
 
 		map.registerSprite(ParticleDodge.PARTICLE_TEXTURE);
+	}
+
+	public static void spawnDimGenParticle(World world, double posX, double posY, double posZ, double targetX, double targetY, double targetZ) {
+		spawnParticle(new ParticleDimGenCraft(world, posX, posY, posZ, targetX, targetY, targetZ));
 	}
 
 	public static void spawnDodgeParticles(EntityPlayer player, int amount, double posX, double posY, double posZ) {

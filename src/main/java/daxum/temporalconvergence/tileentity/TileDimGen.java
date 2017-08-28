@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.particle.ParticleHandler;
 import daxum.temporalconvergence.recipes.DimGenRecipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -457,7 +458,7 @@ public class TileDimGen extends TileEntityBase implements ITickable {
 	}
 
 	private void spawnParticles() {
-		if (craftingState == CraftingStates.CRAFTING) {
+		if (!TemporalConvergence.proxy.isDedicatedServer() && craftingState == CraftingStates.CRAFTING) {
 			for (int i = 0; i < PEDESTAL_COUNT; i++) {
 				if (activePedestals[i]) {
 					spawnParticlesAt(pedLocs[i]);
@@ -466,6 +467,7 @@ public class TileDimGen extends TileEntityBase implements ITickable {
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void spawnParticlesAt(BlockPos toPos) {
 		int number = 0;
 
@@ -480,7 +482,7 @@ public class TileDimGen extends TileEntityBase implements ITickable {
 			double offX = Math.random() * 0.5 + 0.25;
 			double offY = Math.random() * 0.25 + 1.2;
 			double offZ = Math.random() * 0.5 + 0.25;
-			TemporalConvergence.proxy.spawnDimGenParticle(world, toPos.getX() + offX, toPos.getY() + offY, toPos.getZ() + offZ, pos.getX() + 0.5, pos.getY() + 1.325, pos.getZ() + 0.5);
+			ParticleHandler.spawnDimGenParticle(world, toPos.getX() + offX, toPos.getY() + offY, toPos.getZ() + offZ, pos.getX() + 0.5, pos.getY() + 1.325, pos.getZ() + 0.5);
 		}
 	}
 
