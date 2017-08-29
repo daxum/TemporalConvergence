@@ -40,7 +40,12 @@ public class BlockLunarWood extends BlockLog {
 
 	@Override
 	public MapColor getMapColor(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return MapColor.CYAN;
+		return MapColor.SILVER;
+	}
+
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+		return 10;
 	}
 
 	@Override

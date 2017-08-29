@@ -39,12 +39,13 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockSolarSapling extends BlockBase implements IPlantable, IGrowable {
-	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.1, 0.0, 0.1, 0.9, 0.8, 0.9);
-	private static final WorldGenTrees TREE_GEN = new WorldGenTrees(true, 5, ModBlocks.SOLAR_WOOD.getDefaultState(), ModBlocks.SOLAR_LEAVES.getDefaultState(), false);
+public class BlockSaplingBase extends BlockBase implements IPlantable, IGrowable {
+	private static final AxisAlignedBB SAPLING_AABB = new AxisAlignedBB(0.1, 0.0, 0.1, 0.9, 0.8, 0.9);
+	private final WorldGenTrees TREE_GEN;
 
-	public BlockSolarSapling() {
-		super("solar_sapling", BlockPresets.PLANT);
+	public BlockSaplingBase(String registryName, BlockPresets preset, IBlockState woodState, IBlockState leafState) {
+		super(registryName, preset);
+		TREE_GEN = new WorldGenTrees(true, 5, woodState, leafState, false);
 		setTickRandomly(true);
 	}
 
@@ -81,16 +82,14 @@ public class BlockSolarSapling extends BlockBase implements IPlantable, IGrowabl
 
 	@Override
 	public void grow(World world, Random rand, BlockPos pos, IBlockState state) {
-		if (!TerrainGen.saplingGrowTree(world, rand, pos)) {
-			return;
-		}
+		if (TerrainGen.saplingGrowTree(world, rand, pos)) {
+			IBlockState sapling = world.getBlockState(pos);
 
-		IBlockState sapling = world.getBlockState(pos);
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 4);
 
-		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 4);
-
-		if (!TREE_GEN.generate(world, rand, pos)) {
-			world.setBlockState(pos, sapling, 4);
+			if (!TREE_GEN.generate(world, rand, pos)) {
+				world.setBlockState(pos, sapling, 4);
+			}
 		}
 	}
 
@@ -106,7 +105,7 @@ public class BlockSolarSapling extends BlockBase implements IPlantable, IGrowabl
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-		return AABB;
+		return SAPLING_AABB;
 	}
 
 	@Override

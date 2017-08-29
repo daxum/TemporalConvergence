@@ -76,6 +76,8 @@ public final class ModBlocks {
 	public static final Block SOLAR_LEAVES;
 	public static final Block SOLAR_SAPLING;
 	public static final Block BRAZIER_BOTTOM;
+	public static final Block LUNAR_LEAVES;
+	public static final Block LUNAR_SAPLING;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -131,8 +133,10 @@ public final class ModBlocks {
 		ROAD_BORDER_STAIRS = new BlockRoadBorderStairs();
 		FUTURE_CHEST = new BlockFutureChest();
 		SOLAR_LEAVES = new BlockSolarLeaves();
-		SOLAR_SAPLING = new BlockSolarSapling();
+		SOLAR_SAPLING = new BlockSaplingBase("solar_sapling", BlockPresets.PLANT, SOLAR_WOOD.getDefaultState(), SOLAR_LEAVES.getDefaultState());
 		BRAZIER_BOTTOM = new BlockBrazierBottom();
+		LUNAR_LEAVES = new BlockLunarLeaves();
+		LUNAR_SAPLING = new BlockSaplingBase("lunar_sapling", BlockPresets.PLANT, LUNAR_WOOD.getDefaultState(), LUNAR_LEAVES.getDefaultState());
 	}
 
 	@SubscribeEvent
@@ -177,6 +181,8 @@ public final class ModBlocks {
 		blockRegistry.register(SOLAR_LEAVES);
 		blockRegistry.register(SOLAR_SAPLING);
 		blockRegistry.register(BRAZIER_BOTTOM);
+		blockRegistry.register(LUNAR_LEAVES);
+		blockRegistry.register(LUNAR_SAPLING);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");

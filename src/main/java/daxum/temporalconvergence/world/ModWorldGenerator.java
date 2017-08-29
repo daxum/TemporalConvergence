@@ -38,6 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ModWorldGenerator implements IWorldGenerator {
 	private static final WorldGenTrees SOLAR_TREE_GEN = new WorldGenTrees(false, 5, ModBlocks.SOLAR_WOOD.getDefaultState(), ModBlocks.SOLAR_LEAVES.getDefaultState(), false);
+	private static final WorldGenTrees LUNAR_TREE_GEN = new WorldGenTrees(false, 5, ModBlocks.LUNAR_WOOD.getDefaultState(), ModBlocks.LUNAR_LEAVES.getDefaultState(), false);
 
 	@Override
 	public void generate(Random rand, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
@@ -51,7 +52,8 @@ public class ModWorldGenerator implements IWorldGenerator {
 		World world = event.getWorld();
 
 		if (world.provider.getDimensionType() == DimensionType.OVERWORLD) {
-			generateTrees(world, new Random(), event.getPos().getX() >> 4, event.getPos().getZ() >> 4, 5);
+			generateTrees(world, new Random(), event.getPos().getX() >> 4, event.getPos().getZ() >> 4, 7, SOLAR_TREE_GEN, (IPlantable) ModBlocks.SOLAR_SAPLING, 0);
+			generateTrees(world, new Random(), event.getPos().getX() >> 4, event.getPos().getZ() >> 4, 6, LUNAR_TREE_GEN, (IPlantable) ModBlocks.LUNAR_SAPLING, 75);
 		}
 	}
 
@@ -73,7 +75,7 @@ public class ModWorldGenerator implements IWorldGenerator {
 		}
 	}
 
-	private static void generateTrees(World world, Random rand, int chunkX, int chunkZ, int chance) {
+	private static void generateTrees(World world, Random rand, int chunkX, int chunkZ, int chance, WorldGenTrees generator, IPlantable sapling, int minHeight) {
 		if (rand.nextInt(chance) == 0) {
 			int x = chunkX * 16 + rand.nextInt(10) + 3;
 			int z = chunkZ * 16 + rand.nextInt(10) + 3;
@@ -81,12 +83,12 @@ public class ModWorldGenerator implements IWorldGenerator {
 
 			BlockPos pos = new BlockPos(x, y, z);
 
-			if (isTrunkClear(world, pos)) {
+			if (y >= minHeight && isTrunkClear(world, pos)) {
 				BlockPos downPos = pos.down();
 				IBlockState state = world.getBlockState(downPos);
 
-				if (state.getBlock().canSustainPlant(state, world, downPos, EnumFacing.UP, (IPlantable) ModBlocks.SOLAR_SAPLING)) {
-					SOLAR_TREE_GEN.generate(world, rand, pos);
+				if (state.getBlock().canSustainPlant(state, world, downPos, EnumFacing.UP, sapling)) {
+					generator.generate(world, rand, pos);
 				}
 			}
 		}

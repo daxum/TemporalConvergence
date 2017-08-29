@@ -154,5 +154,7 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.FUTURE_CHEST).setRegistryName(ModBlocks.FUTURE_CHEST.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_LEAVES).setRegistryName(ModBlocks.SOLAR_LEAVES.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.SOLAR_SAPLING).setRegistryName(ModBlocks.SOLAR_SAPLING.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_LEAVES).setRegistryName(ModBlocks.LUNAR_LEAVES.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_SAPLING).setRegistryName(ModBlocks.LUNAR_SAPLING.getRegistryName()));
 	}
 }
