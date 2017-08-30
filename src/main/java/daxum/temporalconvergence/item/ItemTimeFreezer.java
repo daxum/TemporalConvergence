@@ -22,6 +22,7 @@ package daxum.temporalconvergence.item;
 import java.util.List;
 
 import daxum.temporalconvergence.entity.EntityFrozen;
+import daxum.temporalconvergence.power.PowerHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -61,8 +62,8 @@ public class ItemTimeFreezer extends ItemBase {
 		if (world.isRemote) return;
 
 		if (!isActive(stack)) {
-			if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 2 == 0) {
-				stack.setItemDamage(stack.getItemDamage() - 1);
+			if (stack.getItemDamage() > 0/* && world.getTotalWorldTime() % 2 == 0*/) {
+				rechargeFreezer(world, entity, stack);
 			}
 
 			return;
@@ -76,9 +77,10 @@ public class ItemTimeFreezer extends ItemBase {
 		if (entity != null && entity.getEntityBoundingBox() != null) {
 			AxisAlignedBB entityBB = entity.getEntityBoundingBox().grow(2.0);
 			List<Entity> entities = entity.getEntityWorld().getEntitiesInAABBexcluding(entity, entityBB, null);
+
 			if (entities.isEmpty()) {
 				if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 4 == 0) {
-					stack.setItemDamage(stack.getItemDamage() - 1);
+					rechargeFreezer(world, entity, stack);
 				}
 
 				return;
@@ -116,10 +118,12 @@ public class ItemTimeFreezer extends ItemBase {
 			}
 
 			if (damage > 0) {
-				damageStack(stack, damage);
+				if (!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).isCreative()) {
+					damageStack(stack, damage);
+				}
 			}
 			else if (stack.getItemDamage() > 0 && world.getTotalWorldTime() % 4 == 0) {
-				stack.setItemDamage(stack.getItemDamage() - 1);
+				rechargeFreezer(world, entity, stack);
 			}
 		}
 	}
@@ -185,6 +189,12 @@ public class ItemTimeFreezer extends ItemBase {
 	//To be expanded once config made
 	private boolean isBossProjectile(Entity entity) {
 		return entity instanceof EntityDragonFireball || entity instanceof EntityWitherSkull;
+	}
+
+	private void rechargeFreezer(World world, Entity entity, ItemStack stack) {
+		if (entity != null && entity.getEntityBoundingBox() != null && PowerHandler.requestPower(world, entity.getEntityBoundingBox(), "time", 5) >= 5) {
+			stack.setItemDamage(stack.getItemDamage() - 1);
+		}
 	}
 
 	private void damageStack(ItemStack stack, int amount) {
