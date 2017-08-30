@@ -192,8 +192,8 @@ public class ItemTimeFreezer extends ItemBase {
 	}
 
 	private void rechargeFreezer(World world, Entity entity, ItemStack stack) {
-		if (entity != null && entity.getEntityBoundingBox() != null && PowerHandler.requestPower(world, entity.getEntityBoundingBox(), "time", 5) >= 5) {
-			stack.setItemDamage(stack.getItemDamage() - 1);
+		if (entity != null && entity.getEntityBoundingBox() != null) {
+			stack.setItemDamage(stack.getItemDamage() - PowerHandler.requestPower(world, entity.getEntityBoundingBox(), "time", 5));
 		}
 	}
 
