@@ -62,7 +62,7 @@ public class ItemTimeFreezer extends ItemBase {
 		if (world.isRemote) return;
 
 		if (!isActive(stack)) {
-			if (stack.getItemDamage() > 0/* && world.getTotalWorldTime() % 2 == 0*/) {
+			if (stack.getItemDamage() > 0) {
 				rechargeFreezer(world, entity, stack);
 			}
 
