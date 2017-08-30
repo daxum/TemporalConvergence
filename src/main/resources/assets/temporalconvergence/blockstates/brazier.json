@@ -1,33 +1,6 @@
 {
     "multipart": [
         {   "apply": { "model": "temporalconvergence:brazier" }},
-        {   "when": { "AND": [{"filled": "level1"}, {"burning": "false"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_1" }
-        },
-        {   "when": { "AND": [{"filled": "level2"}, {"burning": "false"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_2" }
-        },
-        {   "when": { "AND": [{"filled": "level3"}, {"burning": "false"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_3" }
-        },
-        {   "when": { "AND": [{"filled": "level4"}, {"burning": "false"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_4" }
-        },
-        {   "when": { "AND": [{"filled": "netherrack"}, {"OR": [{"burning": "true"}, {"burning": "false"}]}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_nether" }
-        },
-        {   "when": { "AND": [{"filled": "level1"}, {"burning": "true"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_1_burning" }
-        },
-        {   "when": { "AND": [{"filled": "level2"}, {"burning": "true"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_2_burning" }
-        },
-        {   "when": { "AND": [{"filled": "level3"}, {"burning": "true"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_3_burning" }
-        },
-        {   "when": { "AND": [{"filled": "level4"}, {"burning": "true"}] },
-            "apply": { "model": "temporalconvergence:brazier_fill_4_burning" }
-        },
         {   "when": { "burning": "true" },
             "apply": { "model": "temporalconvergence:brazier_fire" }
         },

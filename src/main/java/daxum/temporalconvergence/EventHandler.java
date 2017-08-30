@@ -25,6 +25,7 @@ import daxum.temporalconvergence.item.ItemPhaseClothChest;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.particle.ParticleHandler;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
+import daxum.temporalconvergence.render.tileentity.TileBrazierRenderer;
 import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.world.DimensionHandler;
 import daxum.temporalconvergence.world.ModWorldGenerator;
@@ -61,6 +62,7 @@ public final class EventHandler {
 		if (!TemporalConvergence.proxy.isDedicatedServer()) {
 			MinecraftForge.EVENT_BUS.register(ParticleHandler.class);
 			MinecraftForge.EVENT_BUS.register(AIBossBarRenderer.class);
+			MinecraftForge.EVENT_BUS.register(TileBrazierRenderer.class);
 		}
 	}
 
