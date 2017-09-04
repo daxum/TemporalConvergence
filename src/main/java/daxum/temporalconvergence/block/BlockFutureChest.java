@@ -53,7 +53,7 @@ public class BlockFutureChest extends BlockBase {
 		super("future_chest", BlockPresets.IRON);
 		setStateDefaults(FACING, EnumFacing.NORTH, OPEN, false);
 		setHasTileEntity();
-		setLightLevel(0.8f);
+		//setLightLevel(0.8f);
 	}
 
 	@Override

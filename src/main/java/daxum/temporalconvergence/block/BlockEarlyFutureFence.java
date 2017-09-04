@@ -47,7 +47,7 @@ public class BlockEarlyFutureFence extends BlockFence {
 		setResistance(10.0f);
 		setHarvestLevel("pickaxe", 0);
 		setSoundType(SoundType.METAL);
-		setLightLevel(1.0f);
+		//setLightLevel(1.0f);
 	}
 
 	@Override

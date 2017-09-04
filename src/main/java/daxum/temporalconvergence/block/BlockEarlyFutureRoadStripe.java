@@ -38,7 +38,7 @@ public class BlockEarlyFutureRoadStripe extends BlockBase {
 	public BlockEarlyFutureRoadStripe() {
 		super("early_future_road_stripe", BlockPresets.WEAK_IRON);
 		setStateDefaults(NORTH, true, EAST, true, SOUTH, true, WEST, true);
-		setLightLevel(0.625f);
+		//setLightLevel(0.625f);
 	}
 
 	@Override
