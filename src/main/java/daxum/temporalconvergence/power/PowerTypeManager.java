@@ -89,7 +89,53 @@ public final class PowerTypeManager {
 		return powerTypes.toArray(new String[0]);
 	}
 
-	static {
-		//TODO: add power types here
+	//Used by machines
+	public static class PowerRequirements {
+		private final String[] types;
+		private final int[] amounts;
+
+		//Objects passed in the form "String, Integer, String, Integer, ..." for all required types
+		public PowerRequirements(Object... objects) {
+			if (objects.length % 2 != 0) {
+				throw new IllegalArgumentException("Invalid initializer for PowerRequirements: length must be even");
+			}
+			else if (objects.length == 0) {
+				//No power requirements - a bit odd, but perfectly valid
+				types = new String[] {};
+				amounts = new int[] {};
+				return;
+			}
+
+			types = new String[objects.length / 2];
+			amounts = new int[objects.length / 2];
+
+			for (int i = 0; i < objects.length - 1; i += 2) {
+				if (objects[i] == null || objects[i + 1] == null) {
+					throw new IllegalArgumentException("Cannot initialize PowerRequirements with a null argument");
+				}
+
+				if (objects[i] instanceof String && objects[i + 1] instanceof Integer) {
+					types[i / 2] = (String) objects[i];
+					amounts[i / 2] = (Integer) objects[i];
+				}
+				else {
+					TemporalConvergence.LOGGER.warn("Skipping argument {} of PowerRequirements initializer: wasn't a String or Integer", i);
+				}
+			}
+		}
+
+		public String[] getTypesRequired() {
+			return types;
+		}
+
+		public int getAmountForType(String type) {
+			for (int i = 0; i < types.length; i++) {
+				if (types[i].equals(type)) {
+					return amounts[i];
+				}
+			}
+
+			return 0;
+		}
 	}
 }
