@@ -69,7 +69,6 @@ public class ChunkProviderEarlyFuture implements IChunkGenerator {
 	private NoiseGeneratorOctaves maxLimitPerlinNoise;
 	private NoiseGeneratorOctaves depthNoise;
 
-	private double[] depthBuffer = new double[256];
 	private double[] mainNoiseRegion;
 	private double[] minLimitRegion;
 	private double[] maxLimitRegion;
