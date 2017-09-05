@@ -47,7 +47,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class TileBrazier extends TileEntityBase implements ITickable, IPowerProvider {
 	private static final Map<Item, BrazierFuel> FUEL_MAP = new HashMap<>();
-	private static final AxisAlignedBB POWER_RANGE = new AxisAlignedBB(-5.0, -5.0, -5.0, 5.0, 5.0, 5.0);
 
 	private final Random rand = new Random();
 	private final ItemStackHandler inventory = new BrazierInventory();
@@ -118,7 +117,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 				burning = true;
 
 
-				PowerHandler.addProvider(world, pos, powerType, POWER_RANGE.offset(pos), true);
+				PowerHandler.addProvider(world, pos, powerType, fuelData.powerRange.offset(pos), true);
 
 				world.setBlockState(pos, ModBlocks.BRAZIER.getDefaultState().withProperty(BlockBrazier.BURNING, true));
 
@@ -156,7 +155,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 	private void resumeBurning() {
 		if (isPaused()) {
 			burning = true;
-			PowerHandler.addProvider(world, pos, powerType, POWER_RANGE.offset(pos), true);
+			PowerHandler.addProvider(world, pos, powerType, FUEL_MAP.get(currentFuel).powerRange.offset(pos), true);
 			world.setBlockState(pos, ModBlocks.BRAZIER.getDefaultState().withProperty(BlockBrazier.BURNING, true));
 
 			sendBlockUpdate();
@@ -265,11 +264,13 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 		public final int burnTime;
 		public final int power;
 		public final String powerType;
+		public final AxisAlignedBB powerRange;
 
-		public BrazierFuel(int time, int pow, String type) {
+		public BrazierFuel(int time, int pow, String type, AxisAlignedBB range) {
 			burnTime = time;
 			power = pow;
 			powerType = type;
+			powerRange = range;
 		}
 	}
 
@@ -320,10 +321,10 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 		return true;
 	}
 
-	public static void addFuel(Item fuel, int burnTime, String powerType, int powerProduced) {
+	public static void addFuel(Item fuel, int burnTime, String powerType, int powerProduced, double range) {
 		if (fuel != null && burnTime > 0 && powerProduced >= 0) {
 			if (!FUEL_MAP.containsKey(fuel)) {
-				FUEL_MAP.put(fuel, new BrazierFuel(burnTime, powerProduced, powerType));
+				FUEL_MAP.put(fuel, new BrazierFuel(burnTime, powerProduced, powerType, new AxisAlignedBB(-range, -range, -range, range, range, range)));
 			}
 			else {
 				TemporalConvergence.LOGGER.warn("Attempted to register duplicate brazier fuel for item {}", fuel.getRegistryName());
@@ -333,6 +334,6 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 
 	static {
 		//Initialize fuels
-		addFuel(ModItems.TIME_DUST, 2400, "time", 10);
+		addFuel(ModItems.TIME_DUST, 2400, "time", 10, 5);
 	}
 }
