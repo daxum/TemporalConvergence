@@ -85,7 +85,7 @@ public class InitLogBuilder {
 	}
 
 	private static final String[] PREFIXES = {"Look out!", "Warning:", "Watch out!", "Um...", "Ack!", "Hey, listen!", "Just so you know,", "Don't panic, but", "Hey!", "Don't move!", "Don't look now, but"};
-	private static final String[] ADJECTIVES = {"angry", "shady", "unhappy", "depressed", "joyful", "annoyed", "upside down", "inverted", "explosive", "electric", "random", "vengeful", "insane", "fat", "hungry"};
+	private static final String[] ADJECTIVES = {"angry", "shady", "unhappy", "depressed", "deranged", "annoyed", "upside down", "inverted", "explosive", "electric", "random", "vengeful", "insane", "fat", "hungry"};
 	private static final String[] NOUNS = {"ferret", "elephant", "alien", "person", "ghost", "computer", "robot", "moose", "tree", "Nazg" + (char) 251 + "l", "wizard", "dragon", "chicken", "ostrich", "penguin"};
 	private static final String[] NOUNS2 = {"knife", "spatula", "chemistry textbook"/*The horror!*/, "chainsaw", "lawyer", "toaster", "sharp object", "spork", "flamethrower", "spoon", "fork", "tank"};
 	//Max length of 15
