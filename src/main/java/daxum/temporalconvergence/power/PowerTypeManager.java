@@ -193,5 +193,30 @@ public final class PowerTypeManager {
 
 			return output;
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == this) {
+				return true;
+			}
+
+			if (!(obj instanceof PowerRequirements)) {
+				return false;
+			}
+
+			PowerRequirements other = (PowerRequirements) obj;
+
+			if (other.amounts.length != amounts.length) {
+				return false;
+			}
+
+			for (int i = 0; i < amounts.length; i++) {
+				if (!(amounts[i] == other.amounts[i] && types[i].equals(other.types[i]))) {
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 }

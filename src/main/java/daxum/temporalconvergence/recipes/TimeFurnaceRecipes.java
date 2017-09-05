@@ -81,5 +81,21 @@ public final class TimeFurnaceRecipes {
 		public TimeFurnaceRecipe copy() {
 			return new TimeFurnaceRecipe(input.copy(), powerRequired, output.copy(), smeltTime);
 		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (other == this) {
+				return true;
+			}
+			else if (!(other instanceof TimeFurnaceRecipe)) {
+				return false;
+			}
+			else {
+				TimeFurnaceRecipe otherRecipe = (TimeFurnaceRecipe) other;
+
+				return ItemStack.areItemStacksEqual(input, otherRecipe.input) && ItemStack.areItemStacksEqual(output, otherRecipe.output) && smeltTime == otherRecipe.smeltTime
+						&& powerRequired.equals(otherRecipe);
+			}
+		}
 	}
 }
