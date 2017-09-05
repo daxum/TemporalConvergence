@@ -141,8 +141,6 @@ public class FutureCityGenerator implements INBTSerializable<NBTTagList> {
 		}
 
 		private void generateCity() {
-			final int MAX_AREA = MAX_CITY_SIZE * MAX_CITY_SIZE;
-			final int CITY_AREA = cityWidth * cityLength;
 
 			//Fill in the border
 
