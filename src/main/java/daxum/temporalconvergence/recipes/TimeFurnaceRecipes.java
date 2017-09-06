@@ -87,7 +87,7 @@ public final class TimeFurnaceRecipes {
 			if (other == this) {
 				return true;
 			}
-			else if (!(other instanceof TimeFurnaceRecipe)) {
+			else if (other == null || !(other instanceof TimeFurnaceRecipe)) {
 				return false;
 			}
 			else {

@@ -132,6 +132,10 @@ public final class PowerTypeManager {
 			return types;
 		}
 
+		public int[] getAmountsRequired() {
+			return amounts;
+		}
+
 		public int getAmountForType(String type) {
 			for (int i = 0; i < types.length; i++) {
 				if (types[i].equals(type)) {
@@ -200,7 +204,7 @@ public final class PowerTypeManager {
 				return true;
 			}
 
-			if (!(obj instanceof PowerRequirements)) {
+			if (obj == null || !(obj instanceof PowerRequirements)) {
 				return false;
 			}
 
