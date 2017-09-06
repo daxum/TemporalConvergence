@@ -27,10 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import daxum.temporalconvergence.TemporalConvergence;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
 
 public final class PowerTypeManager {
 	private static Map<String, Map<String, Float>> interactionMap = new HashMap<>(); //Outer map = effected, inner map = effecting
@@ -146,53 +142,12 @@ public final class PowerTypeManager {
 			return 0;
 		}
 
-		public PowerRequirements(NBTTagCompound comp) {
-			if (comp.hasKey("count", Constants.NBT.TAG_INT) && comp.hasKey("amounts", Constants.NBT.TAG_INT_ARRAY) && comp.hasKey("types", Constants.NBT.TAG_LIST)) {
-				final int length = comp.getInteger("count");
-
-				types = new String[length];
-
-				NBTTagList list = comp.getTagList("types", Constants.NBT.TAG_COMPOUND);
-
-				int index = 0;
-				for (NBTBase tag : list) {
-					types[index] = ((NBTTagCompound)tag).getString("t");
-					index++;
-				}
-
-				amounts = comp.getIntArray("amounts");
-			}
-			else {
-				types = new String[] {};
-				amounts = new int[] {};
-			}
-		}
-
-		public NBTTagCompound serializeNBT() {
-			NBTTagCompound comp = new NBTTagCompound();
-
-			NBTTagList stringList = new NBTTagList();
-
-			for (String s : types) {
-				NBTTagCompound tag = new NBTTagCompound();
-
-				tag.setString("t", s);
-				stringList.appendTag(tag);
-			}
-
-			comp.setInteger("count", types.length);
-			comp.setTag("types", stringList);
-			comp.setIntArray("amounts", amounts);
-
-			return comp;
-		}
-
 		@Override
 		public String toString() {
 			String output = "";
 
 			for (int i = 0; i < types.length; i++) {
-				output += types[i] + ": " + amounts[i] + "\n";
+				output += types[i] + ": " + amounts[i] + " ";
 			}
 
 			return output;

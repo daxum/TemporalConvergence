@@ -21,6 +21,7 @@ package daxum.temporalconvergence.recipes;
 
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.power.PowerTypeManager.PowerRequirements;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public final class RecipeHandler {
 	public static void init() {
 		initDimGen();
+		initTimeFurnace();
 		GameRegistry.addSmelting(ModBlocks.TIMESTONE_MIX, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
 	}
 	/*
@@ -43,6 +45,11 @@ public final class RecipeHandler {
 	public static void initDimGen() {
 		DimGenRecipes.addRecipe(new ItemStack(ModItems.TIME_FREEZER), new ItemStack(Blocks.CHORUS_FLOWER), new ItemStack(ModItems.TIME_STEEL_INGOT, 4), new ItemStack(ModItems.TIME_DUST, 4), new ItemStack(Items.DIAMOND, 4));
 		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 4, 10)); //Test recipe
+	}
+
+	public static void initTimeFurnace() {
+		//TODO: test recipe, remove
+		TimeFurnaceRecipes.addRecipe(new ItemStack(Items.IRON_INGOT), new PowerRequirements("fire", 1600, "stable", 700), new ItemStack(Items.DIAMOND), 100);
 	}
 	/*
 	TODO: OreDict the following recipes:

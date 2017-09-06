@@ -33,7 +33,7 @@ public final class WorldHelper {
 	public static <T extends TileEntity> T getTileEntity(IBlockAccess world, BlockPos pos, Class<T> targetClass) {
 		TileEntity te = world.getTileEntity(pos);
 
-		if (targetClass.isAssignableFrom(te.getClass())) {
+		if (te != null && targetClass.isAssignableFrom(te.getClass())) {
 			return targetClass.cast(te);
 		}
 

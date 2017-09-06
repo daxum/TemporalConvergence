@@ -26,6 +26,7 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.power.PowerTypeManager.PowerRequirements;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public final class TimeFurnaceRecipes {
 	private static final List<TimeFurnaceRecipe> RECIPES = new ArrayList<>();
@@ -34,7 +35,7 @@ public final class TimeFurnaceRecipes {
 	public static void addRecipe(ItemStack input, PowerRequirements requirements, ItemStack output, int smeltTime) {
 		if (!input.isEmpty()) {
 			if (smeltTime > 0) {
-				RECIPES.add(new TimeFurnaceRecipe(input, requirements, output, smeltTime));
+				RECIPES.add(new TimeFurnaceRecipe(ItemHandlerHelper.copyStackWithSize(input, 1), requirements, ItemHandlerHelper.copyStackWithSize(output, 1), smeltTime));
 			}
 			else {
 				TemporalConvergence.LOGGER.error("Smelt time must be greater than 0");
@@ -55,7 +56,7 @@ public final class TimeFurnaceRecipes {
 		ItemStack vanillaResult = FurnaceRecipes.instance().getSmeltingResult(input);
 
 		if (!vanillaResult.isEmpty()) {
-			return new TimeFurnaceRecipe(input, NO_REQUIREMENTS, vanillaResult, 200);
+			return new TimeFurnaceRecipe(ItemHandlerHelper.copyStackWithSize(input, 1), NO_REQUIREMENTS, vanillaResult.copy(), 200);
 		}
 
 		return null;
@@ -75,7 +76,7 @@ public final class TimeFurnaceRecipes {
 		}
 
 		public boolean matches(ItemStack in) {
-			return ItemStack.areItemStacksEqual(input, in);
+			return ItemStack.areItemStacksEqual(input, ItemHandlerHelper.copyStackWithSize(in, 1));
 		}
 
 		public TimeFurnaceRecipe copy() {
@@ -93,9 +94,18 @@ public final class TimeFurnaceRecipes {
 			else {
 				TimeFurnaceRecipe otherRecipe = (TimeFurnaceRecipe) other;
 
-				return ItemStack.areItemStacksEqual(input, otherRecipe.input) && ItemStack.areItemStacksEqual(output, otherRecipe.output) && smeltTime == otherRecipe.smeltTime
-						&& powerRequired.equals(otherRecipe);
+				boolean inputEqual = ItemStack.areItemStacksEqual(input, otherRecipe.input);
+				boolean outputEqual = ItemStack.areItemStacksEqual(output, otherRecipe.output);
+				boolean timeEqual = smeltTime == otherRecipe.smeltTime;
+				boolean powerEqual = powerRequired.equals(otherRecipe.powerRequired);
+
+				return inputEqual && outputEqual && timeEqual && powerEqual;
 			}
+		}
+
+		@Override
+		public String toString() {
+			return "( " + input + " -> " + output + " | " + smeltTime + " " + powerRequired + ")";
 		}
 	}
 }

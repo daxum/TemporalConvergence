@@ -100,6 +100,10 @@ public class BlockTimeFurnace extends BlockBase {
 
 			if (timeFurnace != null) {
 				bottomCorner = timeFurnace.getBottomCorner();
+
+				if (timeFurnace instanceof TileTimeFurnaceController) {
+					dropControllerInventory(world, pos, ((TileTimeFurnaceController)timeFurnace).getInventory());
+				}
 			}
 
 			if (bottomCorner != null) {
@@ -117,17 +121,19 @@ public class BlockTimeFurnace extends BlockBase {
 					TileTimeFurnaceController furnaceController = WorldHelper.getTileEntity(world, pos, TileTimeFurnaceController.class);
 
 					if (furnaceController != null) {
-						ItemStackHandler contrInv = furnaceController.getInventory();
-
-						for (int i = 0; i < contrInv.getSlots(); i++) {
-							InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), contrInv.getStackInSlot(i));
-							contrInv.setStackInSlot(i, ItemStack.EMPTY);
-						}
+						dropControllerInventory(world, pos, furnaceController.getInventory());
 					}
 				}
 
 				world.setBlockState(pos, getDefaultState());
 			}
+		}
+	}
+
+	private void dropControllerInventory(World world, BlockPos pos, ItemStackHandler inventory) {
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
+			inventory.setStackInSlot(i, ItemStack.EMPTY);
 		}
 	}
 
