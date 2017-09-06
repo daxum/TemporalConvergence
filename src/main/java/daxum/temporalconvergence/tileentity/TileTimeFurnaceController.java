@@ -45,10 +45,6 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 
 	@Override
 	public void update() {
-		if (powerRequestAABB == null) {
-			setRequestBox();
-		}
-
 		if (burnTime > 0) {
 			burnTime--;
 			markDirty();
@@ -119,6 +115,11 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 							int requestAmount = currentRecipe.powerRequired.getAmountForType(powerType) - powerGotten[i];
 
 							if (requestAmount > 0) {
+								//Only set the box if needed
+								if (powerRequestAABB == null) {
+									setRequestBox();
+								}
+
 								powerGotten[i] += PowerHandler.requestPower(world, powerRequestAABB, powerType, requestAmount);
 							}
 						}
