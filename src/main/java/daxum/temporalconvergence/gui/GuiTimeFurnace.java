@@ -64,6 +64,15 @@ public class GuiTimeFurnace extends GuiContainer {
 
 			drawTexturedModalRect(x + 55, y + 40 + height, 176, 1 + height, 16, 13 - height);
 		}
+
+		//Smelting progress
+		if (contr.isSmelting()) {
+			double smeltPercent = contr.getSmeltPercent();
+
+			int width = MathHelper.floor(23.0 * smeltPercent);
+
+			drawTexturedModalRect(x + 79, y + 36, 176, 14, width + 1, 17); //TODO: position
+		}
 	}
 
 	@Override

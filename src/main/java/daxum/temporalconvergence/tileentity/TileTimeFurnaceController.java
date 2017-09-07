@@ -28,6 +28,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -96,7 +97,7 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 							//Nooooooooo...
 							smeltFinishTime += 2;
 
-							if (smeltFinishTime - smeltStartTime > currentRecipe.smeltTime) {
+							if (world.getTotalWorldTime() - smeltStartTime > currentRecipe.smeltTime) {
 								stopSmelting();
 							}
 
@@ -109,6 +110,8 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 
 					//Get power
 					if (tryRequestPower) {
+						boolean needsSync = false;
+
 						for (int i = 0; i < powerGotten.length; i++) {
 							String powerType = currentRecipe.powerRequired.getTypesRequired()[i];
 
@@ -120,8 +123,15 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 									setRequestBox();
 								}
 
+								int prevPower = powerGotten[i];
 								powerGotten[i] += PowerHandler.requestPower(world, powerRequestAABB, powerType, requestAmount);
+
+								needsSync = needsSync || prevPower != powerGotten[i];
 							}
+						}
+
+						if (needsSync) {
+							sendBlockUpdate();
 						}
 					}
 				}
@@ -137,6 +147,8 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 						smeltStartTime = world.getTotalWorldTime();
 						smeltFinishTime = smeltStartTime + currentRecipe.smeltTime;
 						powerGotten = new int[currentRecipe.powerRequired.getTypesRequired().length];
+
+						sendBlockUpdate();
 					}
 				}
 			}
@@ -154,7 +166,7 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 		return false;
 	}
 
-	private boolean isSmelting() {
+	public boolean isSmelting() {
 		return currentRecipe != null;
 	}
 
@@ -171,8 +183,6 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 				if (inventory.getStackInSlot(ControllerInventory.FUEL_SLOT).isEmpty() && fuelStack.getItem().hasContainerItem(fuelStack)) {
 					inventory.setStackInSlot(ControllerInventory.FUEL_SLOT, fuelStack.getItem().getContainerItem(fuelStack));
 				}
-
-				sendBlockUpdate();
 			}
 		}
 	}
@@ -216,6 +226,25 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 
 	public float getBurnPercent() {
 		return (float) burnTime / maxBurnTime;
+	}
+
+	public double getSmeltPercent() {
+		if (currentRecipe != null) {
+			long ticksStalled =  smeltFinishTime - smeltStartTime - currentRecipe.smeltTime;
+			double totalPercent = (double) (world.getTotalWorldTime() - smeltStartTime - ticksStalled) / (smeltFinishTime - smeltStartTime);
+			totalPercent = MathHelper.clamp(totalPercent, 0.0, 1.0);
+
+			int[] powerRequired = currentRecipe.powerRequired.getAmountsRequired();
+
+			for (int i = 0; i < powerRequired.length; i++) {
+				totalPercent += (double) powerGotten[i] / powerRequired[i];
+			}
+
+			return MathHelper.clamp(totalPercent / (powerRequired.length + 1), 0.0, 1.0);
+		}
+		else {
+			return 0.0;
+		}
 	}
 
 	private static final String INVENTORY_TAG = "inventory";
