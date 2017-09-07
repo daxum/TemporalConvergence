@@ -210,6 +210,14 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 		return pos;
 	}
 
+	public boolean isBurning() {
+		return burnTime > 0;
+	}
+
+	public float getBurnPercent() {
+		return (float) burnTime / maxBurnTime;
+	}
+
 	private static final String INVENTORY_TAG = "inventory";
 	private static final String BURN_TIME_TAG = "burnTime";
 	private static final String MAX_BURN_TIME_TAG = "maxBurnTime";

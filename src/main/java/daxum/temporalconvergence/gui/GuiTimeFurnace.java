@@ -21,17 +21,21 @@ package daxum.temporalconvergence.gui;
 
 import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
+import daxum.temporalconvergence.tileentity.TileTimeFurnaceController;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 public class GuiTimeFurnace extends GuiContainer {
 	private static final ResourceLocation FURNACE_GUI_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/gui/time_furnace.png");
+	private final TileTimeFurnaceController contr;
 
 	public GuiTimeFurnace(IInventory playerInv, TileTimeFurnaceBase tfc) {
 		super(new ContainerTimeFurnace(playerInv, tfc));
+		contr = tfc.getController();
 		ySize = 172;
 	}
 
@@ -46,9 +50,20 @@ public class GuiTimeFurnace extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.getTextureManager().bindTexture(FURNACE_GUI_TEXTURE);
-		int i = (width - xSize) / 2;
-		int j = (height - ySize) / 2;
-		drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
+
+		//Main Gui
+		int x = (width - xSize) / 2;
+		int y = (height - ySize) / 2;
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+
+		//Fuel usage
+		if (contr.isBurning()) {
+			float burnPercent = contr.getBurnPercent();
+
+			int height = 13 - MathHelper.ceil(13.0 * burnPercent);
+
+			drawTexturedModalRect(x + 55, y + 40 + height, 176, 1 + height, 16, 13 - height);
+		}
 	}
 
 	@Override
@@ -56,5 +71,4 @@ public class GuiTimeFurnace extends GuiContainer {
 		fontRenderer.drawString(I18n.format("container.timefurnace"), 9, 7, 9838347);
 		fontRenderer.drawString(I18n.format("container.inventory"), 9, 78, 9838347);
 	}
-
 }
