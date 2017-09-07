@@ -64,10 +64,17 @@ public final class ModItems {
 	public static final Item PHASE_CLOTH_HELMET;
 	public static final Item LUNAR_BOOMERANG;
 	public static final Item BRAZIER;
+	public static final Item ENERGIZED_CHARCOAL;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
 		STABLE_CHARCOAL = new ItemBase("stable_charcoal") {
+			@Override
+			public int getItemBurnTime(ItemStack fuel) {
+				return 2000;
+			}
+		};
+		ENERGIZED_CHARCOAL = new ItemBase("energized_charcoal") {
 			@Override
 			public int getItemBurnTime(ItemStack fuel) {
 				return 1200;
@@ -112,6 +119,7 @@ public final class ModItems {
 		itemRegistry.register(PHASE_CLOTH_HELMET);
 		itemRegistry.register(LUNAR_BOOMERANG);
 		itemRegistry.register(BRAZIER);
+		itemRegistry.register(ENERGIZED_CHARCOAL);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
