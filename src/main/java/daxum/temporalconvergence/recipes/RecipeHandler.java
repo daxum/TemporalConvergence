@@ -48,8 +48,7 @@ public final class RecipeHandler {
 	}
 
 	public static void initTimeFurnace() {
-		//TODO: test recipe, remove
-		TimeFurnaceRecipes.addRecipe(new ItemStack(Items.IRON_INGOT), new PowerRequirements("fire", 1600, "stable", 700), new ItemStack(Items.DIAMOND), 100);
+		TimeFurnaceRecipes.addRecipe(new ItemStack(Items.IRON_INGOT), new PowerRequirements("fire", 1600, "stable", 700), new ItemStack(ModItems.STABLE_IRON_INGOT), 400);
 	}
 	/*
 	TODO: OreDict the following recipes:

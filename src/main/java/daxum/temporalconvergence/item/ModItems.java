@@ -65,6 +65,7 @@ public final class ModItems {
 	public static final Item LUNAR_BOOMERANG;
 	public static final Item BRAZIER;
 	public static final Item ENERGIZED_CHARCOAL;
+	public static final Item STABLE_IRON_INGOT;
 
 	static {
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
@@ -80,6 +81,8 @@ public final class ModItems {
 				return 1200;
 			}
 		};
+		STABLE_IRON_INGOT = new ItemBase("stable_iron_ingot");
+
 
 		TIME_BULB = new ItemTimeBulb();
 		TIME_DUST = new ItemTimeDust();
@@ -120,6 +123,7 @@ public final class ModItems {
 		itemRegistry.register(LUNAR_BOOMERANG);
 		itemRegistry.register(BRAZIER);
 		itemRegistry.register(ENERGIZED_CHARCOAL);
+		itemRegistry.register(STABLE_IRON_INGOT);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
