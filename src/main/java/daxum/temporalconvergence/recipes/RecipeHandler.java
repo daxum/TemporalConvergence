@@ -32,6 +32,8 @@ public final class RecipeHandler {
 		initDimGen();
 		initTimeFurnace();
 		GameRegistry.addSmelting(ModBlocks.TIMESTONE_MIX, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
+		GameRegistry.addSmelting(ModBlocks.LUNAR_WOOD, new ItemStack(ModItems.STABLE_CHARCOAL), 0.15f);
+		GameRegistry.addSmelting(ModBlocks.SOLAR_WOOD, new ItemStack(ModItems.ENERGIZED_CHARCOAL), 0.15f);
 	}
 	/*
 	public static void initOreDict() {
