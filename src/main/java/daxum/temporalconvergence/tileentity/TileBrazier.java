@@ -30,7 +30,6 @@ import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.IPowerProvider;
 import daxum.temporalconvergence.power.PowerHandler;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -337,6 +336,6 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 		//Initialize fuels
 		addFuel(ModItems.TIME_DUST, 2400, "time", 10, 5);
 		addFuel(ModItems.STABLE_CHARCOAL, 7200, "stable", 5, 4);
-		addFuel(Items.COAL, 4800, "fire", 15, 6); //TODO: change
+		addFuel(ModItems.ENERGIZED_CHARCOAL, 4800, "fire", 15, 6);
 	}
 }
