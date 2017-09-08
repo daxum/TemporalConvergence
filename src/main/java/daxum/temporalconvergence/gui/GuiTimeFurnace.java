@@ -71,7 +71,7 @@ public class GuiTimeFurnace extends GuiContainer {
 
 			int width = MathHelper.floor(23.0 * smeltPercent);
 
-			drawTexturedModalRect(x + 79, y + 36, 176, 14, width + 1, 17); //TODO: position
+			drawTexturedModalRect(x + 79, y + 36, 176, 14, width + 1, 17);
 		}
 	}
 
