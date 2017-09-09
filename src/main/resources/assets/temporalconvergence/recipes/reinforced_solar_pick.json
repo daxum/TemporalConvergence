@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        " I ",
+        "IPI",
+        " I "
+    ],
+
+    "key": {
+        "P": {"item": "temporalconvergence:solar_wood_pickaxe"},
+        "I": {"item": "temporalconvergence:stable_iron_ingot"}
+    },
+
+    "result": {"item": "temporalconvergence:reinforced_solar_pickaxe"}
+}

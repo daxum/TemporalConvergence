@@ -37,15 +37,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public final class ModItems {
-	public static final CreativeTabs TEMPCONVTAB = new CreativeTabs(TemporalConvergence.MODID) {
-		@Override
-		public ItemStack getTabIconItem() {
-			return new ItemStack(Items.CLOCK);
-		}
-	};
+	public static final CreativeTabs TEMPCONVTAB;
 
-	public static final ToolMaterial SOLAR_WOOD = EnumHelper.addToolMaterial("SOLAR_WOOD", 1, 28800, 6.0f, 0.0f, 0);
-	public static final ArmorMaterial PHASE_CLOTH_ARMOR = EnumHelper.addArmorMaterial("TC_PHASE_CLOTH_ARMOR", "temporalconvergence:phase_cloth_armor", 3, new int[] {1, 1, 1, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
+	public static final ToolMaterial SOLAR_WOOD;
+	public static final ToolMaterial REINFORCED_SOLAR;
+
+	public static final ArmorMaterial PHASE_CLOTH_ARMOR;
 
 	public static final Item TIME_BULB;
 	public static final Item TIME_DUST;
@@ -66,8 +63,21 @@ public final class ModItems {
 	public static final Item BRAZIER;
 	public static final Item ENERGIZED_CHARCOAL;
 	public static final Item STABLE_IRON_INGOT;
+	public static final Item REINFORCED_SOLAR_PICK;
+	public static final Item REINFORCED_SOLAR_SHOVEL;
+	public static final Item REINFORCED_SOLAR_AXE;
 
 	static {
+		TEMPCONVTAB = new CreativeTabs(TemporalConvergence.MODID) {
+			@Override
+			public ItemStack getTabIconItem() {
+				return new ItemStack(Items.CLOCK);
+			}
+		};
+
+		SOLAR_WOOD = EnumHelper.addToolMaterial("TC_SOLAR_WOOD", 1, 28800, 6.0f, 0.0f, 0);
+		PHASE_CLOTH_ARMOR = EnumHelper.addArmorMaterial("TC_PHASE_CLOTH_ARMOR", "temporalconvergence:phase_cloth_armor", 3, new int[] {1, 1, 1, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
+
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
 		STABLE_CHARCOAL = new ItemBase("stable_charcoal") {
 			@Override
@@ -83,6 +93,7 @@ public final class ModItems {
 		};
 		STABLE_IRON_INGOT = new ItemBase("stable_iron_ingot");
 
+		REINFORCED_SOLAR = EnumHelper.addToolMaterial("TC_REINF_SOLAR", 2, 57600, 8.0f, 1.0f, 5).setRepairItem(new ItemStack(STABLE_IRON_INGOT));
 
 		TIME_BULB = new ItemTimeBulb();
 		TIME_DUST = new ItemTimeDust();
@@ -99,6 +110,9 @@ public final class ModItems {
 		PHASE_CLOTH_HELMET = new ItemPhaseClothHelmet();
 		LUNAR_BOOMERANG = new ItemLunarBoomerang();
 		BRAZIER = new ItemBrazier();
+		REINFORCED_SOLAR_PICK = new ItemReinforcedSolarPick();
+		REINFORCED_SOLAR_SHOVEL = new ItemReinforcedSolarShovel();
+		REINFORCED_SOLAR_AXE = new ItemReinforcedSolarAxe();
 	}
 
 	@SubscribeEvent
@@ -124,6 +138,9 @@ public final class ModItems {
 		itemRegistry.register(BRAZIER);
 		itemRegistry.register(ENERGIZED_CHARCOAL);
 		itemRegistry.register(STABLE_IRON_INGOT);
+		itemRegistry.register(REINFORCED_SOLAR_PICK);
+		itemRegistry.register(REINFORCED_SOLAR_SHOVEL);
+		itemRegistry.register(REINFORCED_SOLAR_AXE);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));

@@ -1,0 +1,6 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "temporalconvergence:items/reinforced_solar_shovel"
+	}
+}

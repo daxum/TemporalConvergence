@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+
+    "pattern": [
+        " I ",
+        " S ",
+        " I "
+    ],
+
+    "key": {
+        "S": {"item": "temporalconvergence:solar_wood_shovel"},
+        "I": {"item": "temporalconvergence:stable_iron_ingot"}
+    },
+
+    "result": {"item": "temporalconvergence:reinforced_solar_shovel"}
+}
