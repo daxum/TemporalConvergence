@@ -19,13 +19,20 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
+import java.util.Arrays;
+
 import daxum.temporalconvergence.block.BlockTimeChest;
 import daxum.temporalconvergence.gui.ContainerTimeChest;
+import daxum.temporalconvergence.power.PowerHandler;
+import daxum.temporalconvergence.recipes.TimeChestRecipes;
 import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -41,22 +48,71 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileTimeChest extends TileEntityBase implements TileEntityInventoried, ITickable {
-	private ItemStackHandler inventory = new ItemStackHandler(27) { //Yay anonymous class ^.^
+	private final ItemStackHandler inventory = new ItemStackHandler(27) { //Yay anonymous class ^.^
 		@Override
 		protected void onContentsChanged(int slot) {
+			if (!world.isRemote) {
+				setDecayTimer(slot);
+			}
+
 			markDirty();
 		}
 	};
+
+	private final int[] decayTimers = new int[inventory.getSlots()];
+	private int powerRequestTimer = 0;
+	private int decaySpeed = 0;
 
 	private boolean beingUsed = false;
 	private float prevLidAngle = 0.0f;
 	private float lidAngle = 0.0f;
 
+	public TileTimeChest() {
+		Arrays.fill(decayTimers, -1);
+	}
+
 	@Override
 	//The 55,142nd prime number is 681,047
 	public void update() {
+		//Handle item conversion
+		if (!world.isRemote) {
+			if (powerRequestTimer <= 0) {
+				int powerGotten = PowerHandler.requestPower(world, pos, "time", 40);
+
+				if (powerGotten > 0) {
+					powerRequestTimer = Math.min(powerGotten, 20);
+					decaySpeed = Math.max(1, powerGotten - powerRequestTimer);
+					sendBlockUpdate();
+				}
+				else {
+					powerRequestTimer = 10;
+
+					if (decaySpeed > 0) {
+						decaySpeed = 0;
+						sendBlockUpdate();
+					}
+				}
+			}
+			else {
+				powerRequestTimer--;
+			}
+
+			if (decaySpeed > 0) {
+				for (int i = 0; i < decayTimers.length; i++) {
+					if (decayTimers[i] > 0) {
+						decayTimers[i] -= decaySpeed;
+
+						if (decayTimers[i] <= 0) {
+							convertItemInSlot(i);
+							decayTimers[i] = -1;
+						}
+					}
+				}
+			}
+		}
+
 		//Update items in inventory. I hope the fake player won't cause problems...
-		if (!world.isRemote && world.getTotalWorldTime() % 10 == 0) {
+		if (!world.isRemote && (decaySpeed > 0 || world.getTotalWorldTime() % 10 == 0)) {
 			for (int i = 0; i < inventory.getSlots(); i++) {
 				if (!inventory.getStackInSlot(i).isEmpty()) {
 					inventory.getStackInSlot(i).getItem().onUpdate(inventory.getStackInSlot(i), world, FakePlayerFactory.getMinecraft((WorldServer) world), 0, true);
@@ -120,22 +176,82 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 	}
 
+	private void setDecayTimer(int slot) {
+		ItemStack stack = inventory.getStackInSlot(slot);
+
+		if (!TimeChestRecipes.getOutput(stack).isEmpty()) {
+			decayTimers[slot] = TimeChestRecipes.getTime(stack);
+		}
+		else if (stack.getItem() instanceof ItemFood) {
+			ItemFood food = (ItemFood) stack.getItem();
+
+			decayTimers[slot] = food.getHealAmount(stack) * 2000;
+		}
+		else {
+			decayTimers[slot] = -1;
+		}
+	}
+
+	private void convertItemInSlot(int slot) {
+		ItemStack stack = inventory.getStackInSlot(slot);
+		ItemStack output = TimeChestRecipes.getOutput(stack);
+
+		if (!output.isEmpty()) {
+			output.setCount(Math.min(stack.getCount() * output.getCount(), inventory.getSlotLimit(slot)));
+			inventory.setStackInSlot(slot, output);
+		}
+		else if (stack.getItem() instanceof ItemFood) {
+			final int foodValue = Math.max(((ItemFood)stack.getItem()).getHealAmount(stack), 1);
+			final int amount = Math.min(stack.getCount() * foodValue, inventory.getSlotLimit(slot));
+
+			//TODO: change
+			inventory.setStackInSlot(slot, new ItemStack(Items.COAL, amount, 1));
+		}
+	}
+
+	private static final String INVENTORY_TAG = "inv";
+	private static final String USED_TAG = "used";
+	private static final String DECAY_TIME_TAG = "decay";
+	private static final String POWER_TIMER_TAG = "powerTime";
+	private static final String DECAY_SPEED_TAG = "convTime";
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
-		comp.setTag("inv", inventory.serializeNBT());
-		comp.setBoolean("used", beingUsed);
+		comp.setTag(INVENTORY_TAG, inventory.serializeNBT());
+		comp.setBoolean(USED_TAG, beingUsed);
+		comp.setIntArray(DECAY_TIME_TAG, decayTimers);
+		comp.setInteger(POWER_TIMER_TAG, powerRequestTimer);
+		comp.setInteger(DECAY_SPEED_TAG, decaySpeed);
 
 		return super.writeToNBT(comp);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound comp) {
-		if (comp.hasKey("inv", Constants.NBT.TAG_COMPOUND)) {
-			inventory.deserializeNBT(comp.getCompoundTag("inv"));
+		if (comp.hasKey(INVENTORY_TAG, Constants.NBT.TAG_COMPOUND)) {
+			inventory.deserializeNBT(comp.getCompoundTag(INVENTORY_TAG));
 		}
 
-		if (comp.hasKey("used", Constants.NBT.TAG_BYTE)) { //Booleans are stored as bytes
-			beingUsed = comp.getBoolean("used");
+		if (comp.hasKey(USED_TAG, Constants.NBT.TAG_BYTE)) { //Booleans are stored as bytes
+			beingUsed = comp.getBoolean(USED_TAG);
+		}
+
+		if (comp.hasKey(DECAY_TIME_TAG, Constants.NBT.TAG_INT_ARRAY)) {
+			int[] decayTimes = comp.getIntArray(DECAY_TIME_TAG);
+
+			if (decayTimes.length == decayTimers.length) {
+				for (int i = 0; i < decayTimers.length; i++) {
+					decayTimers[i] = decayTimes[i];
+				}
+			}
+		}
+
+		if (comp.hasKey(POWER_TIMER_TAG, Constants.NBT.TAG_INT)) {
+			powerRequestTimer = comp.getInteger(POWER_TIMER_TAG);
+		}
+
+		if (comp.hasKey(DECAY_SPEED_TAG, Constants.NBT.TAG_INT)) {
+			decaySpeed = comp.getInteger(DECAY_SPEED_TAG);
 		}
 
 		super.readFromNBT(comp);

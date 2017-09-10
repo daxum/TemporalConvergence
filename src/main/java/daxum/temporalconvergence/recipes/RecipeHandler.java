@@ -31,6 +31,7 @@ public final class RecipeHandler {
 	public static void init() {
 		initDimGen();
 		initTimeFurnace();
+		initTimeChest();
 		GameRegistry.addSmelting(ModBlocks.TIMESTONE_MIX, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
 		GameRegistry.addSmelting(ModBlocks.LUNAR_WOOD, new ItemStack(ModItems.STABLE_CHARCOAL), 0.15f);
 		GameRegistry.addSmelting(ModBlocks.SOLAR_WOOD, new ItemStack(ModItems.ENERGIZED_CHARCOAL), 0.15f);
@@ -51,6 +52,12 @@ public final class RecipeHandler {
 
 	public static void initTimeFurnace() {
 		TimeFurnaceRecipes.addRecipe(new ItemStack(Items.IRON_INGOT), new PowerRequirements("fire", 1600, "stable", 700), new ItemStack(ModItems.STABLE_IRON_INGOT), 400);
+	}
+
+	public static void initTimeChest() {
+		//TODO: remove test recipes
+		TimeChestRecipes.addConversion(new ItemStack(Items.DIAMOND), new ItemStack(Items.COAL), 16000);
+		TimeChestRecipes.addConversion(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 3, 15), 2000);
 	}
 	/*
 	TODO: OreDict the following recipes:

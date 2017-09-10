@@ -19,6 +19,8 @@ tile.early_future_stairs.name=Futuristic Stairs
 tile.early_future_stairs_fancy.name=Fancy Futuristic Stairs
 tile.early_future_slab.early_future_block.name=Futuristic Block Slab
 
+container.timechest=Asynchronous Chest
+
 item.time_freezer.name=Weak Temporal Disruptor
 item.solar_wood_pickaxe.name=Transitory Pickaxe
 item.solar_wood_shovel.name=Transitory Shovel
