@@ -48,8 +48,6 @@ public class TileTimePlant extends TileEntityBase {
 			}
 
 			bulbStrength += MOON_CHARGE_BONUS * world.getCurrentMoonPhaseFactor();
-
-			bulbStrength *= 1.5;
 		}
 
 		ItemStack output = new ItemStack(ModItems.TIME_BULB, 1);

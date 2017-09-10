@@ -97,11 +97,8 @@ public class BlockTimePlant extends BlockBase implements IPlantable, IGrowable {
 			world.setBlockState(pos, state.cycleProperty(AGE));
 
 			if (world.getTileEntity(pos) instanceof TileTimePlant) {
-				if (state.getValue(AGE) == 6) {
-					((TileTimePlant)world.getTileEntity(pos)).increaseCharge(3);
-				}
-				else {
-					((TileTimePlant)world.getTileEntity(pos)).increaseCharge(2);
+				if ((state.getValue(AGE) & 1) == 1) {
+					((TileTimePlant)world.getTileEntity(pos)).increaseCharge(1);
 				}
 			}
 		}
