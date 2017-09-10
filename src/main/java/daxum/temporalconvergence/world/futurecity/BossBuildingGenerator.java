@@ -40,8 +40,6 @@ public class BossBuildingGenerator extends FutureStructureGenerator {
 	public void placeInMap(int[][] cityMap, int[][] dataMap) {
 		final int cityWidth = cityMap.length;
 		final int cityLength = cityMap[0].length;
-		final int MAX_AREA = FutureCityGenerator.MAX_CITY_SIZE * FutureCityGenerator.MAX_CITY_SIZE;
-		final int CITY_AREA = cityWidth * cityLength;
 
 		final int startX = rand.nextInt(cityWidth - 1 - BOSS_BUILDING_WIDTH) + 1;
 		final int startZ = rand.nextInt(cityLength - 1 - BOSS_BUILDING_LENGTH) + 1;

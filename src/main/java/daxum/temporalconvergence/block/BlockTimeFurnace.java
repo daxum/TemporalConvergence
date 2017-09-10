@@ -157,7 +157,6 @@ public class BlockTimeFurnace extends BlockBase {
 
 	private void createStructure(World world, BlockPos pos, EnumFacing facing) {
 		if (!world.isRemote && facing.getAxis() != Axis.Y) {
-			final int sideLength = 3;
 			BlockPos bottomCorner = pos.offset(facing.getOpposite()).down().north().west();
 
 			for (BlockPos currentPos : getStructurePosList(bottomCorner)) {

@@ -83,7 +83,6 @@ public class BlockEarlyFutureFence extends BlockFence {
 	}
 
 	private boolean canFenceConnectTo(IBlockAccess world, BlockPos pos, EnumFacing facing) {
-		Block block = world.getBlockState(pos.offset(facing)).getBlock();
 		return canConnectTo(world, pos.offset(facing), facing);
 	}
 }
