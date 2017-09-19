@@ -217,20 +217,27 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 	private void convertItemInSlot(int slot) {
 		ItemStack stack = inventory.getStackInSlot(slot);
 		ItemStack output = TimeChestRecipes.getOutput(stack);
+		int amount = 0;
 
 		if (!output.isEmpty()) {
-			output.setCount(Math.min(stack.getCount() * output.getCount(), inventory.getSlotLimit(slot)));
-			inventory.setStackInSlot(slot, output);
+			amount = stack.getCount() * output.getCount();
 		}
 		else if (stack.getItem() instanceof ItemFood) {
 			final int foodValue = Math.max(((ItemFood)stack.getItem()).getHealAmount(stack), 1);
-			final int amount = stack.getCount() * foodValue;
+			amount = stack.getCount() * foodValue;
 
-			inventory.setStackInSlot(slot, new ItemStack(ModItems.ANCIENT_DUST, Math.min(amount, inventory.getSlotLimit(slot))));
+			output = new ItemStack(ModItems.ANCIENT_DUST);
+		}
+
+		if (!output.isEmpty()) {
+			output.setCount(Math.min(Math.min(amount, inventory.getSlotLimit(slot)), output.getMaxStackSize()));
+			final int extra = amount - output.getCount();
+
+			inventory.setStackInSlot(slot, output);
 
 			//If can't fit in slot, add to other slots. If it still can't fit, just get rid of it
-			if (amount > inventory.getSlotLimit(slot)) {
-				ItemHandlerHelper.insertItemStacked(inventory, new ItemStack(ModItems.ANCIENT_DUST, amount - inventory.getSlotLimit(slot)), false);
+			if (extra > 0) {
+				ItemHandlerHelper.insertItemStacked(inventory, new ItemStack(output.getItem(), extra, output.getMetadata()), false);
 			}
 		}
 	}
