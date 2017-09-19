@@ -21,6 +21,7 @@ package daxum.temporalconvergence.recipes;
 
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.power.PowerTypeList;
 import daxum.temporalconvergence.power.PowerTypeManager.PowerRequirements;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -50,7 +51,7 @@ public final class RecipeHandler {
 	}
 
 	public static void initTimeFurnace() {
-		TimeFurnaceRecipes.addRecipe(new ItemStack(Items.IRON_INGOT), new PowerRequirements("fire", 1600, "stable", 700), new ItemStack(ModItems.STABLE_IRON_INGOT), 400);
+		TimeFurnaceRecipes.addRecipe(new ItemStack(Items.IRON_INGOT), new PowerRequirements(PowerTypeList.FIRE, 1600, PowerTypeList.STABLE, 700), new ItemStack(ModItems.STABLE_IRON_INGOT), 400);
 	}
 
 	public static void initTimeChest() {
