@@ -24,16 +24,20 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiTimeChest extends GuiContainer {
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
+	private final TileTimeChest timeChest;
 
 	public GuiTimeChest(IInventory playerInv, TileTimeChest tc) {
 		super(new ContainerTimeChest(playerInv, tc));
+		timeChest = tc;
 	}
 
 	@Override
@@ -57,5 +61,28 @@ public class GuiTimeChest extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		fontRenderer.drawString(I18n.format("container.timechest"), 8, 6, 4210752);
 		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 93, 4210752);
+		drawDecayOverlay();
+	}
+
+	private void drawDecayOverlay() {
+		for (int i = 0; i < timeChest.getInventory().getSlots(); i++) {
+			Slot slot = inventorySlots.inventorySlots.get(i);
+
+			if (timeChest.isDecaying(slot.getSlotIndex()) && slot.isEnabled()) {
+				GlStateManager.disableLighting();
+				GlStateManager.disableDepth();
+				GlStateManager.colorMask(true, true, true, false);
+
+				int height = 16 - MathHelper.ceil(16 * timeChest.getDecayPercent(slot.getSlotIndex()));
+				int x = slot.xPos;
+				int y = slot.yPos + 16 - height;
+
+				drawGradientRect(x, y, x + 16, y + height, -2130706433, -2130706433);
+
+				GlStateManager.colorMask(true, true, true, true);
+				GlStateManager.enableLighting();
+				GlStateManager.enableDepth();
+			}
+		}
 	}
 }

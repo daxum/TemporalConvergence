@@ -59,6 +59,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 	};
 
+	private final int[] maxDecayTimes = new int[inventory.getSlots()];
 	private final int[] decayTimers = new int[inventory.getSlots()];
 	private int powerRequestTimer = 0;
 	private int decaySpeed = 0;
@@ -69,6 +70,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 
 	public TileTimeChest() {
 		Arrays.fill(decayTimers, -1);
+		Arrays.fill(maxDecayTimes, -1);
 	}
 
 	@Override
@@ -98,6 +100,8 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 			}
 
 			if (decaySpeed > 0) {
+				boolean changed = false;
+
 				for (int i = 0; i < decayTimers.length; i++) {
 					if (decayTimers[i] > 0) {
 						decayTimers[i] -= decaySpeed;
@@ -106,7 +110,13 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 							convertItemInSlot(i);
 							decayTimers[i] = -1;
 						}
+
+						changed = true;
 					}
+				}
+
+				if (changed) {
+					sendBlockUpdate();
 				}
 			}
 		}
@@ -176,6 +186,14 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 	}
 
+	public float getDecayPercent(int slot) {
+		return (float) decayTimers[slot] / maxDecayTimes[slot];
+	}
+
+	public boolean isDecaying(int slot) {
+		return decayTimers[slot] > 0;
+	}
+
 	private void setDecayTimer(int slot) {
 		ItemStack stack = inventory.getStackInSlot(slot);
 
@@ -190,6 +208,9 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		else {
 			decayTimers[slot] = -1;
 		}
+
+		maxDecayTimes[slot] = decayTimers[slot];
+		sendBlockUpdate();
 	}
 
 	private void convertItemInSlot(int slot) {
@@ -241,6 +262,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 
 			if (decayTimes.length == decayTimers.length) {
 				for (int i = 0; i < decayTimers.length; i++) {
+					setDecayTimer(i);
 					decayTimers[i] = decayTimes[i];
 				}
 			}
