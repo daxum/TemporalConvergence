@@ -97,7 +97,7 @@ public class TileBrazierRenderer extends FastTESR<TileBrazier> {
 
 	static {
 		addFillTexture(ModItems.TIME_DUST, new ResourceLocation(TemporalConvergence.MODID, "blocks/brazier_dust_fill"));
-		addFillTexture(ModItems.STABLE_CHARCOAL, new ResourceLocation(TemporalConvergence.MODID, "blocks/brazier_stable_charcoal_fill"));
+		addFillTexture(ModItems.ANCIENT_DUST, new ResourceLocation(TemporalConvergence.MODID, "blocks/brazier_ancient_dust_fill"));
 		addFillTexture(ModItems.ENERGIZED_CHARCOAL, new ResourceLocation(TemporalConvergence.MODID, "blocks/brazier_energized_charcoal_fill"));
 	}
 }

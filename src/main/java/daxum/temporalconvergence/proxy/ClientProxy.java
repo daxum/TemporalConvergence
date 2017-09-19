@@ -52,7 +52,6 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.DIM_LINKER);
 		registerRender(ModItems.EARLY_FUTURE_DOOR);
 		registerRender(ModItems.REWOUND_TIME_SEEDS);
-		registerRender(ModItems.STABLE_CHARCOAL);
 		registerRender(ModItems.PHASE_CLOTH_CHEST);
 		registerRender(ModItems.PHASE_CLOTH_LEGS);
 		registerRender(ModItems.PHASE_CLOTH_BOOTS);
@@ -64,6 +63,7 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.REINFORCED_SOLAR_PICK);
 		registerRender(ModItems.REINFORCED_SOLAR_SHOVEL);
 		registerRender(ModItems.REINFORCED_SOLAR_AXE);
+		registerRender(ModItems.ANCIENT_DUST);
 
 		//Blocks
 		registerRender(Item.getItemFromBlock(ModBlocks.ORIGIN_STONE));

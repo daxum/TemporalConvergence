@@ -243,6 +243,11 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 				stopBurning();
 			}
 		}
+		else {
+			currentFuel = null;
+			powerType = null;
+			powerPerTick = 0;
+		}
 
 		super.readFromNBT(comp);
 	}
@@ -335,7 +340,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 	static {
 		//Initialize fuels
 		addFuel(ModItems.TIME_DUST, 2400, "time", 10, 5);
-		addFuel(ModItems.STABLE_CHARCOAL, 7200, "stable", 5, 4);
+		addFuel(ModItems.ANCIENT_DUST, 7200, "stable", 5, 4);
 		addFuel(ModItems.ENERGIZED_CHARCOAL, 4800, "fire", 15, 6);
 	}
 }

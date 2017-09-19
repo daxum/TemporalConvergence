@@ -54,7 +54,6 @@ public final class ModItems {
 	public static final Item DIM_LINKER;
 	public static final Item EARLY_FUTURE_DOOR;
 	public static final Item REWOUND_TIME_SEEDS;
-	public static final Item STABLE_CHARCOAL;
 	public static final Item PHASE_CLOTH_CHEST;
 	public static final Item PHASE_CLOTH_LEGS;
 	public static final Item PHASE_CLOTH_BOOTS;
@@ -66,6 +65,7 @@ public final class ModItems {
 	public static final Item REINFORCED_SOLAR_PICK;
 	public static final Item REINFORCED_SOLAR_SHOVEL;
 	public static final Item REINFORCED_SOLAR_AXE;
+	public static final Item ANCIENT_DUST;
 
 	static {
 		TEMPCONVTAB = new CreativeTabs(TemporalConvergence.MODID) {
@@ -79,19 +79,14 @@ public final class ModItems {
 		PHASE_CLOTH_ARMOR = EnumHelper.addArmorMaterial("TC_PHASE_CLOTH_ARMOR", "temporalconvergence:phase_cloth_armor", 3, new int[] {1, 1, 1, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
 
 		TIME_STEEL_INGOT = new ItemBase("time_steel_ingot");
-		STABLE_CHARCOAL = new ItemBase("stable_charcoal") {
+		ENERGIZED_CHARCOAL = new ItemBase("energized_charcoal") {
 			@Override
 			public int getItemBurnTime(ItemStack fuel) {
 				return 2000;
 			}
 		};
-		ENERGIZED_CHARCOAL = new ItemBase("energized_charcoal") {
-			@Override
-			public int getItemBurnTime(ItemStack fuel) {
-				return 1200;
-			}
-		};
 		STABLE_IRON_INGOT = new ItemBase("stable_iron_ingot");
+		ANCIENT_DUST = new ItemBase("ancient_dust");
 
 		REINFORCED_SOLAR = EnumHelper.addToolMaterial("TC_REINF_SOLAR", 2, 57600, 8.0f, 1.0f, 5).setRepairItem(new ItemStack(STABLE_IRON_INGOT));
 
@@ -129,7 +124,6 @@ public final class ModItems {
 		itemRegistry.register(SOLAR_WOOD_SHOVEL);
 		itemRegistry.register(EARLY_FUTURE_DOOR);
 		itemRegistry.register(REWOUND_TIME_SEEDS);
-		itemRegistry.register(STABLE_CHARCOAL);
 		itemRegistry.register(PHASE_CLOTH_CHEST);
 		itemRegistry.register(PHASE_CLOTH_LEGS);
 		itemRegistry.register(PHASE_CLOTH_BOOTS);
@@ -141,6 +135,7 @@ public final class ModItems {
 		itemRegistry.register(REINFORCED_SOLAR_PICK);
 		itemRegistry.register(REINFORCED_SOLAR_SHOVEL);
 		itemRegistry.register(REINFORCED_SOLAR_AXE);
+		itemRegistry.register(ANCIENT_DUST);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));

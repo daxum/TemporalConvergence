@@ -23,13 +23,13 @@ import java.util.Arrays;
 
 import daxum.temporalconvergence.block.BlockTimeChest;
 import daxum.temporalconvergence.gui.ContainerTimeChest;
+import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.PowerHandler;
 import daxum.temporalconvergence.recipes.TimeChestRecipes;
 import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -45,6 +45,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileTimeChest extends TileEntityBase implements TileEntityInventoried, ITickable {
@@ -223,10 +224,14 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 		else if (stack.getItem() instanceof ItemFood) {
 			final int foodValue = Math.max(((ItemFood)stack.getItem()).getHealAmount(stack), 1);
-			final int amount = Math.min(stack.getCount() * foodValue, inventory.getSlotLimit(slot));
+			final int amount = stack.getCount() * foodValue;
 
-			//TODO: change
-			inventory.setStackInSlot(slot, new ItemStack(Items.COAL, amount, 1));
+			inventory.setStackInSlot(slot, new ItemStack(ModItems.ANCIENT_DUST, Math.min(amount, inventory.getSlotLimit(slot))));
+
+			//If can't fit in slot, add to other slots. If it still can't fit, just get rid of it
+			if (amount > inventory.getSlotLimit(slot)) {
+				ItemHandlerHelper.insertItemStacked(inventory, new ItemStack(ModItems.ANCIENT_DUST, amount - inventory.getSlotLimit(slot)), false);
+			}
 		}
 	}
 
@@ -262,7 +267,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 
 			if (decayTimes.length == decayTimers.length) {
 				for (int i = 0; i < decayTimers.length; i++) {
-					setDecayTimer(i);
+					setDecayForLoad(i);
 					decayTimers[i] = decayTimes[i];
 				}
 			}
@@ -277,6 +282,22 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 
 		super.readFromNBT(comp);
+	}
+
+	private void setDecayForLoad(int slot) {
+		ItemStack stack = inventory.getStackInSlot(slot);
+		int time = -1;
+
+		if (!TimeChestRecipes.getOutput(stack).isEmpty()) {
+			time = TimeChestRecipes.getTime(stack);
+		}
+		else if (stack.getItem() instanceof ItemFood) {
+			ItemFood food = (ItemFood) stack.getItem();
+
+			time = food.getHealAmount(stack) * 2000;
+		}
+
+		maxDecayTimes[slot] = time;
 	}
 
 	@Override
