@@ -20,6 +20,7 @@
 package daxum.temporalconvergence.tileentity;
 
 import daxum.temporalconvergence.power.PowerHandler;
+import daxum.temporalconvergence.power.PowerType;
 import daxum.temporalconvergence.recipes.TimeFurnaceRecipes;
 import daxum.temporalconvergence.recipes.TimeFurnaceRecipes.TimeFurnaceRecipe;
 import net.minecraft.item.ItemStack;
@@ -113,7 +114,7 @@ public class TileTimeFurnaceController extends TileTimeFurnaceBase implements IT
 						boolean needsSync = false;
 
 						for (int i = 0; i < powerGotten.length; i++) {
-							String powerType = currentRecipe.powerRequired.getTypesRequired()[i];
+							PowerType powerType = currentRecipe.powerRequired.getTypesRequired()[i];
 
 							int requestAmount = currentRecipe.powerRequired.getAmountForType(powerType) - powerGotten[i];
 

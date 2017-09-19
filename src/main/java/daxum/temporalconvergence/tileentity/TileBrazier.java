@@ -29,6 +29,8 @@ import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.IPowerProvider;
 import daxum.temporalconvergence.power.PowerHandler;
+import daxum.temporalconvergence.power.PowerType;
+import daxum.temporalconvergence.power.PowerTypeList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -42,6 +44,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -52,7 +56,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 	private final ItemStackHandler inventory = new BrazierInventory();
 	private Item currentFuel = null;
 	private int burnTime = 0;
-	private String powerType = null;
+	private PowerType powerType = null;
 	private int powerPerTick = 0;
 	private int powerThisTick = 0;
 	private boolean burning = false;
@@ -92,7 +96,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 	}
 
 	@Override
-	public int getPower(String type, int amount) {
+	public int getPower(PowerType type, int amount) {
 		if (burning && powerType.equals(type) && powerThisTick < powerPerTick) {
 			int provided = Math.min(powerPerTick - powerThisTick, amount);
 			powerThisTick += provided;
@@ -117,7 +121,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 				burning = true;
 
 
-				PowerHandler.addProvider(world, pos, powerType, fuelData.powerRange.offset(pos), true);
+				PowerHandler.addProvider(world, pos, powerType, fuelData.powerRange.offset(pos));
 
 				world.setBlockState(pos, ModBlocks.BRAZIER.getDefaultState().withProperty(BlockBrazier.BURNING, true));
 
@@ -155,7 +159,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 	private void resumeBurning() {
 		if (isPaused()) {
 			burning = true;
-			PowerHandler.addProvider(world, pos, powerType, FUEL_MAP.get(currentFuel).powerRange.offset(pos), true);
+			PowerHandler.addProvider(world, pos, powerType, FUEL_MAP.get(currentFuel).powerRange.offset(pos));
 			world.setBlockState(pos, ModBlocks.BRAZIER.getDefaultState().withProperty(BlockBrazier.BURNING, true));
 
 			sendBlockUpdate();
@@ -202,6 +206,11 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 
 	public boolean shouldRenderContents() {
 		return !inventory.getStackInSlot(0).isEmpty() || burnTime > 0;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getColor() {
+		return powerType == null ? 15961837 : powerType.getColor();
 	}
 
 	private float calculateFillPercent() {
@@ -268,10 +277,10 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 	private static class BrazierFuel {
 		public final int burnTime;
 		public final int power;
-		public final String powerType;
+		public final PowerType powerType;
 		public final AxisAlignedBB powerRange;
 
-		public BrazierFuel(int time, int pow, String type, AxisAlignedBB range) {
+		public BrazierFuel(int time, int pow, PowerType type, AxisAlignedBB range) {
 			burnTime = time;
 			power = pow;
 			powerType = type;
@@ -326,7 +335,7 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 		return true;
 	}
 
-	public static void addFuel(Item fuel, int burnTime, String powerType, int powerProduced, double range) {
+	public static void addFuel(Item fuel, int burnTime, PowerType powerType, int powerProduced, double range) {
 		if (fuel != null && burnTime > 0 && powerProduced >= 0) {
 			if (!FUEL_MAP.containsKey(fuel)) {
 				FUEL_MAP.put(fuel, new BrazierFuel(burnTime, powerProduced, powerType, new AxisAlignedBB(-range, -range, -range, range, range, range)));
@@ -339,8 +348,8 @@ public class TileBrazier extends TileEntityBase implements ITickable, IPowerProv
 
 	static {
 		//Initialize fuels
-		addFuel(ModItems.TIME_DUST, 2400, "time", 10, 5);
-		addFuel(ModItems.ANCIENT_DUST, 7200, "stable", 5, 4);
-		addFuel(ModItems.ENERGIZED_CHARCOAL, 4800, "fire", 15, 6);
+		addFuel(ModItems.TIME_DUST, 2400, PowerTypeList.TIME, 10, 5);
+		addFuel(ModItems.ANCIENT_DUST, 7200, PowerTypeList.STABLE, 5, 4);
+		addFuel(ModItems.ENERGIZED_CHARCOAL, 4800, PowerTypeList.FIRE, 15, 6);
 	}
 }

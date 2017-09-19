@@ -23,6 +23,7 @@ import java.util.List;
 
 import daxum.temporalconvergence.entity.EntityFrozen;
 import daxum.temporalconvergence.power.PowerHandler;
+import daxum.temporalconvergence.power.PowerTypeList;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -193,7 +194,7 @@ public class ItemTimeFreezer extends ItemBase {
 
 	private void rechargeFreezer(World world, Entity entity, ItemStack stack) {
 		if (entity != null && entity.getEntityBoundingBox() != null) {
-			stack.setItemDamage(stack.getItemDamage() - PowerHandler.requestPower(world, entity.getEntityBoundingBox(), "time", 5));
+			stack.setItemDamage(stack.getItemDamage() - PowerHandler.requestPower(world, entity.getEntityBoundingBox(), PowerTypeList.TIME, 5));
 		}
 	}
 

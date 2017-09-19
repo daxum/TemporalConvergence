@@ -19,9 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.power;
 
-public interface IPowerProvider {
-	int getPower(PowerType type, int amount);
-
-	//Whether other providers near this one can influence the amount of power received
-	default boolean adjustAmount() { return true; }
+public final class PowerTypeList {
+	public static final PowerType TIME = new PowerType("time", 70, 193, 219);
+	public static final PowerType STABLE = new PowerType("stable", 142, 186, 169);
+	public static final PowerType FIRE = new PowerType("fire", 191, 120, 19);
 }

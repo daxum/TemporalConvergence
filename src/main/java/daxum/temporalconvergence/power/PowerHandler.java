@@ -32,7 +32,7 @@ import net.minecraft.world.World;
 public final class PowerHandler {
 
 	//Request power of type powerType from all providers within range of the given position
-	public static int requestPower(World world, BlockPos pos, String powerType, int amount) {
+	public static int requestPower(World world, BlockPos pos, PowerType powerType, int amount) {
 		if (!world.isRemote) {
 			ProviderTree tree = PowerTreeData.get(world).getTree();
 
@@ -43,7 +43,7 @@ public final class PowerHandler {
 	}
 
 	//Request power of type powerType from all providers within range of the given bounding box
-	public static int requestPower(World world, AxisAlignedBB receiverBox, String powerType, int amount) {
+	public static int requestPower(World world, AxisAlignedBB receiverBox, PowerType powerType, int amount) {
 		if (!world.isRemote) {
 			ProviderTree tree = PowerTreeData.get(world).getTree();
 
@@ -54,54 +54,28 @@ public final class PowerHandler {
 	}
 
 	//Adds a provider that produces power of type powerType within range to the list of providers for the given world
-	public static void addProvider(World world, BlockPos pos, String powerType, AxisAlignedBB range, boolean startActive) {
+	public static void addProvider(World world, BlockPos pos, PowerType powerType, AxisAlignedBB range) {
 		if (!world.isRemote) {
-			ProviderTree tree = PowerTreeData.get(world).getTree();
+			PowerTreeData data = PowerTreeData.get(world);
+			ProviderTree tree = data.getTree();
 
-			tree.addProvider(pos, powerType, range, startActive);
-			PowerTypeManager.addPowerType(powerType);
-		}
-	}
-
-	//Removes all providers at the given position from the world's provider list
-	public static void removeProvider(World world, BlockPos pos) {
-		if (!world.isRemote) {
-			ProviderTree tree = PowerTreeData.get(world).getTree();
-
-			for (String type : PowerTypeManager.getPowerTypes()) {
-				tree.removeProvider(pos, type);
-			}
+			tree.addProvider(pos, powerType, range);
+			data.markDirty();
 		}
 	}
 
 	//Removes all providers at the given position that produce power of type powerType from the world's provider list
-	public static void removeProvider(World world, BlockPos pos, String powerType) {
+	public static void removeProvider(World world, BlockPos pos, PowerType powerType) {
 		if (!world.isRemote) {
-			ProviderTree tree = PowerTreeData.get(world).getTree();
+			PowerTreeData data = PowerTreeData.get(world);
+			ProviderTree tree = data.getTree();
 
 			tree.removeProvider(pos, powerType);
+			data.markDirty();
 		}
 	}
 
-	//Informs the PowerHandler that the provider at the given position is actively producing power of type powerType (the generator is on)
-	public static void activateProvider(World world, BlockPos pos, String powerType) {
-		if (!world.isRemote) {
-			ProviderTree tree = PowerTreeData.get(world).getTree();
-
-			tree.setActive(pos, powerType, true);
-		}
-	}
-
-	//Informs the PowerHandler that the provider at the given position is not currently producing power of type powerType (the generator is off)
-	public static void deactivateProvider(World world, BlockPos pos, String powerType) {
-		if (!world.isRemote) {
-			ProviderTree tree = PowerTreeData.get(world).getTree();
-
-			tree.setActive(pos, powerType, false);
-		}
-	}
-
-	private static int getPower(World world, List<ProviderData> dataList, String powerType, int amount) {
+	private static int getPower(World world, List<ProviderData> dataList, PowerType powerType, int amount) {
 		//Get all providers from dataList, removing invalid ones from the tree
 		int providerCount = 0;
 

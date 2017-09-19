@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import daxum.temporalconvergence.TemporalConvergence;
-import daxum.temporalconvergence.world.savedata.PowerTreeData;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -39,13 +38,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 public class ProviderTree implements INBTSerializable<NBTTagList> {
 	public static final AxisAlignedBB SINGLE_BLOCK_AABB = new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
 	private TreeNode root = new TreeNode(new AxisAlignedBB(-30000000, 0, -30000000, 30000000, 256, 30000000));
-	private final PowerTreeData saveData;
 
-	public ProviderTree(PowerTreeData dataHandler) {
-		saveData = dataHandler;
-	}
-
-	public List<ProviderData> getIntersectingProviders(String powerType, AxisAlignedBB receiverBox) {
+	public List<ProviderData> getIntersectingProviders(PowerType powerType, AxisAlignedBB receiverBox) {
 		List<ProviderData> posList = new ArrayList();
 
 		root.getIntersectingProviders(powerType, receiverBox, posList);
@@ -53,45 +47,36 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 		return posList;
 	}
 
-	public void addProvider(BlockPos pos, String powerType, AxisAlignedBB providerBox, boolean active) {
+	public void addProvider(BlockPos pos, PowerType powerType, AxisAlignedBB providerBox) {
 		AxisAlignedBB blockBox = SINGLE_BLOCK_AABB.offset(pos);
 
 		if (isAabbWithin(blockBox, providerBox)) {
-			root.addProvider(pos, powerType, providerBox, active);
+			root.addProvider(pos, powerType, providerBox);
 			root.recalculateMultipliers(providerBox, PowerTypeManager.getEffectedTypes(powerType));
-			saveData.markDirty();
 		}
 		else {
 			TemporalConvergence.LOGGER.warn("Couldn't add provider at pos {} with {} because the position was not inside the bounding box", pos, providerBox);
 		}
 	}
 
-	public void removeProvider(BlockPos pos, String powerType) {
+	public void removeProvider(BlockPos pos, PowerType powerType) {
 		root.removeProvider(pos, powerType, SINGLE_BLOCK_AABB.offset(pos));
-		saveData.markDirty();
-	}
-
-	public void setActive(BlockPos pos, String powerType, boolean active) {
-		root.setActive(pos, powerType, SINGLE_BLOCK_AABB.offset(pos), active);
-		saveData.markDirty();
 	}
 
 	public static class ProviderData {
 		public final BlockPos pos;
 		public final AxisAlignedBB range;
-		public boolean active;
 		public float multiplier;
 
-		public ProviderData(BlockPos position, AxisAlignedBB aabb, boolean act, float mult) {
+		public ProviderData(BlockPos position, AxisAlignedBB aabb, float mult) {
 			pos = position;
 			range = aabb;
-			active = act;
 			multiplier = mult;
 		}
 
 		@Override
 		public String toString() {
-			return (active ? "Active" : "Inactive") + " provider at " + pos + " with range " + range + " and multiplier " + multiplier;
+			return "Provider at " + pos + " with range " + range + " and multiplier " + multiplier;
 		}
 	}
 
@@ -105,21 +90,21 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 
 		private final AxisAlignedBB range;
 		private TreeNode[] children = null;
-		private Map<String, List<ProviderData>> typeProviderMap = null;
+		private Map<PowerType, List<ProviderData>> typeProviderMap = null;
 		private int providers = 0;
 
 		public TreeNode(AxisAlignedBB aabb) {
 			range = aabb;
 		}
 
-		public void getIntersectingProviders(String powerType, AxisAlignedBB aabb, List<ProviderData> posList) {
+		public void getIntersectingProviders(PowerType powerType, AxisAlignedBB aabb, List<ProviderData> posList) {
 			if (typeProviderMap != null && typeProviderMap.get(powerType) != null) {
 				List<ProviderData> providerList = typeProviderMap.get(powerType);
 
 				for (int i = 0; i < providerList.size(); i++) {
 					ProviderData data = providerList.get(i);
 
-					if (data.active && data.range.intersects(aabb)) {
+					if (data.range.intersects(aabb)) {
 						posList.add(data);
 					}
 				}
@@ -134,22 +119,22 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			}
 		}
 
-		public void addProvider(BlockPos pos, String powerType, AxisAlignedBB providerBox, boolean active) {
+		public void addProvider(BlockPos pos, PowerType powerType, AxisAlignedBB providerBox) {
 			//Try adding to children, if any
 			if (!isLeaf()) {
 				for (int i = 0; i < children.length; i++) {
 					if (isAabbWithin(providerBox, children[i].range)) {
-						children[i].addProvider(pos, powerType, providerBox, active);
+						children[i].addProvider(pos, powerType, providerBox);
 						return;
 					}
 				}
 			}
 
 			//Couldn't add to children, so add to self
-			String[] types = PowerTypeManager.getEffectingTypes(powerType);
+			PowerType[] types = PowerTypeManager.getEffectingTypes(powerType);
 			float multiplier = types == null ? 1.0f : root.calculateMultiplier(powerType, providerBox, types, new int[types.length]);
 
-			addProvider(powerType, new ProviderData(pos, providerBox, active, multiplier));
+			addProvider(powerType, new ProviderData(pos, providerBox, multiplier));
 
 			//If too full, split tree
 			if (shouldSplit()) {
@@ -157,31 +142,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			}
 		}
 
-		public void setActive(BlockPos pos, String powerType, AxisAlignedBB posBox, boolean active) {
-			if (!isLeaf()) {
-				for (int i = 0; i < children.length; i++) {
-					if (isAabbWithin(posBox, children[i].range)) {
-						children[i].setActive(pos, powerType, posBox, active);
-						break;
-					}
-				}
-			}
-
-			if (typeProviderMap != null) {
-				List<ProviderData> dataList = typeProviderMap.get(powerType);
-
-				if (dataList != null) {
-					for (int i = 0; i < dataList.size(); i++) {
-						if (dataList.get(i).pos.equals(pos) && dataList.get(i).active != active) {
-							dataList.get(i).active = active;
-							root.recalculateMultipliers(dataList.get(i).range, PowerTypeManager.getEffectedTypes(powerType));
-						}
-					}
-				}
-			}
-		}
-
-		public void removeProvider(BlockPos pos, String powerType, AxisAlignedBB posBox) {
+		public void removeProvider(BlockPos pos, PowerType powerType, AxisAlignedBB posBox) {
 			if (!isLeaf()) {
 				for (int i = 0; i < children.length; i++) {
 					if (isAabbWithin(posBox, children[i].range)) {
@@ -207,7 +168,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			}
 		}
 
-		public void recalculateMultipliers(AxisAlignedBB changedBox, String[] effectedTypes) {
+		public void recalculateMultipliers(AxisAlignedBB changedBox, PowerType[] effectedTypes) {
 			if (effectedTypes.length == 0) {
 				return;
 			}
@@ -219,7 +180,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 					if (dataList != null) {
 						for (int j = 0; j < dataList.size(); j++) {
 							if (dataList.get(j).range.intersects(changedBox)) {
-								String[] types = PowerTypeManager.getEffectingTypes(effectedTypes[i]);
+								PowerType[] types = PowerTypeManager.getEffectingTypes(effectedTypes[i]);
 								int[] typeCounts = new int[types.length];
 
 								dataList.get(j).multiplier = root.calculateMultiplier(effectedTypes[i], dataList.get(j).range, types, typeCounts);
@@ -238,7 +199,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			}
 		}
 
-		private float calculateMultiplier(String powerType, AxisAlignedBB box, String[] multiplyingTypes, int[] typeCounts) {
+		private float calculateMultiplier(PowerType powerType, AxisAlignedBB box, PowerType[] multiplyingTypes, int[] typeCounts) {
 			float multiplier = 1.0f;
 
 			if (typeProviderMap != null) {
@@ -247,7 +208,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 
 					if (dataList != null) {
 						for (int j = 0; j < dataList.size(); j++) {
-							if (dataList.get(j).active && dataList.get(j).range.intersects(box)) {
+							if (dataList.get(j).range.intersects(box)) {
 								multiplier *= (PowerTypeManager.getMultiplier(multiplyingTypes[i], powerType) - 1.0) * (1.0 / Math.pow(2.0, typeCounts[i])) + 1.0;
 								typeCounts[i]++;
 							}
@@ -283,7 +244,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			return range.maxZ - range.minZ > MIN_LENGTH;
 		}
 
-		private void addProvider(String powerType, ProviderData data) {
+		private void addProvider(PowerType powerType, ProviderData data) {
 			if (typeProviderMap == null) {
 				typeProviderMap = new HashMap<>();
 			}
@@ -337,7 +298,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			}
 
 			//Add providers to children
-			for (Entry<String, List<ProviderData>> entry : typeProviderMap.entrySet()) {
+			for (Entry<PowerType, List<ProviderData>> entry : typeProviderMap.entrySet()) {
 				List<ProviderData> providerList = entry.getValue();
 
 				for (int i = providerList.size() - 1; i >= 0; i--) {
@@ -355,17 +316,17 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			}
 		}
 
-		private void addFromLoad(BlockPos pos, String powerType, AxisAlignedBB providerBox, boolean active, float multiplier) {
+		private void addFromLoad(BlockPos pos, PowerType powerType, AxisAlignedBB providerBox, float multiplier) {
 			if (!isLeaf()) {
 				for (int i = 0; i < children.length; i++) {
 					if (isAabbWithin(providerBox, children[i].range)) {
-						children[i].addFromLoad(pos, powerType, providerBox, active, multiplier);
+						children[i].addFromLoad(pos, powerType, providerBox, multiplier);
 						return;
 					}
 				}
 			}
 
-			addProvider(powerType, new ProviderData(pos, providerBox, active, multiplier));
+			addProvider(powerType, new ProviderData(pos, providerBox, multiplier));
 
 			if (shouldSplit()) {
 				splitNode();
@@ -384,7 +345,7 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 			output += "Providers: " + providers + "\n";
 
 			if (typeProviderMap != null) {
-				for (Map.Entry<String, List<ProviderData>> entry : typeProviderMap.entrySet()) {
+				for (Map.Entry<PowerType, List<ProviderData>> entry : typeProviderMap.entrySet()) {
 					if (entry.getValue() != null && !entry.getValue().isEmpty()) {
 						output += "\t" + entry.getKey() + ":\n";
 
@@ -423,11 +384,11 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 
 	private void addNodeToList(TreeNode node, NBTTagList list) {
 		if (node.typeProviderMap != null) {
-			for (Map.Entry<String, List<ProviderData>> entry : node.typeProviderMap.entrySet()) {
+			for (Map.Entry<PowerType, List<ProviderData>> entry : node.typeProviderMap.entrySet()) {
 				if (entry.getValue() != null && !entry.getValue().isEmpty()) {
 					for (ProviderData data : entry.getValue()) {
 						NBTTagCompound comp = new NBTTagCompound();
-						comp.setString("type", entry.getKey());
+						comp.setString("type", entry.getKey().getName());
 						comp.setLong("pos", data.pos.toLong());
 						comp.setDouble("minX", data.range.minX);
 						comp.setDouble("minY", data.range.minY);
@@ -435,7 +396,6 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 						comp.setDouble("maxX", data.range.maxX);
 						comp.setDouble("maxY", data.range.maxY);
 						comp.setDouble("maxZ", data.range.maxZ);
-						comp.setBoolean("active", data.active);
 						comp.setFloat("mult", data.multiplier);
 
 						list.appendTag(comp);
@@ -462,10 +422,9 @@ public class ProviderTree implements INBTSerializable<NBTTagList> {
 				if (comp.hasKey("type", Constants.NBT.TAG_STRING) && comp.hasKey("pos", Constants.NBT.TAG_LONG)
 						&& comp.hasKey("minX", Constants.NBT.TAG_DOUBLE) && comp.hasKey("minY", Constants.NBT.TAG_DOUBLE)
 						&& comp.hasKey("minZ", Constants.NBT.TAG_DOUBLE) && comp.hasKey("maxX", Constants.NBT.TAG_DOUBLE)
-						&& comp.hasKey("maxY", Constants.NBT.TAG_DOUBLE) && comp.hasKey("maxZ", Constants.NBT.TAG_DOUBLE)
-						&& comp.hasKey("active", Constants.NBT.TAG_BYTE) && comp.hasKey("mult", Constants.NBT.TAG_FLOAT)) {
+						&& comp.hasKey("maxY", Constants.NBT.TAG_DOUBLE) && comp.hasKey("maxZ", Constants.NBT.TAG_DOUBLE)) {
 					AxisAlignedBB box = new AxisAlignedBB(comp.getDouble("minX"), comp.getDouble("minY"), comp.getDouble("minZ"), comp.getDouble("maxX"), comp.getDouble("maxY"), comp.getDouble("maxZ"));
-					root.addFromLoad(BlockPos.fromLong(comp.getLong("pos")), comp.getString("type"), box, comp.getBoolean("active"), comp.getFloat("mult"));
+					root.addFromLoad(BlockPos.fromLong(comp.getLong("pos")), PowerTypeManager.getType(comp.getString("type")), box, comp.getFloat("mult"));
 				}
 				else {
 					TemporalConvergence.LOGGER.error("Error loading tag {} for ProviderTree", comp);

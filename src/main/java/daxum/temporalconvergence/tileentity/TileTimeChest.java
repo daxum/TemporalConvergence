@@ -25,6 +25,7 @@ import daxum.temporalconvergence.block.BlockTimeChest;
 import daxum.temporalconvergence.gui.ContainerTimeChest;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.PowerHandler;
+import daxum.temporalconvergence.power.PowerTypeList;
 import daxum.temporalconvergence.recipes.TimeChestRecipes;
 import daxum.temporalconvergence.util.RenderHelper;
 import daxum.temporalconvergence.util.WorldHelper;
@@ -80,7 +81,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		//Handle item conversion
 		if (!world.isRemote) {
 			if (powerRequestTimer <= 0) {
-				int powerGotten = PowerHandler.requestPower(world, pos, "time", 40);
+				int powerGotten = PowerHandler.requestPower(world, pos, PowerTypeList.TIME, 40);
 
 				if (powerGotten > 0) {
 					powerRequestTimer = Math.min(powerGotten, 20);

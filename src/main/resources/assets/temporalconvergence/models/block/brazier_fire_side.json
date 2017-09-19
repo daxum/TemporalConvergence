@@ -3,8 +3,8 @@
 
     "textures": {
         "particle": "minecraft:blocks/fire_layer_0",
-        "fire": "minecraft:blocks/fire_layer_0",
-        "fire_alt": "minecraft:blocks/fire_layer_1"
+        "fire": "temporalconvergence:blocks/desat_fire",
+        "fire_alt": "temporalconvergence:blocks/desat_fire_alt"
     },
 
     "ambientocclusion": false,
@@ -16,8 +16,8 @@
             "to": [ 11, 12.7, 5.01 ],
             "shade": false,
             "faces": {
-                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" },
-                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire" }
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire", "tintindex": 1 },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire", "tintindex": 1 }
             }
         },
 
@@ -27,8 +27,8 @@
             "to": [ 11, 12.7, 5.01 ],
             "shade": false,
             "faces": {
-                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire_alt" },
-                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire_alt" }
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire_alt", "tintindex": 1 },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#fire_alt", "tintindex": 1 }
             }
         }
     ]

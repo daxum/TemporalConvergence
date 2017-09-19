@@ -21,34 +21,29 @@ package daxum.temporalconvergence.power;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import daxum.temporalconvergence.TemporalConvergence;
 
 public final class PowerTypeManager {
-	private static Map<String, Map<String, Float>> interactionMap = new HashMap<>(); //Outer map = effected, inner map = effecting
-	private static Set<String> powerTypes = new HashSet<>();
-	private static boolean hasWarned = false;
+	private static Map<PowerType, Map<PowerType, Float>> interactionMap = new HashMap<>(); //Outer map = effected, inner map = effecting
+	private static Map<String, PowerType> powerTypes = new HashMap<>();
 
-	public static void addInteraction(String effecting, String effected, float multiplier) {
+	public static void addInteraction(PowerType effecting, PowerType effected, float multiplier) {
 		if (multiplier < 0.0f) {
 			TemporalConvergence.LOGGER.error("Invalid multiplier {} for type interaction ({} -> {})", multiplier, effecting, effected);
 			return;
 		}
 
 		if (interactionMap.get(effected) == null) {
-			interactionMap.put(effected, new HashMap<String, Float>());
+			interactionMap.put(effected, new HashMap<PowerType, Float>());
 		}
 
 		interactionMap.get(effected).put(effecting, multiplier);
-		addPowerType(effecting);
-		addPowerType(effected);
 	}
 
-	public static float getMultiplier(String effecting, String effected) {
+	public static float getMultiplier(PowerType effecting, PowerType effected) {
 		if (interactionMap.get(effected) != null && interactionMap.get(effected).get(effecting) != null) {
 			return interactionMap.get(effected).get(effecting);
 		}
@@ -56,42 +51,43 @@ public final class PowerTypeManager {
 		return 1.0f;
 	}
 
-	public static String[] getEffectingTypes(String effected) {
+	public static PowerType[] getEffectingTypes(PowerType effected) {
 		if (interactionMap.get(effected) != null) {
-			return interactionMap.get(effected).keySet().toArray(new String[0]);
+			return interactionMap.get(effected).keySet().toArray(new PowerType[0]);
 		}
 
 		return null;
 	}
 
-	public static String[] getEffectedTypes(String effecting) {
-		List<String> types = new ArrayList<>();
+	public static PowerType[] getEffectedTypes(PowerType effecting) {
+		List<PowerType> types = new ArrayList<>();
 
-		for (String key : interactionMap.keySet()) {
+		for (PowerType key : interactionMap.keySet()) {
 			if (interactionMap.get(key) != null && interactionMap.get(key).containsKey(effecting)) {
 				types.add(key);
 			}
 		}
 
-		return types.toArray(new String[0]);
+		return types.toArray(new PowerType[0]);
 	}
 
-	public static void addPowerType(String type) {
-		if (powerTypes.add(type)) {
-			if (powerTypes.size() > 100 && !hasWarned) {
-				TemporalConvergence.LOGGER.warn("Powertype list contains over 100 entries, which may cause performance issues");
-				hasWarned = true;
-			}
+	public static boolean addPowerType(PowerType type) {
+		if (type == null || powerTypes.containsKey(type.getName())) {
+			return false;
 		}
+
+		powerTypes.put(type.getName(), type);
+
+		return true;
 	}
 
-	public static String[] getPowerTypes() {
-		return powerTypes.toArray(new String[0]);
+	public static PowerType getType(String name) {
+		return powerTypes.get(name);
 	}
 
 	//Used by machines
 	public static class PowerRequirements {
-		private final String[] types;
+		private final PowerType[] types;
 		private final int[] amounts;
 
 		//Objects passed in the form "String, Integer, String, Integer, ..." for all required types
@@ -101,12 +97,12 @@ public final class PowerTypeManager {
 			}
 			else if (objects.length == 0) {
 				//No power requirements - a bit odd, but perfectly valid
-				types = new String[] {};
+				types = new PowerType[] {};
 				amounts = new int[] {};
 				return;
 			}
 
-			types = new String[objects.length / 2];
+			types = new PowerType[objects.length / 2];
 			amounts = new int[objects.length / 2];
 
 			for (int i = 0; i < objects.length - 1; i += 2) {
@@ -114,17 +110,17 @@ public final class PowerTypeManager {
 					throw new IllegalArgumentException("Cannot initialize PowerRequirements with a null argument");
 				}
 
-				if (objects[i] instanceof String && objects[i + 1] instanceof Integer) {
-					types[i / 2] = (String) objects[i];
+				if (objects[i] instanceof PowerType && objects[i + 1] instanceof Integer) {
+					types[i / 2] = (PowerType) objects[i];
 					amounts[i / 2] = (Integer) objects[i + 1];
 				}
 				else {
-					TemporalConvergence.LOGGER.warn("Skipping argument {} of PowerRequirements initializer: wasn't a String or Integer", i);
+					TemporalConvergence.LOGGER.warn("Skipping argument {} of PowerRequirements initializer: wasn't a PowerType or Integer", i);
 				}
 			}
 		}
 
-		public String[] getTypesRequired() {
+		public PowerType[] getTypesRequired() {
 			return types;
 		}
 
@@ -132,7 +128,7 @@ public final class PowerTypeManager {
 			return amounts;
 		}
 
-		public int getAmountForType(String type) {
+		public int getAmountForType(PowerType type) {
 			for (int i = 0; i < types.length; i++) {
 				if (types[i].equals(type)) {
 					return amounts[i];

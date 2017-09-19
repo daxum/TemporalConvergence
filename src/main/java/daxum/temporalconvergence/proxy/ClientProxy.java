@@ -25,10 +25,12 @@ import daxum.temporalconvergence.fluid.FluidRenderRegister;
 import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.render.AIBossBarRenderer;
 import daxum.temporalconvergence.render.entity.EntityRenderRegister;
+import daxum.temporalconvergence.tileentity.TileBrazier;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
@@ -125,12 +127,30 @@ public class ClientProxy implements IProxy {
 
 	@Override
 	public void registerColors() {
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
-			@Override
-			public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
-				return world != null && pos != null ? BiomeColorHelper.getGrassColorAtPos(world, pos) :  ColorizerGrass.getGrassColor(0.5, 1.0);
+		BlockColors colors = Minecraft.getMinecraft().getBlockColors();
+		colors.registerBlockColorHandler((IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) -> { return getTimePlantColor(world, pos); }, ModBlocks.TIME_PLANT);
+		colors.registerBlockColorHandler((IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) -> { return getBrazierColor(world, pos); }, ModBlocks.BRAZIER);
+
+	}
+
+	private int getTimePlantColor(IBlockAccess world, BlockPos pos) {
+		if (world != null && pos != null) {
+			return BiomeColorHelper.getGrassColorAtPos(world, pos);
+		}
+
+		return ColorizerGrass.getGrassColor(0.5, 1.0);
+	}
+
+	private int getBrazierColor(IBlockAccess world, BlockPos pos) {
+		if (world != null && pos != null) {
+			TileBrazier brazier = WorldHelper.getTileEntity(world, pos, TileBrazier.class);
+
+			if (brazier != null) {
+				return brazier.getColor();
 			}
-		}, ModBlocks.TIME_PLANT);
+		}
+
+		return 15961837;
 	}
 
 	@Override

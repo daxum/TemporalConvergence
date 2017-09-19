@@ -29,7 +29,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class PowerTreeData extends WorldSavedData {
 	public static final String DATA_NAME = TemporalConvergence.MODID + "-powerTreeData";
-	private ProviderTree tree = new ProviderTree(this);
+	private ProviderTree tree = new ProviderTree();
 
 	public PowerTreeData() {
 		super(DATA_NAME);
