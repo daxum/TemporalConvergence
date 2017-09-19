@@ -115,7 +115,7 @@ public final class PowerTypeManager {
 					amounts[i / 2] = (Integer) objects[i + 1];
 				}
 				else {
-					throw new IllegalArgumentException("Agument to PowerRequirements constructor wasn't a PowerType or Integer");
+					throw new IllegalArgumentException("Argument to PowerRequirements constructor wasn't a PowerType or Integer");
 				}
 			}
 		}
