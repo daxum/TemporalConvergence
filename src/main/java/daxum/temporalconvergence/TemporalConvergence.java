@@ -45,7 +45,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = TemporalConvergence.VERSION, acceptedMinecraftVersions="[1.12]")
+@Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = TemporalConvergence.VERSION, acceptedMinecraftVersions="[1.12.2]")
 public class TemporalConvergence {
 	public static final String MODID = "temporalconvergence"; //Remember to change creative tab name in ModItems and lang file if changed.
 	public static final String NAME = "Temporal Convergence"; //Why on earth did I choose a 19 letter name?
