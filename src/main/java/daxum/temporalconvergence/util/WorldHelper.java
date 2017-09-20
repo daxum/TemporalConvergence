@@ -54,26 +54,32 @@ public final class WorldHelper {
 
 	//These 6 functions are meant to be called with the result of world.getWorldTime()
 	public static boolean isNight(long time) {
+		time = time % 24000;
 		return time >= 13000 && time < 24000;
 	}
 
 	public static boolean isDay(long time) {
+		time = time % 24000;
 		return !isNight(time);
 	}
 
 	public static boolean isDawn(long time) {
+		time = time % 24000;
 		return time >= 0 && time < 2000;
 	}
 
 	public static boolean isNoon(long time) {
+		time = time % 24000;
 		return time >= 5000 && time < 7000;
 	}
 
 	public static boolean isDusk(long time) {
+		time = time % 24000;
 		return time >= 11000 && time < 13000;
 	}
 
 	public static boolean isMidnight(long time) {
+		time = time % 24000;
 		return time >= 17500 && time < 18500;
 	}
 }
