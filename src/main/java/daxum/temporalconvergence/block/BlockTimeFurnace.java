@@ -82,7 +82,7 @@ public class BlockTimeFurnace extends BlockBase {
 			TileTimeFurnaceBase timeFurnace = WorldHelper.getTileEntity(world, pos, TileTimeFurnaceBase.class);
 
 			if (timeFurnace != null && timeFurnace.getController() != null) {
-				player.openGui(TemporalConvergence.instance, GuiHandler.TIME_FURNACE_GUI, world, pos.getX(), pos.getY(), pos.getZ());
+				player.openGui(TemporalConvergence.INSTANCE, GuiHandler.TIME_FURNACE_GUI, world, pos.getX(), pos.getY(), pos.getZ());
 			}
 
 			return true;

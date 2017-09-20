@@ -36,7 +36,7 @@ import daxum.temporalconvergence.world.ModWorldGenerator;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.Mod.InstanceFactory;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -48,18 +48,23 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @Mod(modid = TemporalConvergence.MODID, name = TemporalConvergence.NAME, version = TemporalConvergence.VERSION, acceptedMinecraftVersions="[1.12]")
 public class TemporalConvergence {
 	public static final String MODID = "temporalconvergence"; //Remember to change creative tab name in ModItems and lang file if changed.
-	public static final String NAME = "Temporal Convergence";
+	public static final String NAME = "Temporal Convergence"; //Why on earth did I choose a 19 letter name?
 	public static final String VERSION = "${version}";
 
-	@Instance(MODID)
-	public static TemporalConvergence instance;
+	public static final TemporalConvergence INSTANCE;
 
-	public static final Logger LOGGER = LogManager.getLogger(MODID); //Why on earth did I choose a 19 letter name?
+	@InstanceFactory
+	public static TemporalConvergence getInstance() {
+		return INSTANCE;
+	}
+
+	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	@SidedProxy(clientSide = "daxum.temporalconvergence.proxy.ClientProxy", serverSide = "daxum.temporalconvergence.proxy.ServerProxy")
 	public static IProxy proxy;
 
 	static {
+		INSTANCE = new TemporalConvergence();
 		FluidRegistry.enableUniversalBucket();
 	}
 
@@ -79,7 +84,7 @@ public class TemporalConvergence {
 	@SuppressWarnings("unused")
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
 
 		GameRegistry.registerWorldGenerator(new ModWorldGenerator(), 0);
 		RecipeHandler.init();

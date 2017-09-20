@@ -27,9 +27,9 @@ public final class ModEntities {
 	public static void init() {
 		int id = 0;
 
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "time_pixie"), EntityTimePixie.class, "time_pixie", id++, TemporalConvergence.instance, 16, 2, false, 0x2fd1dbff, 0xfffffffe);
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "ai_boss"), EntityAIBoss.class, "ai_boss", id++, TemporalConvergence.instance, 64, 2, false, 4671303, 8751526);
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "frozen_entity"), EntityFrozen.class, "frozen_entity", id++, TemporalConvergence.instance, 16, 10, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "lunar_boomerang"), EntityLunarBoomerang.class, "lunar_boomerang", id++, TemporalConvergence.instance, 128, 4, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "time_pixie"), EntityTimePixie.class, "time_pixie", id++, TemporalConvergence.INSTANCE, 16, 2, false, 0x2fd1dbff, 0xfffffffe);
+		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "ai_boss"), EntityAIBoss.class, "ai_boss", id++, TemporalConvergence.INSTANCE, 64, 2, false, 4671303, 8751526);
+		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "frozen_entity"), EntityFrozen.class, "frozen_entity", id++, TemporalConvergence.INSTANCE, 16, 10, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(TemporalConvergence.MODID, "lunar_boomerang"), EntityLunarBoomerang.class, "lunar_boomerang", id++, TemporalConvergence.INSTANCE, 128, 4, true);
 	}
 }

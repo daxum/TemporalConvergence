@@ -57,7 +57,7 @@ public class BlockTimeChest extends BlockBase {
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		if (world.getTileEntity(pos) instanceof TileTimeChest) {
-			player.openGui(TemporalConvergence.instance, GuiHandler.TIME_CHEST_GUI, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(TemporalConvergence.INSTANCE, GuiHandler.TIME_CHEST_GUI, world, pos.getX(), pos.getY(), pos.getZ());
 			((TileTimeChest) world.getTileEntity(pos)).setUsed();
 		}
 

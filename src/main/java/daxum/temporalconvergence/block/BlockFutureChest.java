@@ -59,7 +59,7 @@ public class BlockFutureChest extends BlockBase {
 	@Override
 	public boolean onBlockActivated (World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		if (world.getTileEntity(pos) instanceof TileFutureChest) {
-			player.openGui(TemporalConvergence.instance, GuiHandler.FUTURE_CHEST_GUI, world, pos.getX(), pos.getY(), pos.getZ());
+			player.openGui(TemporalConvergence.INSTANCE, GuiHandler.FUTURE_CHEST_GUI, world, pos.getX(), pos.getY(), pos.getZ());
 			((TileFutureChest)world.getTileEntity(pos)).addUsingPlayer();
 
 			if (!state.getValue(OPEN)) {
