@@ -21,7 +21,6 @@ package daxum.temporalconvergence.gui;
 
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerTimeChest extends ContainerBase<TileTimeChest> {
 
@@ -33,7 +32,7 @@ public class ContainerTimeChest extends ContainerBase<TileTimeChest> {
 	protected void addTileSlots() {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 9; x++) {
-				addSlotToContainer(new SlotItemHandler(tile.getInventory(), x + y * 9, 8 + x * 18, 18 + y * 18));
+				addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), x + y * 9, 8 + x * 18, 18 + y * 18));
 			}
 		}
 	}

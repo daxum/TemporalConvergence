@@ -76,21 +76,25 @@ public abstract class ContainerBase<T extends TileEntityInventoried> extends Con
 
 			if (fromSlot < inventorySize) {
 				// From tile Inventory to Player Inventory
-				if (!mergeItemStack(current, inventorySize, inventorySlots.size(), true))
+				if (!mergeItemStack(current, inventorySize, inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
+				}
 			} else {
 				// From Player Inventory to tile Inventory
-				if (!mergeItemStack(current, 0, inventorySize, false))
+				if (!mergeItemStack(current, 0, inventorySize, false)) {
 					return ItemStack.EMPTY;
+				}
 			}
 
-			if (current.getCount() == 0)
+			if (current.getCount() == 0) {
 				slot.putStack(ItemStack.EMPTY);
+			}
 
 			slot.onSlotChanged();
 
-			if (current.getCount() == previous.getCount())
+			if (current.getCount() == previous.getCount()) {
 				return ItemStack.EMPTY;
+			}
 		}
 
 		return previous;

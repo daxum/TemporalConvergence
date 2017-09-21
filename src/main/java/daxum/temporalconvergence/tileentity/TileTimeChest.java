@@ -39,6 +39,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
@@ -55,9 +56,8 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		protected void onContentsChanged(int slot) {
 			if (!world.isRemote) {
 				setDecayTimer(slot);
+				markDirty();
 			}
-
-			markDirty();
 		}
 	};
 
@@ -203,9 +203,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 			decayTimers[slot] = TimeChestRecipes.getTime(stack);
 		}
 		else if (stack.getItem() instanceof ItemFood) {
-			ItemFood food = (ItemFood) stack.getItem();
-
-			decayTimers[slot] = food.getHealAmount(stack) * 2000;
+			decayTimers[slot] = getDecayForFood(stack);
 		}
 		else {
 			decayTimers[slot] = -1;
@@ -213,6 +211,12 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 
 		maxDecayTimes[slot] = decayTimers[slot];
 		sendBlockUpdate();
+	}
+
+	private int getDecayForFood(ItemStack stack) {
+		ItemFood food = (ItemFood) stack.getItem();
+
+		return MathHelper.ceil(food.getHealAmount(stack) * food.getSaturationModifier(stack) * 2500.0f) + 5000;
 	}
 
 	private void convertItemInSlot(int slot) {
@@ -225,7 +229,15 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 		}
 		else if (stack.getItem() instanceof ItemFood) {
 			final int foodValue = Math.max(((ItemFood)stack.getItem()).getHealAmount(stack), 1);
-			amount = stack.getCount() * foodValue;
+			final double dustAmount = stack.getCount() * foodValue / 4.0;
+
+			if (dustAmount < 1.0) {
+				amount = dustAmount > world.rand.nextDouble() ? 1 : 0;
+			}
+			else {
+				final int intDust =  MathHelper.floor(dustAmount);
+				amount = intDust + (dustAmount - intDust > world.rand.nextDouble() ? 1 : 0);
+			}
 
 			output = new ItemStack(ModItems.ANCIENT_DUST);
 		}
@@ -300,9 +312,7 @@ public class TileTimeChest extends TileEntityBase implements TileEntityInventori
 			time = TimeChestRecipes.getTime(stack);
 		}
 		else if (stack.getItem() instanceof ItemFood) {
-			ItemFood food = (ItemFood) stack.getItem();
-
-			time = food.getHealAmount(stack) * 2000;
+			time = getDecayForFood(stack);
 		}
 
 		maxDecayTimes[slot] = time;

@@ -21,7 +21,6 @@ package daxum.temporalconvergence.gui;
 
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
 import net.minecraft.inventory.IInventory;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerTimeFurnace extends ContainerBase<TileTimeFurnaceBase> {
 
@@ -31,9 +30,9 @@ public class ContainerTimeFurnace extends ContainerBase<TileTimeFurnaceBase> {
 
 	@Override
 	protected void addTileSlots() {
-		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 0, 56, 56));
-		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 1, 56, 20));
-		addSlotToContainer(new SlotItemHandler(tile.getInventory(), 2, 116, 38));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 0, 56, 56));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 1, 56, 20));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 2, 116, 38));
 	}
 
 }
