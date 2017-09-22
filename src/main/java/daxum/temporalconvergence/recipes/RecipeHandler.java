@@ -55,9 +55,7 @@ public final class RecipeHandler {
 	}
 
 	public static void initTimeChest() {
-		//TODO: remove test recipes
-		TimeChestRecipes.addConversion(new ItemStack(Items.DIAMOND), new ItemStack(Items.COAL), 16000);
-		TimeChestRecipes.addConversion(new ItemStack(Items.BONE), new ItemStack(Items.DYE, 3, 15), 2000);
+		TimeChestRecipes.addConversion(new ItemStack(Items.DIAMOND), new ItemStack(ModItems.TIME_GEM), 31500);
 	}
 	/*
 	TODO: OreDict the following recipes:

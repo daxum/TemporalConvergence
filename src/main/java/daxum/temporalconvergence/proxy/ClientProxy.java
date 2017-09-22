@@ -66,6 +66,7 @@ public class ClientProxy implements IProxy {
 		registerRender(ModItems.REINFORCED_SOLAR_SHOVEL);
 		registerRender(ModItems.REINFORCED_SOLAR_AXE);
 		registerRender(ModItems.ANCIENT_DUST);
+		registerRender(ModItems.TIME_GEM);
 
 		//Blocks
 		registerRender(Item.getItemFromBlock(ModBlocks.ORIGIN_STONE));

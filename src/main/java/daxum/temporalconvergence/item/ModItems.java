@@ -66,6 +66,7 @@ public final class ModItems {
 	public static final Item REINFORCED_SOLAR_SHOVEL;
 	public static final Item REINFORCED_SOLAR_AXE;
 	public static final Item ANCIENT_DUST;
+	public static final Item TIME_GEM;
 
 	static {
 		TEMPCONVTAB = new CreativeTabs(TemporalConvergence.MODID) {
@@ -87,6 +88,7 @@ public final class ModItems {
 		};
 		STABLE_IRON_INGOT = new ItemBase("stable_iron_ingot");
 		ANCIENT_DUST = new ItemBase("ancient_dust");
+		TIME_GEM = new ItemBase("time_gem");
 
 		REINFORCED_SOLAR = EnumHelper.addToolMaterial("TC_REINF_SOLAR", 2, 57600, 8.0f, 1.0f, 5).setRepairItem(new ItemStack(STABLE_IRON_INGOT));
 
@@ -136,6 +138,7 @@ public final class ModItems {
 		itemRegistry.register(REINFORCED_SOLAR_SHOVEL);
 		itemRegistry.register(REINFORCED_SOLAR_AXE);
 		itemRegistry.register(ANCIENT_DUST);
+		itemRegistry.register(TIME_GEM);
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
