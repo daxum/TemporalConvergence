@@ -77,7 +77,7 @@ public final class RenderHelper {
 	}
 
 	public static void renderItem(long time, ItemStack stack, BlockPos rotationRandomizer, float partialTicks, boolean shouldBob) {
-		renderItem(time, stack, rotationRandomizer.getX() + rotationRandomizer.getY() + rotationRandomizer.getZ(), partialTicks, shouldBob);
+		renderItem(time, stack, rotationRandomizer.getX() * rotationRandomizer.getY() * rotationRandomizer.getZ(), partialTicks, shouldBob);
 	}
 
 	//Helper function because I'm tired of typing all three values
