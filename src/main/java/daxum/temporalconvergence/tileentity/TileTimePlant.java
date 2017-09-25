@@ -42,7 +42,7 @@ public class TileTimePlant extends TileEntityBase {
 	public ItemStack getHarvestItem(long worldTime) {
 		int bulbStrength = 1 + charge;
 
-		if (WorldHelper.isNight(worldTime) && world.canBlockSeeSky(pos)) {
+		if (WorldHelper.isNight(worldTime)) {
 			if (WorldHelper.isMidnight(worldTime)) {
 				bulbStrength += MIDNIGHT_CHARGE_BONUS;
 			}
