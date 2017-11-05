@@ -21,8 +21,8 @@ package daxum.temporalconvergence.recipes;
 
 import daxum.temporalconvergence.block.ModBlocks;
 import daxum.temporalconvergence.item.ModItems;
+import daxum.temporalconvergence.power.PowerRequirements;
 import daxum.temporalconvergence.power.PowerTypeList;
-import daxum.temporalconvergence.power.PowerTypeManager.PowerRequirements;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;

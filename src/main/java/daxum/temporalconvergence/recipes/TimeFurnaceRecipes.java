@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import daxum.temporalconvergence.TemporalConvergence;
-import daxum.temporalconvergence.power.PowerTypeManager.PowerRequirements;
+import daxum.temporalconvergence.power.PowerRequirements;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.items.ItemHandlerHelper;
