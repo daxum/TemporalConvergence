@@ -20,78 +20,86 @@
 package daxum.temporalconvergence.recipes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.item.HashableStack;
+import daxum.temporalconvergence.power.PowerRequirements;
 import net.minecraft.item.ItemStack;
 
-//TODO: Rewrite this thing, it's a mess.
 public final class DimGenRecipes {
-	private static List<DimGenRecipe> recipes = new ArrayList();
+	private static final Map<HashableStack, DimGenRecipe> RECIPES = new HashMap<>();
 
-	public static boolean addRecipe(ItemStack output, ItemStack centerInput, Object... inputs) {
-		List<ItemStack> listInputs = new ArrayList<>();
-
-		for (Object o : inputs) {
-			if (!(o instanceof ItemStack)) {
-				TemporalConvergence.LOGGER.error("Invalid input for dim gen recipe <{} -> {}>: Recieved {} instead of ItemStack. This recipe will be skipped.", centerInput, output, o.getClass());
-				return false;
-			}
-
-			ItemStack stack = (ItemStack) o;
-
-			for (int i = 0; i < stack.getCount(); i++) {
-				listInputs.add(new ItemStack(stack.getItem(), 1, stack.getItemDamage()));
-
-				if (listInputs.size() > 12) {
-					TemporalConvergence.LOGGER.error("Error trying to register dimGen recipe <{} -> {}>: Too many inputs, must be at most 12", centerInput, output);
-					return false;
-				}
-			}
+	public static void addRecipe(ItemStack output, PowerRequirements power, int craftTime, ItemStack centerInput, ItemStack... inputs) {
+		if (output.isEmpty() || centerInput.isEmpty() || craftTime <= 0 || inputs.length > 8) {
+			TemporalConvergence.LOGGER.warn("Invalid dimGen recipe ({} -> {}) will be skipped", centerInput, output);
+			return;
 		}
 
-		recipes.add(new DimGenRecipe(output, centerInput, listInputs));
-		return true;
+		RECIPES.put(new HashableStack(centerInput), new DimGenRecipe(output, power, craftTime, inputs));
 	}
 
 	public static boolean isValidRecipe(ItemStack centerInput, List<ItemStack> inputs) {
-		return inputs.size() <= 12 && !getOutput(centerInput, inputs).isEmpty();
+		return inputs.size() <= 8 && !getOutput(centerInput, inputs).isEmpty();
 	}
 
 	public static ItemStack getOutput(ItemStack centerInput, List<ItemStack> inputs) {
-		for (DimGenRecipe i : recipes) {
-			if (i.areInputsEqual(centerInput, inputs)) {
-				return i.output.copy();
-			}
+		DimGenRecipe recipe = getRecipe(centerInput, inputs);
+
+		return recipe == null ? ItemStack.EMPTY : recipe.output;
+	}
+
+	public static PowerRequirements getPower(ItemStack centerInput, List<ItemStack> inputs) {
+		DimGenRecipe recipe = getRecipe(centerInput, inputs);
+
+		return recipe.power;
+	}
+
+	public static int getTime(ItemStack centerInput, List<ItemStack> inputs) {
+		DimGenRecipe recipe = getRecipe(centerInput, inputs);
+
+		return recipe.time;
+
+	}
+
+	private static DimGenRecipe getRecipe(ItemStack centerInput, List<ItemStack> inputs) {
+		HashableStack input = new HashableStack(centerInput);
+
+		if (RECIPES.containsKey(input) && RECIPES.get(input).areInputsEqual(inputs)) {
+			return RECIPES.get(input);
 		}
 
-		return ItemStack.EMPTY;
-
+		return null;
 	}
 
 	public static class DimGenRecipe {
 		public final ItemStack output;
-		public final ItemStack mainInput;
-		public final List<ItemStack> inputs;
+		public final ItemStack[] inputs;
+		public final PowerRequirements power;
+		public final int time;
 
-		public DimGenRecipe(ItemStack out, ItemStack main, List<ItemStack> in) {
-			inputs = in;
+		public DimGenRecipe(ItemStack out, PowerRequirements powerReq, int craftTime, ItemStack[] inputList) {
+			inputs = inputList;
 			output = out;
-			mainInput = main;
+			power = powerReq;
+			time = craftTime;
 		}
 
-		public boolean areInputsEqual(ItemStack main, List<ItemStack> in) {
-			if (in.size() != inputs.size() || !ItemStack.areItemStacksEqual(main, mainInput)) {
+		public boolean areInputsEqual(List<ItemStack> testInputs) {
+			if (testInputs.size() != inputs.length) {
 				return false;
 			}
 
 			List<ItemStack> testStacks = new ArrayList<>();
-			testStacks.addAll(in);
+			testStacks.addAll(testInputs);
 
 			boolean found = false;
-			for (int i = 0; i < inputs.size(); i++) {
+
+			for (int i = 0; i < inputs.length; i++) {
 				for (int j = 0; j < testStacks.size(); j++) {
-					if (ItemStack.areItemStacksEqual(inputs.get(i), testStacks.get(j))) {
+					if (ItemStack.areItemStacksEqual(inputs[i], testStacks.get(j))) {
 						testStacks.remove(j);
 						found = true;
 						break;
