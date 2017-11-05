@@ -46,8 +46,7 @@ public final class RecipeHandler {
 	}
 	 */
 	public static void initDimGen() {
-		DimGenRecipes.addRecipe(new ItemStack(ModItems.TIME_FREEZER), new ItemStack(Blocks.CHORUS_FLOWER), new ItemStack(ModItems.TIME_STEEL_INGOT, 4), new ItemStack(ModItems.TIME_DUST, 4), new ItemStack(Items.DIAMOND, 4));
-		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 4, 10)); //Test recipe
+		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new PowerRequirements(), 20, new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10));
 	}
 
 	public static void initTimeFurnace() {
