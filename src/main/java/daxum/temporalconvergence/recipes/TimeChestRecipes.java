@@ -19,56 +19,51 @@
  **************************************************************************/
 package daxum.temporalconvergence.recipes;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import daxum.temporalconvergence.TemporalConvergence;
+import daxum.temporalconvergence.item.HashableStack;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public final class TimeChestRecipes {
-	private static final List<TimeChestRecipe> RECIPES = new ArrayList<>();
+	private static final Map<HashableStack, TimeChestRecipe> RECIPES = new HashMap<>();
 
 	public static void addConversion(ItemStack input, ItemStack output, int time) {
 		if (input.isEmpty() || output.isEmpty() || time <= 0) {
-			TemporalConvergence.LOGGER.info("Attempted to register invalid time chest conversion: {} -> {} : {}", input, output, time);
+			TemporalConvergence.LOGGER.warn("Attempted to register invalid time chest conversion: {} -> {} : {}", input, output, time);
 			return;
 		}
 
-		RECIPES.add(new TimeChestRecipe(input.copy(), output.copy(), time));
+		RECIPES.put(new HashableStack(ItemHandlerHelper.copyStackWithSize(input, 1)), new TimeChestRecipe(output.copy(), time));
 	}
 
 	public static ItemStack getOutput(ItemStack input) {
-		ItemStack adjustedInput = ItemHandlerHelper.copyStackWithSize(input, 1);
+		HashableStack adjustedInput = new HashableStack(ItemHandlerHelper.copyStackWithSize(input, 1));
 
-		for (TimeChestRecipe recipe : RECIPES) {
-			if (ItemStack.areItemStacksEqual(adjustedInput, recipe.input)) {
-				return recipe.output.copy();
-			}
+		if (RECIPES.containsKey(adjustedInput)) {
+			return RECIPES.get(adjustedInput).output;
 		}
 
 		return ItemStack.EMPTY;
 	}
 
 	public static int getTime(ItemStack input) {
-		ItemStack adjustedInput = ItemHandlerHelper.copyStackWithSize(input, 1);
+		HashableStack adjustedInput = new HashableStack(ItemHandlerHelper.copyStackWithSize(input, 1));
 
-		for (TimeChestRecipe recipe : RECIPES) {
-			if (ItemStack.areItemStacksEqual(adjustedInput, recipe.input)) {
-				return recipe.time;
-			}
+		if (RECIPES.containsKey(adjustedInput)) {
+			return RECIPES.get(adjustedInput).time;
 		}
 
 		return -1;
 	}
 
 	public static class TimeChestRecipe {
-		public final ItemStack input;
 		public final ItemStack output;
 		public final int time;
 
-		public TimeChestRecipe(ItemStack in, ItemStack out, int t) {
-			input = in;
+		public TimeChestRecipe(ItemStack out, int t) {
 			output = out;
 			time = t;
 		}
