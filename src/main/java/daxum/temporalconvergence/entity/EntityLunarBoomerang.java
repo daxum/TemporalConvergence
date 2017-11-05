@@ -116,7 +116,7 @@ public class EntityLunarBoomerang extends Entity implements IProjectile {
 			}
 
 			if (target != null && target.isEntityAlive()) {
-				setThrowableHeading(target.posX - posX, adjustTargetHeight(target.posY, target.height) - posY, target.posZ - posZ, (float)getVelocity(), 0.0f);
+				shoot(target.posX - posX, adjustTargetHeight(target.posY, target.height) - posY, target.posZ - posZ, (float)getVelocity(), 0.0f);
 			}
 		}
 
@@ -155,7 +155,7 @@ public class EntityLunarBoomerang extends Entity implements IProjectile {
 		double y = -Math.sin(pitch);
 		double z = Math.cos(yaw) * Math.cos(pitch);
 
-		setThrowableHeading(x, y, z, velocity, 0.0f);
+		shoot(x, y, z, velocity, 0.0f);
 
 		motionX += shooter.motionX;
 		motionZ += shooter.motionZ;
@@ -166,7 +166,7 @@ public class EntityLunarBoomerang extends Entity implements IProjectile {
 	}
 
 	@Override
-	public void setThrowableHeading(double x, double y, double z, float velocity, float inaccuracy) {
+	public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
 		double distance = Math.sqrt(x * x + y * y + z * z);
 		x = x / distance * velocity;
 		y = y / distance * velocity;
@@ -239,7 +239,7 @@ public class EntityLunarBoomerang extends Entity implements IProjectile {
 					target = findNextTarget();
 
 					if (target != null) {
-						setThrowableHeading(target.posX - posX, adjustTargetHeight(target.posY, target.height) - posY, target.posZ - posZ, (float)getVelocity(), 0.0f);
+						shoot(target.posX - posX, adjustTargetHeight(target.posY, target.height) - posY, target.posZ - posZ, (float)getVelocity(), 0.0f);
 					}
 					else {
 						returnToThrower();

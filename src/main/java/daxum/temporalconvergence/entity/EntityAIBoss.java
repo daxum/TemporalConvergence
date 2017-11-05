@@ -124,7 +124,7 @@ public class EntityAIBoss extends EntityMob {
 	private void transitionToState(BossState state) {
 		TemporalConvergence.LOGGER.info("Switching to state {}", state);
 		dataManager.set(BOSS_STATE, state.getIndex());
-		navigator.clearPathEntity();
+		navigator.clearPath();
 		moveHelper.action = Action.WAIT;
 
 		if (state == BossState.VULNERABLE) {
