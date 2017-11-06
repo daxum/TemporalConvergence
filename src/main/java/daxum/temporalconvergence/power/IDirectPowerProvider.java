@@ -23,4 +23,6 @@ public interface IDirectPowerProvider {
 	public int getPower(PowerType type);
 
 	public int getRange();
+
+	public PowerType getTypeProvided();
 }
