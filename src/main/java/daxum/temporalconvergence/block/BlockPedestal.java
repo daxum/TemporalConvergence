@@ -19,7 +19,11 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
+import java.util.List;
+
+import daxum.temporalconvergence.power.IDirectPowerReceiver;
 import daxum.temporalconvergence.tileentity.TilePedestal;
+import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,6 +53,18 @@ public class BlockPedestal extends BlockBase {
 	}
 
 	@Override
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+		BlockPos minPos = pos.add(-TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE);
+		BlockPos maxPos = pos.add(TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE);
+
+		List<IDirectPowerReceiver> receivers = WorldHelper.getAllInRange(world, minPos, maxPos, IDirectPowerReceiver.class);
+
+		for (int i = 0; i < receivers.size(); i++) {
+			receivers.get(i).providerAdded(pos);
+		}
+	}
+
+	@Override
 	//Once again, x, y, and z ARE NOT WORLD COORDINATES!!!!
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
 		if (!world.isRemote && world.getTileEntity(pos) instanceof TilePedestal) {
@@ -75,6 +91,15 @@ public class BlockPedestal extends BlockBase {
 
 			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(0));
 			inventory.setStackInSlot(0, ItemStack.EMPTY);
+		}
+
+		BlockPos minPos = pos.add(-TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE);
+		BlockPos maxPos = pos.add(TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE);
+
+		List<IDirectPowerReceiver> receivers = WorldHelper.getAllInRange(world, minPos, maxPos, IDirectPowerReceiver.class);
+
+		for (int i = 0; i < receivers.size(); i++) {
+			receivers.get(i).providerRemoved(pos);
 		}
 	}
 

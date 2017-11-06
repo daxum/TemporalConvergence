@@ -52,6 +52,29 @@ public final class WorldHelper {
 		return players;
 	}
 
+	//Finds all tile entities of the given class in the cube defined by minPos and maxPos (inclusive)
+	public static <T> List<T> getAllInRange(IBlockAccess world, BlockPos minPos, BlockPos maxPos, Class<T> targetClass) {
+		if (minPos.getX() > maxPos.getX() || minPos.getY() > maxPos.getY() || minPos.getZ() > maxPos.getZ()) {
+			throw new IllegalArgumentException("minPos " + minPos + " is greater than maxPos " + maxPos);
+		}
+
+		List<T> tiles = new ArrayList<>();
+
+		for (int x = minPos.getX(); x <= maxPos.getX(); x++) {
+			for (int y = minPos.getY(); y <= maxPos.getY(); y++) {
+				for (int z = minPos.getZ(); z <= maxPos.getZ(); z++) {
+					TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+
+					if (te != null && targetClass.isAssignableFrom(te.getClass())) {
+						tiles.add((T)te);
+					}
+				}
+			}
+		}
+
+		return tiles;
+	}
+
 	//These 6 functions are meant to be called with the result of world.getWorldTime()
 	public static boolean isNight(long time) {
 		time = time % 24000;

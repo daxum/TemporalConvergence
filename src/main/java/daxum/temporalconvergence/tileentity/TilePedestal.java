@@ -19,14 +19,34 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
+import daxum.temporalconvergence.power.IDirectPowerProvider;
+import daxum.temporalconvergence.power.PowerType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TilePedestal extends TileEntityBase {
-	protected ItemStackHandler inventory = new PedestalInventory(this);
+public class TilePedestal extends TileEntityBase implements IDirectPowerProvider {
+	public static final int PROVIDER_RANGE = 5;
+	private ItemStackHandler inventory = new PedestalInventory(this);
+
+	@Override
+	public int getPower(PowerType type) {
+		// TODO: Get type from focus and amount from tree, 0 if focus type doesn't match, break focus if overloaded
+		return 0;
+	}
+
+	@Override
+	public int getRange() {
+		return PROVIDER_RANGE;
+	}
+
+	@Override
+	public PowerType getTypeProvided() {
+		// TODO: get type from focus
+		return null;
+	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound comp) {
@@ -61,7 +81,7 @@ public class TilePedestal extends TileEntityBase {
 		private final TilePedestal parent;
 
 		public PedestalInventory(TilePedestal tp) {
-			super();
+			super(1);
 			parent = tp;
 		}
 
