@@ -20,7 +20,7 @@
 package daxum.temporalconvergence.power;
 
 public interface IDirectPowerProvider {
-	public int getPower(PowerType type);
+	public int getPower(PowerType type, int amount);
 
 	public int getRange();
 

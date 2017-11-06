@@ -20,6 +20,8 @@
 package daxum.temporalconvergence.power;
 
 public final class PowerTypeList {
+	//Null power type, used when something isn't providing power
+	public static final PowerType POWER_0 = new PowerType("null", 0, 0, 0);
 	public static final PowerType TIME = new PowerType("time", 70, 193, 219);
 	public static final PowerType STABLE = new PowerType("stable", 142, 186, 169);
 	public static final PowerType FIRE = new PowerType("fire", 191, 120, 19);

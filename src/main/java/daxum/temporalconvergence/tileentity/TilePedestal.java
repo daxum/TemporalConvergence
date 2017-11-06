@@ -19,21 +19,58 @@
  **************************************************************************/
 package daxum.temporalconvergence.tileentity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import daxum.temporalconvergence.item.HashableStack;
+import daxum.temporalconvergence.item.ModItems;
 import daxum.temporalconvergence.power.IDirectPowerProvider;
+import daxum.temporalconvergence.power.PowerHandler;
 import daxum.temporalconvergence.power.PowerType;
+import daxum.temporalconvergence.power.PowerTypeList;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TilePedestal extends TileEntityBase implements IDirectPowerProvider {
 	public static final int PROVIDER_RANGE = 5;
+
+	private static final Map<HashableStack, PowerFocusData> FOCI = new HashMap<>();
 	private ItemStackHandler inventory = new PedestalInventory(this);
+	private long lastRequestTime = -1;
+	private int requestAmount = 0;
 
 	@Override
-	public int getPower(PowerType type) {
-		// TODO: Get type from focus and amount from tree, 0 if focus type doesn't match, break focus if overloaded
+	public int getPower(PowerType type, int amount) {
+		if (!world.isRemote) {
+			PowerFocusData data = FOCI.get(new HashableStack(ItemHandlerHelper.copyStackWithSize(inventory.getStackInSlot(0), 1)));
+
+			if (data != null && data.type.equals(type)) {
+				AxisAlignedBB requestBox = new AxisAlignedBB(pos.getX() - PROVIDER_RANGE, pos.getY() - PROVIDER_RANGE, pos.getZ() - PROVIDER_RANGE, pos.getX() + PROVIDER_RANGE, pos.getY() + PROVIDER_RANGE, pos.getZ() + PROVIDER_RANGE);
+				int power = PowerHandler.requestPower(world, requestBox, type, amount);
+
+				if (world.getTotalWorldTime() != lastRequestTime) {
+					requestAmount = power;
+					lastRequestTime = world.getTotalWorldTime();
+				}
+				else {
+					requestAmount += power;
+				}
+
+				if (requestAmount > data.maxLoad) {
+					//TODO: focus breaking effects
+					inventory.setStackInSlot(0, ItemStack.EMPTY);
+				}
+
+				return power;
+			}
+		}
+
 		return 0;
 	}
 
@@ -44,8 +81,9 @@ public class TilePedestal extends TileEntityBase implements IDirectPowerProvider
 
 	@Override
 	public PowerType getTypeProvided() {
-		// TODO: get type from focus
-		return null;
+		PowerFocusData data = FOCI.get(new HashableStack(ItemHandlerHelper.copyStackWithSize(inventory.getStackInSlot(0), 1)));
+
+		return data == null ? PowerTypeList.POWER_0 : data.type;
 	}
 
 	@Override
@@ -94,5 +132,23 @@ public class TilePedestal extends TileEntityBase implements IDirectPowerProvider
 		protected void onContentsChanged(int slot) {
 			parent.sendBlockUpdate();
 		}
+	}
+
+	public static class PowerFocusData {
+		public final PowerType type;
+		public final int maxLoad;
+
+		public PowerFocusData(PowerType typeProvided, int load) {
+			type = typeProvided;
+			maxLoad = load;
+		}
+	}
+
+	public static void addFocus(ItemStack focusStack, PowerType type, int maxLoad) {
+		FOCI.put(new HashableStack(ItemHandlerHelper.copyStackWithSize(focusStack, 1)), new PowerFocusData(type, maxLoad));
+	}
+
+	static {
+		addFocus(new ItemStack(ModItems.TIME_GEM), PowerTypeList.TIME, 100);
 	}
 }
