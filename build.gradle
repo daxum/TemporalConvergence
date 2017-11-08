@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0"
+version = "0.0.0.0"
 group = "daxum.temporalconvergence"
 archivesBaseName = "temporalconvergence"
 
@@ -26,6 +26,7 @@ minecraft {
 
     replace '${version}', project.version
     replaceIn "TemporalConvergence.java"
+
     makeObfSourceJar = false
 }
 
