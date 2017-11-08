@@ -19,11 +19,8 @@
  **************************************************************************/
 package daxum.temporalconvergence.block;
 
-import java.util.List;
-
-import daxum.temporalconvergence.power.IDirectPowerReceiver;
+import daxum.temporalconvergence.power.DirectPowerHelper;
 import daxum.temporalconvergence.tileentity.TilePedestal;
-import daxum.temporalconvergence.util.WorldHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,14 +51,7 @@ public class BlockPedestal extends BlockBase {
 
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-		BlockPos minPos = pos.add(-TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE);
-		BlockPos maxPos = pos.add(TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE);
-
-		List<IDirectPowerReceiver> receivers = WorldHelper.getAllInRange(world, minPos, maxPos, IDirectPowerReceiver.class);
-
-		for (int i = 0; i < receivers.size(); i++) {
-			receivers.get(i).providerAdded(pos);
-		}
+		DirectPowerHelper.signalProviderAdd(world, pos, TilePedestal.PROVIDER_RANGE);
 	}
 
 	@Override
@@ -93,14 +83,7 @@ public class BlockPedestal extends BlockBase {
 			inventory.setStackInSlot(0, ItemStack.EMPTY);
 		}
 
-		BlockPos minPos = pos.add(-TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE, -TilePedestal.PROVIDER_RANGE);
-		BlockPos maxPos = pos.add(TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE, TilePedestal.PROVIDER_RANGE);
-
-		List<IDirectPowerReceiver> receivers = WorldHelper.getAllInRange(world, minPos, maxPos, IDirectPowerReceiver.class);
-
-		for (int i = 0; i < receivers.size(); i++) {
-			receivers.get(i).providerRemoved(pos);
-		}
+		DirectPowerHelper.signalProviderRemove(world, pos, TilePedestal.PROVIDER_RANGE);
 	}
 
 	@Override
