@@ -42,7 +42,13 @@ public class BlockCrafter extends BlockBase {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
-		player.openGui(TemporalConvergence.INSTANCE, 3, world, pos.getX(), pos.getY(), pos.getZ());
+		if (player.isSneaking()) {
+			((TileCrafter)world.getTileEntity(pos)).startCrafting();
+		}
+		else {
+			player.openGui(TemporalConvergence.INSTANCE, 3, world, pos.getX(), pos.getY(), pos.getZ());
+		}
+
 		return true;
 	}
 }

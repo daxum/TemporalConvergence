@@ -29,16 +29,16 @@ import daxum.temporalconvergence.item.HashableStack;
 import daxum.temporalconvergence.power.PowerRequirements;
 import net.minecraft.item.ItemStack;
 
-public final class DimGenRecipes {
-	private static final Map<HashableStack, DimGenRecipe> RECIPES = new HashMap<>();
+public final class CrafterRecipes {
+	private static final Map<HashableStack, CrafterRecipe> RECIPES = new HashMap<>();
 
 	public static void addRecipe(ItemStack output, PowerRequirements power, int craftTime, ItemStack centerInput, ItemStack... inputs) {
 		if (output.isEmpty() || centerInput.isEmpty() || craftTime <= 0 || inputs.length > 8) {
-			TemporalConvergence.LOGGER.warn("Invalid dimGen recipe ({} -> {}) will be skipped", centerInput, output);
+			TemporalConvergence.LOGGER.warn("Invalid crafter recipe ({} -> {}) will be skipped", centerInput, output);
 			return;
 		}
 
-		RECIPES.put(new HashableStack(centerInput), new DimGenRecipe(output, power, craftTime, inputs));
+		RECIPES.put(new HashableStack(centerInput), new CrafterRecipe(output, power, craftTime, inputs));
 	}
 
 	public static boolean isValidRecipe(ItemStack centerInput, List<ItemStack> inputs) {
@@ -46,25 +46,25 @@ public final class DimGenRecipes {
 	}
 
 	public static ItemStack getOutput(ItemStack centerInput, List<ItemStack> inputs) {
-		DimGenRecipe recipe = getRecipe(centerInput, inputs);
+		CrafterRecipe recipe = getRecipe(centerInput, inputs);
 
 		return recipe == null ? ItemStack.EMPTY : recipe.output;
 	}
 
 	public static PowerRequirements getPower(ItemStack centerInput, List<ItemStack> inputs) {
-		DimGenRecipe recipe = getRecipe(centerInput, inputs);
+		CrafterRecipe recipe = getRecipe(centerInput, inputs);
 
 		return recipe.power;
 	}
 
 	public static int getTime(ItemStack centerInput, List<ItemStack> inputs) {
-		DimGenRecipe recipe = getRecipe(centerInput, inputs);
+		CrafterRecipe recipe = getRecipe(centerInput, inputs);
 
 		return recipe.time;
 
 	}
 
-	private static DimGenRecipe getRecipe(ItemStack centerInput, List<ItemStack> inputs) {
+	private static CrafterRecipe getRecipe(ItemStack centerInput, List<ItemStack> inputs) {
 		HashableStack input = new HashableStack(centerInput);
 
 		if (RECIPES.containsKey(input) && RECIPES.get(input).areInputsEqual(inputs)) {
@@ -74,13 +74,13 @@ public final class DimGenRecipes {
 		return null;
 	}
 
-	public static class DimGenRecipe {
+	public static class CrafterRecipe {
 		public final ItemStack output;
 		public final ItemStack[] inputs;
 		public final PowerRequirements power;
 		public final int time;
 
-		public DimGenRecipe(ItemStack out, PowerRequirements powerReq, int craftTime, ItemStack[] inputList) {
+		public CrafterRecipe(ItemStack out, PowerRequirements powerReq, int craftTime, ItemStack[] inputList) {
 			inputs = inputList;
 			output = out;
 			power = powerReq;

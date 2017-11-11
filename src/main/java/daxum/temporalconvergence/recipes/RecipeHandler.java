@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class RecipeHandler {
 	public static void init() {
-		initDimGen();
+		initCrafter();
 		initTimeFurnace();
 		initTimeChest();
 		GameRegistry.addSmelting(ModBlocks.TIMESTONE_MIX, new ItemStack(ModBlocks.TIME_STONE), 0.1f);
@@ -45,8 +45,8 @@ public final class RecipeHandler {
 		OreDictionary.registerOre("stone", ModBlocks.TIME_STONE);
 	}
 	 */
-	public static void initDimGen() {
-		DimGenRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new PowerRequirements(), 20, new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10));
+	public static void initCrafter() {
+		CrafterRecipes.addRecipe(new ItemStack(Blocks.MELON_BLOCK), new PowerRequirements(PowerTypeList.TIME, 60), 20, new ItemStack(Blocks.PUMPKIN), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10), new ItemStack(Items.DYE, 1, 10));
 	}
 
 	public static void initTimeFurnace() {

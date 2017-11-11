@@ -47,4 +47,33 @@ public final class DirectPowerHelper {
 			receivers.get(i).providerRemoved(pos);
 		}
 	}
+
+	public static int getPowerDistributed(List<IDirectPowerProvider> providers, PowerType type, int amount) {
+		int providedAmount = 0;
+
+		while (providedAmount < amount && providers.size() > 0) {
+			int amountPerProvider = amount / providers.size();
+			int extraAmount = amount - amountPerProvider * providers.size();
+
+			for (int i = providers.size() - 1; i >= 0; i--) {
+				int amountToRequest = amountPerProvider;
+
+				if (extraAmount >= 0) {
+					amountToRequest += extraAmount;
+					extraAmount = 0;
+				}
+
+				int obtainedAmount = providers.get(i).getPower(type, amountToRequest);
+
+				if (obtainedAmount <= 0) {
+					providers.remove(i);
+				}
+				else {
+					providedAmount += obtainedAmount;
+				}
+			}
+		}
+
+		return providedAmount;
+	}
 }
