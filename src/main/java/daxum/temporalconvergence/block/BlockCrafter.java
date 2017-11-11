@@ -17,14 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.power;
+package daxum.temporalconvergence.block;
 
-public interface IDirectPowerProvider {
-	public static final int MAX_RANGE = 25;
+import daxum.temporalconvergence.tileentity.TileCrafter;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-	public int getPower(PowerType type, int amount);
+public class BlockCrafter extends BlockBase {
+	public BlockCrafter() {
+		super("time_crafter", BlockPresets.STONE_MACHINE);
+		setHasTileEntity();
+	}
 
-	public int getRange();
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileCrafter();
+	}
 
-	public PowerType getTypeProvided();
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
+		//TODO: open gui, crafting
+		return true;
+	}
 }

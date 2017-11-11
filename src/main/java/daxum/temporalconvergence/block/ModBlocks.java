@@ -21,6 +21,7 @@ package daxum.temporalconvergence.block;
 
 import daxum.temporalconvergence.block.BlockBase.BlockPresets;
 import daxum.temporalconvergence.tileentity.TileBrazier;
+import daxum.temporalconvergence.tileentity.TileCrafter;
 import daxum.temporalconvergence.tileentity.TileDimContr;
 import daxum.temporalconvergence.tileentity.TileFutureChest;
 import daxum.temporalconvergence.tileentity.TilePedestal;
@@ -76,6 +77,7 @@ public final class ModBlocks {
 	public static final Block BRAZIER_BOTTOM;
 	public static final Block LUNAR_LEAVES;
 	public static final Block LUNAR_SAPLING;
+	public static final Block CRAFTER;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -134,6 +136,7 @@ public final class ModBlocks {
 		BRAZIER_BOTTOM = new BlockBrazierBottom();
 		LUNAR_LEAVES = new BlockLunarLeaves();
 		LUNAR_SAPLING = new BlockSaplingBase("lunar_sapling", BlockPresets.PLANT, LUNAR_WOOD.getDefaultState(), LUNAR_LEAVES.getDefaultState());
+		CRAFTER = new BlockCrafter();
 	}
 
 	@SubscribeEvent
@@ -179,6 +182,7 @@ public final class ModBlocks {
 		blockRegistry.register(BRAZIER_BOTTOM);
 		blockRegistry.register(LUNAR_LEAVES);
 		blockRegistry.register(LUNAR_SAPLING);
+		blockRegistry.register(CRAFTER);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
@@ -189,5 +193,6 @@ public final class ModBlocks {
 		GameRegistry.registerTileEntity(TileTimeFurnace.class, "time_furnace");
 		GameRegistry.registerTileEntity(TileTimeFurnaceController.class, "time_furnace_controller");
 		GameRegistry.registerTileEntity(TileFutureChest.class, "future_chest");
+		GameRegistry.registerTileEntity(TileCrafter.class, "time_crafter");
 	}
 }
