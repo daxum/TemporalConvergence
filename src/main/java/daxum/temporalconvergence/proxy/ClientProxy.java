@@ -78,7 +78,6 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.TIMESTONE_MIX));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_CHEST));
 		registerRender(Item.getItemFromBlock(ModBlocks.PEDESTAL));
-		registerRender(Item.getItemFromBlock(ModBlocks.DIM_GEN));
 		registerRender(Item.getItemFromBlock(ModBlocks.TIME_STONE_PILLAR));
 		registerRender(Item.getItemFromBlock(ModBlocks.TEST_TELEPORTER)); //Why?
 		registerRender(Item.getItemFromBlock(ModBlocks.DIM_CONTR));

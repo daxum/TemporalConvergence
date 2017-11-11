@@ -142,7 +142,6 @@ public final class ModItems {
 
 		//ItemBlocks
 		itemRegistry.register(new ItemBlock(ModBlocks.DIM_CONTR).setRegistryName(ModBlocks.DIM_CONTR.getRegistryName()));
-		itemRegistry.register(new ItemBlock(ModBlocks.DIM_GEN).setRegistryName(ModBlocks.DIM_GEN.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.ORIGIN_STONE).setRegistryName(ModBlocks.ORIGIN_STONE.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.PEDESTAL).setRegistryName(ModBlocks.PEDESTAL.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.TEST_TELEPORTER).setRegistryName(ModBlocks.TEST_TELEPORTER.getRegistryName()));

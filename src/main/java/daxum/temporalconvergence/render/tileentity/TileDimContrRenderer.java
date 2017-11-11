@@ -68,23 +68,18 @@ public class TileDimContrRenderer extends TileEntitySpecialRenderer<TileDimContr
 		bindTexture(SPHERE);
 
 		if (te.renderScale >= 1.0f && te.getId() != -1) {
-			renderSpheres(MAX_RADIUS);
+			//renderSpheres(MAX_RADIUS);
 		}
 		else if (te.renderScale <= 1.0f && te.getId() != -1){
-			renderSpheres(MAX_RADIUS * te.renderScale);
+			//renderSpheres(MAX_RADIUS * te.renderScale);
 			te.renderScale += 0.05;
 		}
 		else if (te.renderScale > 0 && te.getId() == -1) {
-			renderSpheres(MAX_RADIUS * te.renderScale);
+			//renderSpheres(MAX_RADIUS * te.renderScale);
 			te.renderScale -= 0.05;
 		}
 
 		GlStateManager.enableLighting();
 		GlStateManager.popMatrix();
-	}
-
-	public void renderSpheres(float radius) {
-		RenderHelper.renderSphere(radius, 10, 0.0f, 0.5f, 0.0f, 0.5f, false);
-		RenderHelper.renderSphere(radius * 1.05f, 15, 0.5f, 0.5f, 0.0f, 1.0f, true);
 	}
 }

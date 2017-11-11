@@ -22,7 +22,6 @@ package daxum.temporalconvergence.block;
 import daxum.temporalconvergence.block.BlockBase.BlockPresets;
 import daxum.temporalconvergence.tileentity.TileBrazier;
 import daxum.temporalconvergence.tileentity.TileDimContr;
-import daxum.temporalconvergence.tileentity.TileDimGen;
 import daxum.temporalconvergence.tileentity.TileFutureChest;
 import daxum.temporalconvergence.tileentity.TilePedestal;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
@@ -48,7 +47,6 @@ public final class ModBlocks {
 	public static final Block TIME_CHEST;
 	public static final Block TIME_WATER;
 	public static final Block PEDESTAL;
-	public static final Block DIM_GEN;
 	public static final Block TIME_STONE_PILLAR;
 	public static final Block TEST_TELEPORTER;
 	public static final Block DIM_CONTR;
@@ -98,7 +96,6 @@ public final class ModBlocks {
 		TIME_CHEST = new BlockTimeChest();
 		TIME_WATER = new BlockFluidTimeWater();
 		PEDESTAL = new BlockPedestal();
-		DIM_GEN = new BlockDimGen();
 		TIME_STONE_PILLAR = new BlockTimeStonePillar();
 		TEST_TELEPORTER = new BlockTestTeleporter();
 		DIM_CONTR = new BlockDimContr();
@@ -144,7 +141,6 @@ public final class ModBlocks {
 		IForgeRegistry blockRegistry = event.getRegistry();
 
 		blockRegistry.register(DIM_CONTR);
-		blockRegistry.register(DIM_GEN);
 		blockRegistry.register(ORIGIN_STONE);
 		blockRegistry.register(PEDESTAL);
 		blockRegistry.register(TEST_TELEPORTER);
@@ -186,7 +182,6 @@ public final class ModBlocks {
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");
-		GameRegistry.registerTileEntity(TileDimGen.class, "dimensional_generator");
 		GameRegistry.registerTileEntity(TilePedestal.class, "time_pedestal");
 		GameRegistry.registerTileEntity(TileTimeChest.class, "time_chest");
 		GameRegistry.registerTileEntity(TileTimePlant.class, "time_plant");
