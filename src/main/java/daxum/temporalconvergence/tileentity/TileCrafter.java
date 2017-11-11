@@ -33,7 +33,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileCrafter extends TileEntityBase implements TileEntityInventoried, IDirectPowerReceiver {
@@ -41,7 +40,7 @@ public class TileCrafter extends TileEntityBase implements TileEntityInventoried
 	private final ItemStackHandler inventory = new CrafterInventory();
 
 	@Override
-	public IItemHandler getInventory() {
+	public ItemStackHandler getInventory() {
 		return inventory;
 	}
 

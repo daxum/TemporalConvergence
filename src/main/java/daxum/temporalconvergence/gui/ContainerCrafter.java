@@ -17,32 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.block;
+package daxum.temporalconvergence.gui;
 
-import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileCrafter;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.inventory.IInventory;
 
-public class BlockCrafter extends BlockBase {
-	public BlockCrafter() {
-		super("time_crafter", BlockPresets.STONE_MACHINE);
-		setHasTileEntity();
+public class ContainerCrafter extends ContainerBase<TileCrafter> {
+
+	public ContainerCrafter(IInventory playerInventory, TileCrafter crafter) {
+		super(playerInventory, crafter, 85);
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileCrafter();
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
-		player.openGui(TemporalConvergence.INSTANCE, 3, world, pos.getX(), pos.getY(), pos.getZ());
-		return true;
+	protected void addTileSlots() {
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), x + y * 3, 8 + x * 18, 18 + y * 18));
+			}
+		}
 	}
 }

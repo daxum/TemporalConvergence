@@ -19,6 +19,7 @@
  **************************************************************************/
 package daxum.temporalconvergence.gui;
 
+import daxum.temporalconvergence.tileentity.TileCrafter;
 import daxum.temporalconvergence.tileentity.TileFutureChest;
 import daxum.temporalconvergence.tileentity.TileTimeChest;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceBase;
@@ -31,6 +32,7 @@ public class GuiHandler implements IGuiHandler {
 	public static final int TIME_CHEST_GUI = 0;
 	public static final int FUTURE_CHEST_GUI = 1;
 	public static final int TIME_FURNACE_GUI = 2;
+	public static final int CRAFTER_GUI = 3;
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -38,6 +40,7 @@ public class GuiHandler implements IGuiHandler {
 		case TIME_CHEST_GUI: return new ContainerTimeChest(player.inventory, (TileTimeChest)world.getTileEntity(new BlockPos(x, y, z)));
 		case FUTURE_CHEST_GUI: return new ContainerFutureChest(player.inventory, (TileFutureChest)world.getTileEntity(new BlockPos(x, y, z)));
 		case TIME_FURNACE_GUI: return new ContainerTimeFurnace(player.inventory, (TileTimeFurnaceBase)world.getTileEntity(new BlockPos(x, y, z)));
+		case CRAFTER_GUI: return new ContainerCrafter(player.inventory, (TileCrafter)world.getTileEntity(new BlockPos(x, y, z)));
 		default: return null;
 		}
 	}
@@ -48,6 +51,7 @@ public class GuiHandler implements IGuiHandler {
 		case TIME_CHEST_GUI: return new GuiTimeChest(player.inventory, (TileTimeChest)world.getTileEntity(new BlockPos(x, y, z)));
 		case FUTURE_CHEST_GUI: return new GuiFutureChest(player.inventory, (TileFutureChest)world.getTileEntity(new BlockPos(x, y, z)));
 		case TIME_FURNACE_GUI: return new GuiTimeFurnace(player.inventory, (TileTimeFurnaceBase)world.getTileEntity(new BlockPos(x, y, z)));
+		case CRAFTER_GUI: return new GuiCrafter(player.inventory, (TileCrafter)world.getTileEntity(new BlockPos(x, y, z)));
 		default: return null;
 		}
 	}
