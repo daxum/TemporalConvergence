@@ -25,15 +25,19 @@ import net.minecraft.inventory.IInventory;
 public class ContainerCrafter extends ContainerBase<TileCrafter> {
 
 	public ContainerCrafter(IInventory playerInventory, TileCrafter crafter) {
-		super(playerInventory, crafter, 85);
+		super(playerInventory, crafter, 107);
 	}
 
 	@Override
 	protected void addTileSlots() {
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), x + y * 3, 8 + x * 18, 18 + y * 18));
-			}
-		}
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 0, 80, 46));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 1, 57, 23));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 2, 80, 20));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 3, 103, 23));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 4, 54, 46));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 5, 106, 46));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 6, 57, 69));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 7, 80, 72));
+		addSlotToContainer(new SlotItemHandlerFix(tile.getInventory(), 8, 103, 69));
 	}
 }

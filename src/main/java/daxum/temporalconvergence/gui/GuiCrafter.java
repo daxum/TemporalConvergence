@@ -28,10 +28,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiCrafter extends GuiContainer {
-	private static final ResourceLocation CRAFTER_GUI_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/gui/crafter.png");
+	private static final ResourceLocation CRAFTER_GUI_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "textures/gui/time_crafter.png");
 
 	public GuiCrafter(IInventory playerInv, TileCrafter tc) {
 		super(new ContainerCrafter(playerInv, tc));
+		ySize = 189;
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class GuiCrafter extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		fontRenderer.drawString(I18n.format("container.crafter"), 8, 6, 4210752);
-		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(I18n.format("container.crafter"), 8, 7, 4210752);
+		fontRenderer.drawString(I18n.format("container.inventory"), 8, ySize - 97 + 2, 4210752);
 	}
 }
