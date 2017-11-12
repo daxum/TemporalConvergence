@@ -23,11 +23,14 @@ import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileCrafter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class BlockCrafter extends BlockBase {
 	public BlockCrafter() {
@@ -50,5 +53,17 @@ public class BlockCrafter extends BlockBase {
 		}
 
 		return true;
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		if (world.getTileEntity(pos) instanceof TileCrafter) {
+			ItemStackHandler inventory = ((TileCrafter)world.getTileEntity(pos)).getInventory();
+
+			for (int i = 0; i < inventory.getSlots(); i++) {
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
+				inventory.setStackInSlot(i, ItemStack.EMPTY);
+			}
+		}
 	}
 }
