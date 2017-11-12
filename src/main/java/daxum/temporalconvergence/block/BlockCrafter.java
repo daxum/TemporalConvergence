@@ -66,4 +66,9 @@ public class BlockCrafter extends BlockBase {
 			}
 		}
 	}
+
+	@Override
+	public boolean isCube() {
+		return false;
+	}
 }

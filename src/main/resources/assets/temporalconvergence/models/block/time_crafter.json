@@ -1,0 +1,96 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"crafter": "temporalconvergence:blocks/time_crafter"
+	},
+
+	"elements": [
+		{
+			"name": "base",
+			"from": [0, 0, 0],
+			"to": [16, 1, 16],
+			"faces": {
+				"north": { "texture": "#crafter" },
+				"east": { "texture": "#crafter" },
+				"south": { "texture": "#crafter" },
+				"west": { "texture": "#crafter" },
+				"up": { "texture": "#crafter" },
+				"down": { "texture": "#crafter", "cullface": "down" }
+			}
+		},
+
+		{
+			"name": "middle",
+			"from": [4, 1, 4],
+			"to": [12, 13, 12],
+			"faces": {
+				"north": { "texture": "#crafter" },
+				"east": { "texture": "#crafter" },
+				"south": { "texture": "#crafter" },
+				"west": { "texture": "#crafter" }
+			}
+		},
+
+		{
+			"name": "top",
+			"from": [0, 13, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": { "texture": "#crafter" },
+				"east": { "texture": "#crafter" },
+				"south": { "texture": "#crafter" },
+				"west": { "texture": "#crafter" },
+				"up": { "texture": "#crafter", "cullface": "up" },
+				"down": { "texture": "#crafter" }
+			}
+		},
+
+		{
+			"name": "pillar_north_east",
+			"from": [13, 1, 1],
+			"to": [15, 13, 3],
+			"faces": {
+				"north": { "texture": "#crafter", "uv": [0, 0, 4, 12] },
+				"east": { "texture": "#crafter", "uv": [0, 0, 4, 12] },
+				"south": { "texture": "#crafter", "uv": [0, 0, 4, 12] },
+				"west": { "texture": "#crafter", "uv": [0, 0, 4, 12] }
+			}
+		},
+
+		{
+			"name": "pillar_north_west",
+			"from": [1, 1, 1],
+			"to": [3, 13, 3],
+			"faces": {
+				"north": { "texture": "#crafter" },
+				"east": { "texture": "#crafter" },
+				"south": { "texture": "#crafter" },
+				"west": { "texture": "#crafter" }
+			}
+		},
+
+		{
+			"name": "pillar_south_east",
+			"from": [13, 1, 13],
+			"to": [15, 13, 15],
+			"faces": {
+				"north": { "texture": "#crafter" },
+				"east": { "texture": "#crafter" },
+				"south": { "texture": "#crafter" },
+				"west": { "texture": "#crafter" }
+			}
+		},
+
+		{
+			"name": "pillar_south_west",
+			"from": [1, 1, 13],
+			"to": [3, 13, 15],
+			"faces": {
+				"north": { "texture": "#crafter" },
+				"east": { "texture": "#crafter" },
+				"south": { "texture": "#crafter" },
+				"west": { "texture": "#crafter" }
+			}
+		}
+	]
+}
