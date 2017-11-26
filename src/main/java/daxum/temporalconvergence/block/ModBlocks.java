@@ -29,6 +29,7 @@ import daxum.temporalconvergence.tileentity.TileTimeChest;
 import daxum.temporalconvergence.tileentity.TileTimeFurnace;
 import daxum.temporalconvergence.tileentity.TileTimeFurnaceController;
 import daxum.temporalconvergence.tileentity.TileTimePlant;
+import daxum.temporalconvergence.tileentity.TileTimeVault;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -197,5 +198,6 @@ public final class ModBlocks {
 		GameRegistry.registerTileEntity(TileTimeFurnaceController.class, "time_furnace_controller");
 		GameRegistry.registerTileEntity(TileFutureChest.class, "future_chest");
 		GameRegistry.registerTileEntity(TileCrafter.class, "time_crafter");
+		GameRegistry.registerTileEntity(TileTimeVault.class, "time_vault");
 	}
 }

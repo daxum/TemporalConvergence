@@ -17,26 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.block;
+package daxum.temporalconvergence.tileentity;
 
-import daxum.temporalconvergence.tileentity.TileTimeVault;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-
-public class BlockTimeVault extends BlockBase {
-	public BlockTimeVault() {
-		super("time_vault", BlockPresets.IRON);
-		setHasTileEntity();
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileTimeVault();
-	}
-
-	@Override
-	public boolean isCube() {
-		return false;
-	}
+public class TileTimeVault extends TileEntityBase {
+	//TODO
 }

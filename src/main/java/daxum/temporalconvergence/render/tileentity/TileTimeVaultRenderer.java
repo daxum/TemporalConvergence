@@ -17,26 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  **************************************************************************/
-package daxum.temporalconvergence.block;
+package daxum.temporalconvergence.render.tileentity;
 
+import daxum.temporalconvergence.TemporalConvergence;
 import daxum.temporalconvergence.tileentity.TileTimeVault;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.ResourceLocation;
 
-public class BlockTimeVault extends BlockBase {
-	public BlockTimeVault() {
-		super("time_vault", BlockPresets.IRON);
-		setHasTileEntity();
-	}
+public class TileTimeVaultRenderer extends TileEntitySpecialRenderer<TileTimeVault> {
+	private static final ResourceLocation TIME_VAULT_TEXTURE = new ResourceLocation(TemporalConvergence.MODID, "blocks/time_vault");
 
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileTimeVault();
-	}
-
-	@Override
-	public boolean isCube() {
-		return false;
+	public void render(TileTimeVault te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+		//TODO
 	}
 }

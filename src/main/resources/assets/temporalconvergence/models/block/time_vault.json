@@ -1,6 +1,96 @@
 {
-	"parent": "minecraft:block/cube_all",
+	"parent": "minecraft:block/block",
 	"textures": {
-		"all": "temporalconvergence:blocks/time_vault"
-	}
+		"vault": "temporalconvergence:blocks/time_vault"
+	},
+
+	"elements": [
+		{
+			"name": "east_foot",
+			"from": [15, 0, 0],
+			"to": [16, 1, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"east": { "texture": "#vault", "cullface": "east" },
+					"south": { "texture": "#vault", "cullface": "south" },
+					"west": { "texture": "#vault" },
+					"down": { "texture": "#vault" }
+			}
+		},
+
+		{
+			"name": "west_foot",
+			"from": [0, 0, 0],
+			"to": [1, 1, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"east": { "texture": "#vault" },
+					"south": { "texture": "#vault", "cullface": "south" },
+					"west": { "texture": "#vault", "cullface": "west" },
+					"down": { "texture": "#vault" }
+			}
+		},
+
+		{
+			"name": "bottom",
+			"from": [0, 1, 0],
+			"to": [16, 2, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"east": { "texture": "#vault", "cullface": "east" },
+					"south": { "texture": "#vault", "cullface": "south" },
+					"west": { "texture": "#vault", "cullface": "west" },
+					"up": { "texture": "#vault" },
+					"down": { "texture": "#vault" }
+			}
+		},
+
+		{
+			"name": "east_wall",
+			"from": [15, 2, 0],
+			"to": [16, 15, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"east": { "texture": "#vault", "cullface": "east" },
+					"south": { "texture": "#vault", "cullface": "south" },
+					"west": { "texture": "#vault" }
+			}
+		},
+
+		{
+			"name": "west_wall",
+			"from": [0, 2, 0],
+			"to": [1, 15, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"east": { "texture": "#vault" },
+					"south": { "texture": "#vault", "cullface": "south" },
+					"west": { "texture": "#vault", "cullface": "west" }
+			}
+		},
+
+		{
+			"name": "south_wall",
+			"from": [1, 2, 15],
+			"to": [15, 15, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"south": { "texture": "#vault" }
+			}
+		},
+
+		{
+			"name": "top",
+			"from": [0, 15, 0],
+			"to": [16, 16, 16],
+			"faces": {
+					"north": { "texture": "#vault", "cullface": "north" },
+					"east": { "texture": "#vault", "cullface": "east" },
+					"south": { "texture": "#vault", "cullface": "south" },
+					"west": { "texture": "#vault", "cullface": "west" },
+					"up": { "texture": "#vault", "cullface": "up" },
+					"down": { "texture": "#vault" }
+			}
+		}
+	]
 }
