@@ -78,6 +78,7 @@ public final class ModBlocks {
 	public static final Block LUNAR_LEAVES;
 	public static final Block LUNAR_SAPLING;
 	public static final Block CRAFTER;
+	public static final Block TIME_VAULT;
 
 	static {
 		ORIGIN_STONE = new BlockBase("origin_stone");
@@ -137,6 +138,7 @@ public final class ModBlocks {
 		LUNAR_LEAVES = new BlockLunarLeaves();
 		LUNAR_SAPLING = new BlockSaplingBase("lunar_sapling", BlockPresets.PLANT, LUNAR_WOOD.getDefaultState(), LUNAR_LEAVES.getDefaultState());
 		CRAFTER = new BlockCrafter();
+		TIME_VAULT = new BlockTimeVault();
 	}
 
 	@SubscribeEvent
@@ -183,6 +185,7 @@ public final class ModBlocks {
 		blockRegistry.register(LUNAR_LEAVES);
 		blockRegistry.register(LUNAR_SAPLING);
 		blockRegistry.register(CRAFTER);
+		blockRegistry.register(TIME_VAULT);
 
 		//Tile entities
 		GameRegistry.registerTileEntity(TileDimContr.class, "dim_controller");

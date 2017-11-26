@@ -102,6 +102,7 @@ public class ClientProxy implements IProxy {
 		registerRender(Item.getItemFromBlock(ModBlocks.LUNAR_LEAVES));
 		registerRender(Item.getItemFromBlock(ModBlocks.LUNAR_SAPLING));
 		registerRender(Item.getItemFromBlock(ModBlocks.CRAFTER));
+		registerRender(Item.getItemFromBlock(ModBlocks.TIME_VAULT));
 	}
 
 	@Override

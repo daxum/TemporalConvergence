@@ -183,5 +183,6 @@ public final class ModItems {
 		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_LEAVES).setRegistryName(ModBlocks.LUNAR_LEAVES.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.LUNAR_SAPLING).setRegistryName(ModBlocks.LUNAR_SAPLING.getRegistryName()));
 		itemRegistry.register(new ItemBlock(ModBlocks.CRAFTER).setRegistryName(ModBlocks.CRAFTER.getRegistryName()));
+		itemRegistry.register(new ItemBlock(ModBlocks.TIME_VAULT).setRegistryName(ModBlocks.TIME_VAULT.getRegistryName()));
 	}
 }
